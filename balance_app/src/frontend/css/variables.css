@@ -1,0 +1,34 @@
+/* --- Design System Variables --- */
+:root {
+  /* Color Palette */
+  --primary-color: #0c6947;        /* Brand Green */
+  --primary-hover: #084d33;        /* Darker Green */
+  --primary-light: #e6f4ee;        /* Light Tint Green */
+  --text-dark: #1f2937;            /* Off-black for text */
+  --text-light: #4b5563;           /* Grey for body text */
+  --bg-light: #f7faf8;             /* Light gray/green for backgrounds */
+  --bg-card: #ffffff;              /* Card White */
+  --footer-bg: #22252a;            /* Dark Footer */
+  --footer-text: #9ca3af;          /* Light Grey Footer Text */
+  --white: #ffffff;
+  
+  /* Fonts */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Layout & Spacing */
+  --container-max-width: 1200px;
+  --header-height: 80px;
+  
+  /* Shadow & Radii */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+}
