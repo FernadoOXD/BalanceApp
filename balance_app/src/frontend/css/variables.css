@@ -8,6 +8,7 @@
   --text-light: #4b5563;           /* Grey for body text */
   --bg-light: #f7faf8;             /* Light gray/green for backgrounds */
   --bg-card: #ffffff;              /* Card White */
+  --border-color: #d1d5db;         /* Subtle border for inputs & outline buttons */
   --footer-bg: #22252a;            /* Dark Footer */
   --footer-text: #9ca3af;          /* Light Grey Footer Text */
   --white: #ffffff;

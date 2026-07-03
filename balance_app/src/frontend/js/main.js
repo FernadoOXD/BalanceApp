@@ -1,23 +1,24 @@
-import { AppHeader } from "./components/home/headerHome.js";
-import { AppHero } from "./components/home/HeroHome.js";
-import { AppFeatures } from "./components/home/CaracteristicasHome.js";
 import { AppFooter } from "./components/Footer.js";
 
-customElements.define("app-header", AppHeader);
-customElements.define("app-hero", AppHero);
-customElements.define("app-features", AppFeatures);
-customElements.define("app-footer", AppFooter);
+import { AuthPage } from "./pages/AuthPage.js";
+import { HomePage } from "./pages/HomePage.js";
+import { EspecialistaLoginPage } from "./pages/Nutri/EspecialistaLoginPage.js";
+import { PacienteLoginPage } from "./pages/Paciente/PacienteLoginPage.js";
+import { RegistroPacientePage } from "./pages/Paciente/PacienteRegistroPage.js";
+import { Sidebar } from "./components/Sidebar.js";
+import { AgendaEspecialistaPage } from "./pages/Nutri/AgendaEspecialistaPage.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const bookingButtons = document.querySelectorAll(".hero-btn, .btn-primary");
-  bookingButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      if (button.tagName === "A" && button.getAttribute("href") === "#") {
-        e.preventDefault();
-        alert(
-          "Funcionalidad de agenda en construcción. ¡Próximamente disponible!",
-        );
-      }
-    });
-  });
-});
+import { Router } from "./router/Router.js";
+import { routes } from "./router/routes.js";
+
+customElements.define("app-footer", AppFooter);
+customElements.define("page-home", HomePage);
+customElements.define("page-auth", AuthPage);
+customElements.define("page-especialista-login", EspecialistaLoginPage);
+customElements.define("page-paciente-login", PacienteLoginPage);
+customElements.define("registro-paciente-page", RegistroPacientePage);
+customElements.define("app-sidebar", Sidebar);
+customElements.define("agenda-especialista-page", AgendaEspecialistaPage);
+
+const router = new Router(routes, "#app");
+router.init();

@@ -16,6 +16,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
 }
 
 a {

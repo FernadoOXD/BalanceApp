@@ -1,0 +1,221 @@
+/* =====================================================
+   AUTH PAGE — Split-screen welcome view
+   ===================================================== */
+
+/* --- Layout contenedor principal --- */
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* -------------------------------------------------------
+   Panel izquierdo — Imagen decorativa con logo overlay
+   ------------------------------------------------------- */
+.auth-image-panel {
+  position: relative;
+  flex: 0 0 50%;
+  overflow: hidden;
+}
+
+.auth-image-panel__img {
+  width: 70%;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Logo flotante sobre la imagen */
+.auth-image-panel__logo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.auth-image-panel__logo img {
+  height: 100px;
+  width: auto;
+}
+
+/* -------------------------------------------------------
+   Panel derecho — Formulario de auth
+   ------------------------------------------------------- */
+.auth-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 64px;
+  background-color: var(--white);
+}
+
+/* Ancho máximo del bloque de contenido */
+.auth-form-panel__inner {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Logo pequeño arriba del texto */
+.auth-form-panel__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.auth-form-panel__brand img {
+  height: 60px;
+  width: auto;
+}
+
+.auth-form-panel__brand-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: -0.3px;
+}
+
+/* Título principal */
+.auth-form-panel__title {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+/* Subtítulo */
+.auth-form-panel__subtitle {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------
+   Botones de autenticación
+   ------------------------------------------------------- */
+.auth-btn {
+  display: block;
+  width: 100%;
+  padding: 15px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  text-align: center;
+  border: none;
+  font-family: var(--font-family);
+  letter-spacing: 0.1px;
+}
+
+/* Botón primario — Crear Cuenta */
+.auth-btn--primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+  margin-bottom: 14px;
+}
+
+.auth-btn--primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 4px 14px rgba(12, 105, 71, 0.35);
+  transform: translateY(-1px);
+}
+
+.auth-btn--primary:active {
+  transform: translateY(0);
+}
+
+/* Botón outline — Iniciar Sesión */
+.auth-btn--outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
+}
+
+.auth-btn--outline:hover {
+  background-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.auth-btn--outline:active {
+  transform: translateY(0);
+}
+
+/* -------------------------------------------------------
+   Separador con texto "o"
+   ------------------------------------------------------- */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.auth-divider__line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.auth-divider__text {
+  font-size: 13px;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------
+   Enlace "¿Eres especialista?"
+   ------------------------------------------------------- */
+.auth-specialist {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.auth-specialist__link {
+  color: var(--primary-color);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.auth-specialist__link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------
+   Responsive — Móvil: panel imagen se oculta
+   ------------------------------------------------------- */
+@media (max-width: 768px) {
+  .auth-image-panel {
+    display: none;
+  }
+
+  .auth-form-panel {
+    padding: 40px 28px;
+  }
+
+  .auth-form-panel__title {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 420px) {
+  .auth-form-panel {
+    padding: 32px 20px;
+  }
+}
