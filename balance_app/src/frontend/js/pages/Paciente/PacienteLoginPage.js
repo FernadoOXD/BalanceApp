@@ -88,7 +88,12 @@ export class PacienteLoginPage extends HTMLElement {
     const emailInput = this.querySelector("#loginEmail");
     const passwordInput = this.querySelector("#loginPassword");
     const rememberMeInput = this.querySelector("#rememberMe");
-    
+
+    const generalAlert = this.querySelector("#login-alert");
+    const generalAlertMsg = this.querySelector("#login-alert-msg");
+    const emailError = this.querySelector("#loginEmail-error");
+    const passwordError = this.querySelector("#loginPassword-error");
+
     const generalAlert = this.querySelector("#login-alert");
     const generalAlertMsg = this.querySelector("#login-alert-msg");
     const emailError = this.querySelector("#loginEmail-error");
@@ -112,7 +117,8 @@ export class PacienteLoginPage extends HTMLElement {
 
       // 1. Validación General
       if (!email || !password) {
-        generalAlertMsg.textContent = "Por favor, completa todos los campos para continuar.";
+        generalAlertMsg.textContent =
+          "Por favor, completa todos los campos para continuar.";
         generalAlert.style.display = "flex";
         hasErrors = true;
       }
@@ -123,7 +129,11 @@ export class PacienteLoginPage extends HTMLElement {
         this._setError(emailInput, emailError, "Ingresa tu correo electrónico");
         hasErrors = true;
       } else if (!emailRegex.test(email)) {
-        this._setError(emailInput, emailError, "Ingresa un correo electrónico válido");
+        this._setError(
+          emailInput,
+          emailError,
+          "Ingresa un correo electrónico válido",
+        );
         hasErrors = true;
       }
 
@@ -132,7 +142,11 @@ export class PacienteLoginPage extends HTMLElement {
         this._setError(passwordInput, passwordError, "Ingresa tu contraseña");
         hasErrors = true;
       } else if (password.length < 8) {
-        this._setError(passwordInput, passwordError, "La contraseña debe tener al menos 8 caracteres");
+        this._setError(
+          passwordInput,
+          passwordError,
+          "La contraseña debe tener al menos 8 caracteres",
+        );
         hasErrors = true;
       }
 
@@ -141,7 +155,7 @@ export class PacienteLoginPage extends HTMLElement {
       console.log("Login exitoso en frontend:", { email, rememberMe });
 
       // 4. Salto directo al Dashboard usando la navegación por Hash correcta
-      window.location.hash = "/paciente/dashboard";
+      window.location.hash = "/paciente/agenda";
     });
   }
 
@@ -149,7 +163,7 @@ export class PacienteLoginPage extends HTMLElement {
     if (input && errorEl) {
       // Forzar al input a ser transparente y sin bordes molestos
       input.classList.add("form-group__input--error");
-      
+
       // Aplicar el color de fondo y borde rojo al contenedor padre (.form-group) para evitar cortes estéticos
       const groupContainer = input.closest(".form-group");
       if (groupContainer) {
@@ -165,10 +179,43 @@ export class PacienteLoginPage extends HTMLElement {
     const inputs = this.querySelectorAll(".form-group__input");
     const groups = this.querySelectorAll(".form-group");
     const errors = this.querySelectorAll(".form-error");
-    
-    inputs.forEach(input => input.classList.remove("form-group__input--error"));
-    groups.forEach(group => group.classList.remove("form-group--error"));
-    errors.forEach(error => {
+
+    inputs.forEach((input) =>
+      input.classList.remove("form-group__input--error"),
+    );
+    groups.forEach((group) => group.classList.remove("form-group--error"));
+    errors.forEach((error) => {
+      error.textContent = "";
+      error.classList.remove("form-error--visible");
+    });
+  }
+
+  _setError(input, errorEl, message) {
+    if (input && errorEl) {
+      // Forzar al input a ser transparente y sin bordes molestos
+      input.classList.add("form-group__input--error");
+
+      // Aplicar el color de fondo y borde rojo al contenedor padre (.form-group) para evitar cortes estéticos
+      const groupContainer = input.closest(".form-group");
+      if (groupContainer) {
+        groupContainer.classList.add("form-group--error");
+      }
+
+      errorEl.textContent = message;
+      errorEl.classList.add("form-error--visible");
+    }
+  }
+
+  _clearAllErrors() {
+    const inputs = this.querySelectorAll(".form-group__input");
+    const groups = this.querySelectorAll(".form-group");
+    const errors = this.querySelectorAll(".form-error");
+
+    inputs.forEach((input) =>
+      input.classList.remove("form-group__input--error"),
+    );
+    groups.forEach((group) => group.classList.remove("form-group--error"));
+    errors.forEach((error) => {
       error.textContent = "";
       error.classList.remove("form-error--visible");
     });

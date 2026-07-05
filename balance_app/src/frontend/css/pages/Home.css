@@ -2,7 +2,7 @@
 .header {
   height: var(--header-height);
   background-color: var(--white);
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   position: fixed;
   top: 0;
   left: 0;
@@ -74,7 +74,7 @@
   .mobile-toggle {
     display: block;
   }
-  
+
   .nav-menu {
     position: fixed;
     top: var(--header-height);
@@ -88,15 +88,15 @@
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
   }
-  
+
   .nav-menu.active {
     left: 0;
   }
-  
+
   .header-actions {
     display: none; /* Hide actions in small header, can move into mobile menu */
   }
-  
+
   .nav-menu .header-actions-mobile {
     display: flex;
     flex-direction: column;
@@ -197,26 +197,26 @@
   .hero {
     padding: 60px 0;
   }
-  
+
   .hero .container {
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
   }
-  
+
   .hero-content {
     align-items: center;
   }
-  
+
   .hero-title {
     font-size: 38px;
   }
-  
+
   .hero-description {
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   .hero-img {
     max-width: 400px;
   }
@@ -305,12 +305,12 @@
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  
+
   .feature-card {
     align-items: center;
     text-align: center;
   }
-  
+
   .feature-icon-wrapper {
     margin-left: auto;
     margin-right: auto;

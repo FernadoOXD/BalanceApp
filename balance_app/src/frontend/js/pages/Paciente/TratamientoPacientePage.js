@@ -1,4 +1,4 @@
-export class DashboardPaciente extends HTMLElement {
+export class TratamientoPacientePage extends HTMLElement {
   connectedCallback() {
     this.render();
   }

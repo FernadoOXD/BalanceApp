@@ -216,7 +216,7 @@ export class EspecialistaLoginPage extends HTMLElement {
       try {
         await this._mockLogin(emailInput.value, passInput.value);
 
-        window.location.hash = "/nutri/agenda";
+        window.location.hash = "/especialista/agenda";
       } catch (err) {
         this._showAlert(alert, alertMsg, err.message);
         submitBtn.disabled = false;

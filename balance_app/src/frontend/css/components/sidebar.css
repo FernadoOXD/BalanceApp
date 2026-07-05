@@ -1,3 +1,24 @@
+:root {
+  /* Tonalidades Verdes para BalanceApp */
+  --primary-color: #0c6947; /* Verde principal (texto activo, bordes, iconos) */
+  --primary-hover: #095036; /* Verde más oscuro para hover del botón */
+  --primary-light: #e6f3ee; /* Verde muy clarito para el fondo del item activo */
+
+  /* Grises y neutros */
+  --white: #ffffff;
+  --bg-light: #f3f4f6; /* Gris claro para hover inactivo */
+  --text-dark: #1f2937;
+  --text-light: #6b7280; /* Gris para los items inactivos */
+  --border-color: #e5e7eb;
+
+  /* Transiciones y radios */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+  --radius-md: 8px;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
 /* Layout principal para contener sidebar y contenido */
 .sidebar-layout {
   display: flex;
@@ -23,7 +44,7 @@
   flex-direction: column;
   flex-shrink: 0; /* Previene que el sidebar se encoja */
   height: 100vh;
-  position: sticky;
+  position: fixed;
   top: 0;
   overflow-y: auto;
   transition: transform var(--transition-normal);
