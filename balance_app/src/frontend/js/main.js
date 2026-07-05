@@ -10,6 +10,7 @@ import { AgendaEspecialistaPage } from "./pages/Nutri/AgendaEspecialistaPage.js"
 
 import { Router } from "./router/Router.js";
 import { routes } from "./router/routes.js";
+import { DashboardPaciente } from "./pages/Paciente/DashboardPaciente.js";
 
 customElements.define("app-footer", AppFooter);
 customElements.define("page-home", HomePage);
@@ -19,6 +20,6 @@ customElements.define("page-paciente-login", PacienteLoginPage);
 customElements.define("registro-paciente-page", RegistroPacientePage);
 customElements.define("app-sidebar", Sidebar);
 customElements.define("agenda-especialista-page", AgendaEspecialistaPage);
-
+customElements.define("dashboard-paciente", DashboardPaciente);
 const router = new Router(routes, "#app");
 router.init();

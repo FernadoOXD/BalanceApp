@@ -225,10 +225,49 @@
     flex-direction: column;
   }
   .register-image-panel {
-    display: none; /* Ocultar imagen en móvil para dar foco al form */
+    display: none; 
   }
   .register-card {
     box-shadow: none;
     padding: 24px;
   }
+  
+}
+.register-form-group {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start;
+  width: 100%;
+}
+
+.register-input-wrapper {
+  width: 100%;
+}
+
+.form-error {
+  color: #c62828; 
+  font-size: 0.85rem;
+  margin-top: 0.4rem; 
+  display: none;
+}
+
+.form-error--visible {
+  display: block;
+}
+
+.register-input-wrapper:has(.register-form-input--error),
+.register-input-wrapper:has(.form-input--error) {
+  border-color: #c62828 !important;
+  background-color: #ffebee !important;
+}
+
+.register-form-input--error,
+.form-input--error {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 100%;
 }

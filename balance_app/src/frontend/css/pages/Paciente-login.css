@@ -16,7 +16,6 @@
 }
 
 /* Panel Izquierdo */
-
 .auth-image-panel {
   position: relative;
   flex: 0 0 40%;
@@ -149,7 +148,8 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.95rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.2s;
+  box-sizing: border-box;
 }
 .form-group__input:focus {
   outline: none;
@@ -200,4 +200,26 @@
   .panel-illustration {
     display: none;
   }
+}
+
+/* Estilo de errores corregidos */
+.form-error {
+  color: #c62828; 
+  font-size: 0.85rem;
+  margin-top: 0.4rem; 
+  display: none;
+}
+
+.form-error--visible {
+  display: block;
+}
+
+.form-group__input--error {
+  border-color: #c62828 !important;
+  background-color: #ffebee !important;
+}
+
+.form-group--error {
+  /* Se mantiene por compatibilidad JS pero limpia de estilos desbordantes */
+  border: none !important;
 }

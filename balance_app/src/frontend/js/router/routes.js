@@ -30,4 +30,8 @@ export const routes = {
   "/nutri/agenda": (container) => {
     container.innerHTML = `<agenda-especialista-page><app-sidebar></app-sidebar></agenda-especialista-page>`;
   },
+  "/paciente/dashboard": (container) => {
+    container.innerHTML = `<dashboard-paciente></dashboard-paciente>`;
+  },
+
 };

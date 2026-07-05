@@ -1,3 +1,4 @@
+
 export class RegistroPacientePage extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -39,6 +40,11 @@ export class RegistroPacientePage extends HTMLElement {
         <p>Únete a Balance App y da el primer paso hacia tu mejor versión.</p>
       </div>
 
+      <div class="login-alert login-alert--error" id="register-alert" role="alert" style="display: none; margin-bottom: 1.5rem;">
+        <span class="login-alert__icon">⚠</span>
+        <span id="register-alert-msg">Por favor, completa todos los campos para continuar.</span>
+      </div>
+        
       <form id="patient-register-form" novalidate>
         
         <div class="register-form-group">
@@ -47,6 +53,7 @@ export class RegistroPacientePage extends HTMLElement {
             <svg class="register-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <input type="text" id="fullname" class="register-form-input" placeholder="Ej. Ana García" required />
           </div>
+          <span class="form-error" id="fullname-error" role="alert"></span>
         </div>
 
         <div class="register-form-group">
@@ -55,6 +62,7 @@ export class RegistroPacientePage extends HTMLElement {
             <svg class="register-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <input type="email" id="email" class="register-form-input" placeholder="tu@correo.com" required />
           </div>
+          <span class="form-error" id="email-error" role="alert"></span>
         </div>
 
         <div class="register-form-group">
@@ -63,6 +71,7 @@ export class RegistroPacientePage extends HTMLElement {
             <svg class="register-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             <input type="password" id="password" class="register-form-input" placeholder="••••••••" required />
           </div>
+          <span class="form-error" id="password-error" role="alert"></span>
         </div>
 
         <div class="register-form-group">
@@ -71,6 +80,7 @@ export class RegistroPacientePage extends HTMLElement {
             <svg class="register-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             <input type="password" id="confirm-password" class="register-form-input" placeholder="••••••••" required />
           </div>
+          <span class="form-error" id="confirm-password-error" role="alert"></span>
         </div>
 
         <button type="submit" class="register-submit-btn">
@@ -99,9 +109,12 @@ export class RegistroPacientePage extends HTMLElement {
     `;
   }
 
+ 
   initLogic() {
     const form = this.querySelector("#patient-register-form");
     const tabLogin = this.querySelector("#tab-login");
+    const generalAlert = this.querySelector("#register-alert");
+    const generalAlertMsg = this.querySelector("#register-alert-msg");
 
     tabLogin.addEventListener("click", () => {
       window.location.hash = "/auth/paciente-login";
@@ -109,7 +122,86 @@ export class RegistroPacientePage extends HTMLElement {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      console.log("Formulario enviado");
+
+      this._clearAllErrors();
+      generalAlert.style.display = "none";
+
+      const fullnameInput = this.querySelector("#fullname");
+      const emailInput = this.querySelector("#email");
+      const passwordInput = this.querySelector("#password");
+      const confirmPasswordInput = this.querySelector("#confirm-password");
+
+      const fullnameError = this.querySelector("#fullname-error");
+      const emailError = this.querySelector("#email-error");
+      const passwordError = this.querySelector("#password-error");
+      const confirmPasswordError = this.querySelector("#confirm-password-error");
+
+      const fullname = fullnameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      let hasErrors = false;
+
+      if (!fullname || !email || !password || !confirmPassword) {
+        generalAlertMsg.textContent = "Por favor, completa todos los campos para continuar.";
+        generalAlert.style.display = "flex"; 
+      }
+
+      if (!fullname) {
+        this._setError(fullnameInput, fullnameError, "Ingresa tu nombre completo");
+        hasErrors = true;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email) {
+        this._setError(emailInput, emailError, "Ingresa tu correo electrónico");
+        hasErrors = true;
+      } else if (!emailRegex.test(email)) {
+        this._setError(emailInput, emailError, "Ingresa un correo electrónico válido");
+        hasErrors = true;
+      }
+
+      if (!password) {
+        this._setError(passwordInput, passwordError, "Ingresa una contraseña");
+        hasErrors = true;
+      } else if (password.length < 6) { 
+        this._setError(passwordInput, passwordError, "La contraseña debe tener al menos 8 caracteres");
+        hasErrors = true;
+      }
+
+      if (!confirmPassword) {
+        this._setError(confirmPasswordInput, confirmPasswordError, "Confirma tu contraseña");
+        hasErrors = true;
+      } else if (password !== confirmPassword) {
+        this._setError(confirmPasswordInput, confirmPasswordError, "Las contraseñas no coinciden");
+        hasErrors = true;
+      }
+
+      if (hasErrors) return;
+
+      console.log("¡Registro exitoso!", { fullname, email });
+      window.location.hash = "/auth/paciente-login";
+    });
+  }
+
+  _setError(input, errorEl, message) {
+    if (input && errorEl) {
+      input.classList.add("register-form-input--error", "form-input--error"); 
+      errorEl.textContent = message;
+      errorEl.classList.add("form-error--visible");
+    }
+  }
+
+  _clearAllErrors() {
+    const inputs = this.querySelectorAll(".register-form-input");
+    const errors = this.querySelectorAll(".form-error");
+    
+    inputs.forEach(input => input.classList.remove("register-form-input--error", "form-input--error"));
+    errors.forEach(error => {
+      error.textContent = "";
+      error.classList.remove("form-error--visible");
     });
   }
 }
+
