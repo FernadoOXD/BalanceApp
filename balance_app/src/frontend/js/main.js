@@ -27,7 +27,6 @@ import { SettingPaciente } from "./pages/Paciente/SettingPaciente.js";
 //Rutas
 import { Router } from "./router/Router.js";
 import { routes } from "./router/routes.js";
-import { DashboardPaciente } from "./pages/Paciente/DashboardPaciente.js";
 
 /*
 /////////////////////////////////////////////////////////////

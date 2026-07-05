@@ -64,8 +64,4 @@ export const routes = {
   "/paciente/settings": (container) => {
     container.innerHTML = `<setting-paciente></setting-paciente>`;
   },
-  "/paciente/dashboard": (container) => {
-    container.innerHTML = `<dashboard-paciente></dashboard-paciente>`;
-  },
-
 };

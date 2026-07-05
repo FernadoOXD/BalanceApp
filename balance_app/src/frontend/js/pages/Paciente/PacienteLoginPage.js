@@ -94,11 +94,6 @@ export class PacienteLoginPage extends HTMLElement {
     const emailError = this.querySelector("#loginEmail-error");
     const passwordError = this.querySelector("#loginPassword-error");
 
-    const generalAlert = this.querySelector("#login-alert");
-    const generalAlertMsg = this.querySelector("#login-alert-msg");
-    const emailError = this.querySelector("#loginEmail-error");
-    const passwordError = this.querySelector("#loginPassword-error");
-
     btnGoToRegister.addEventListener("click", () => {
       window.location.hash = "/auth/paciente-register";
     });
@@ -156,37 +151,6 @@ export class PacienteLoginPage extends HTMLElement {
 
       // 4. Salto directo al Dashboard usando la navegación por Hash correcta
       window.location.hash = "/paciente/agenda";
-    });
-  }
-
-  _setError(input, errorEl, message) {
-    if (input && errorEl) {
-      // Forzar al input a ser transparente y sin bordes molestos
-      input.classList.add("form-group__input--error");
-
-      // Aplicar el color de fondo y borde rojo al contenedor padre (.form-group) para evitar cortes estéticos
-      const groupContainer = input.closest(".form-group");
-      if (groupContainer) {
-        groupContainer.classList.add("form-group--error");
-      }
-
-      errorEl.textContent = message;
-      errorEl.classList.add("form-error--visible");
-    }
-  }
-
-  _clearAllErrors() {
-    const inputs = this.querySelectorAll(".form-group__input");
-    const groups = this.querySelectorAll(".form-group");
-    const errors = this.querySelectorAll(".form-error");
-
-    inputs.forEach((input) =>
-      input.classList.remove("form-group__input--error"),
-    );
-    groups.forEach((group) => group.classList.remove("form-group--error"));
-    errors.forEach((error) => {
-      error.textContent = "";
-      error.classList.remove("form-error--visible");
     });
   }
 
