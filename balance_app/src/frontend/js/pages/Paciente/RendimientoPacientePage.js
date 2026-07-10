@@ -9,165 +9,224 @@ export class RendimientoPacientePage extends HTMLElement {
     this.innerHTML = `
     <div class="paciente-layout">
       <app-sidebar-paciente></app-sidebar-paciente>
-      <div class="rendimiento-container">
-        
-        <main class="main-content">
-          <header class="main-header">
-            <h1>Hola, <span class="text-highlight" id="user-name-display">...</span></h1>
-            <span class="main-header__date" id="current-date-display">Cargando fecha...</span>
-          </header>
+      
+      <main class="rendimiento-main">
+        <header class="rendimiento-header">
+          <h1>Hola, <span id="user-name-display">Usuario</span></h1>
+          <span class="rendimiento-date" id="current-date-display">Cargando fecha...</span>
+        </header>
 
-          <section class="report-card">
-            <div class="report-card__header">
-              <h2>Reporte Diario</h2>
-            </div>
+        <div id="validation-alert" class="validation-error hidden">
+          <span class="alert-icon">⚠️</span>
+          <p>Por favor, completa todos los campos obligatorios antes de enviar.</p>
+        </div>
+
+        <form id="daily-report-form" class="report-form-container">
+          
+          <section class="card-section">
+            <h2 class="card-title">
+              <img src="assets/icons/menuVerde.png" alt="DietaIcon" class="menuIcon"> 
+              Seguimiento de Dieta
+            </h2>
+            <p class="card-instruction">¿Cómo te fue con las comidas hoy?</p>
             
-            <div class="report-card__body">
-              <p class="report-instructions">Complete de manera honesta el siguiente formulario:</p>
+            <div class="dieta-grid-options">
+              <button type="button" class="dieta-btn-card" data-value="100">
+                <img src="assets/images/smile-verde.png" alt="Excelente" class="mood-icon">
+                <span class="btn-text-main">Seguí la dieta 100%</span>
+              </button>
+              
+              <button type="button" class="dieta-btn-card" data-value="deslices">
+                <img src="assets/images/smile-azul.png" alt="Regular" class="mood-icon">
+                <span class="btn-text-main">Algunos deslices</span>
+              </button>
+              
+              <button type="button" class="dieta-btn-card" data-value="no">
+                <img src="assets/images/smile-rojo.png" alt="Mal" class="mood-icon">
+                <span class="btn-text-main">No la seguí</span>
+              </button>
+            </div>
+            <span id="error-dieta" class="field-error-msg hidden">Selecciona una opción</span>
+          </section>
 
-              <form id="daily-report-form">
-                <div class="report-grid">
-                  
-                  <div class="report-block">
-                    <h3>A: Seguimiento de Dieta</h3>
-                    <div class="dieta-options">
-                      <button type="button" class="dieta-btn" data-value="100">
-                        <span class="dieta-icon check">✓</span> Seguí la dieta 100%
-                      </button>
-                      <button type="button" class="dieta-btn" data-value="deslices">
-                        <span class="dieta-icon warning">~</span> Algunos deslices
-                      </button>
-                      <button type="button" class="dieta-btn" data-value="no">
-                        <span class="dieta-icon cross">✕</span> No la seguí
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="report-block">
-                    <h3>B: Actividad Física</h3>
-                    <p class="report-subinstructions">Recomendaciones asignadas por tu nutrióloga:</p>
-                    
-                    <div id="exercise-recommendations-container" class="recommendations-box">
-                      <p class="placeholder-text">Cargando recommendations de ejercicio asignadas...</p>
-                    </div>
-
-                    <div class="form-group-dash">
-                      <label>Tipo de Ejercicio Realizado</label>
-                      <select id="exercise-type" class="dash-input">
-                        <option value="">Selecciona una actividad</option>
-                        <option value="caminar">Caminar</option>
-                        <option value="correr">Correr / Cardio</option>
-                        <option value="gimnasio">Gimnasio / Pesas</option>
-                      </select>
-                    </div>
-                    <div class="form-group-dash">
-                      <label>Duración (minutos)</label>
-                      <input type="number" id="exercise-duration" class="dash-input" placeholder="Ej. 45">
-                    </div>
-                    <div class="form-group-dash">
-                      <label>¿Completaste tu rutina planeada?</label>
-                      <div class="toggle-buttons">
-                        <button type="button" class="toggle-btn" data-status="si">Sí</button>
-                        <button type="button" class="toggle-btn" data-status="no">No</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="report-block recipe-block">
-                    <h3>C: Receta Asignada</h3>
-                    <p class="report-subinstructions">Indicaciones y minutas vigentes de tu nutrióloga:</p>
-                    
-                    <div id="recipe-preview-container" class="recipe-preview-box">
-                      <p class="placeholder-text">No hay recetas cargadas o asignadas para el día de hoy.</p>
-                    </div>
-                  </div>
-
-                  <div class="report-block">
-                    <h3>D: Notas Adicionales</h3>
-                    <label>¿Cómo te sentiste hoy? ¿Algún antojo o molestia?</label>
-                    <textarea id="report-notes" class="dash-textarea" placeholder="Escribe aquí cómo te has sentido, si tuviste ansiedad, fatiga o algún logro..."></textarea>
-                  </div>
-
-                </div>
-
-                <div class="form-actions-dash">
-                  <button type="submit" class="btn-submit-report">[ Enviar Reporte ]</button>
-                </div>
-              </form>
+          <section class="card-section">
+            <h2 class="card-title">
+              <img src="assets/icons/menuVerde.png" alt="AguaIcon" class="menuIcon">
+              Vasos de agua (250ml)
+            </h2>
+            <div class="water-counter-container" style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 10px 0;">
+              <button type="button" id="btn-water-minus" class="water-btn" style="cursor:pointer; width:35px; height:35px; border-radius:50%; border:1px solid #ced4da; background:#fff; font-size:18px;">-</button>
+              <div style="text-align: center;">
+                <span id="water-count" style="font-size: 32px; font-weight: 700; color: #0d624b; display: block;">4</span>
+                <span class="water-unit-text" style="font-size: 12px; color: #868e96;">Aprox. 1 Litro</span>
+              </div>
+              <button type="button" id="btn-water-plus" class="water-btn" style="cursor:pointer; width:35px; height:35px; border-radius:50%; border:1px solid #0d624b; background:#0d624b; color:#fff; font-size:18px;">+</button>
             </div>
           </section>
-        </main>
 
-      </div>
+          <section class="card-section">
+            <h2 class="card-title">
+              <img src="assets/icons/pesas.png" alt="ActdFisica" class="PesasIcon"> 
+              Actividad Física
+            </h2>
+            
+            <div class="input-field-group">
+              <label>Tipo de Ejercicio</label>
+              <div class="select-wrapper-custom">
+                <select id="exercise-type" class="custom-form-input">
+                  <option value="">Selecciona una actividad</option>
+                  <option value="caminar">Caminar</option>
+                  <option value="correr">Correr / Cardio</option>
+                  <option value="gimnasio">Gimnasio / Pesas</option>
+                </select>
+              </div>
+              <span id="error-ejercicio" class="field-error-msg hidden">Selecciona el tipo de actividad</span>
+            </div>
+
+            <div class="input-field-group">
+              <label>Duración (minutos)</label>
+              <input type="number" id="exercise-duration" class="custom-form-input" placeholder="Ej. 45">
+              <span id="error-duracion" class="field-error-msg hidden">Ingresa los minutos</span>
+            </div>
+
+            <div class="input-field-group checkbox-alignment">
+              <label class="custom-checkbox-container">
+                <input type="checkbox" id="exercise-completed">
+                <span class="checkmark-box"></span>
+                ¿Completaste tu rutina planeada?
+              </label>
+            </div>
+          </section>
+
+          <section class="card-section">
+            <h2 class="card-title">
+              <img src="assets/icons/notas.png" alt="NotasIcon" class="notasIcon"> 
+              Notas Adicionales
+            </h2>
+            <div class="input-field-group">
+              <label>¿Cómo te sentiste hoy? ¿Algún antojo o molestia?</label>
+              <textarea id="report-notes" class="custom-form-textarea" placeholder="¿Cómo te sentiste hoy? ¿Algún antojo o molestia?"></textarea>
+            </div>
+          </section>
+
+          <div class="form-submit-wrapper">
+            <button type="submit" class="btn-send-report">
+              <span class="submit-icon">➤</span> Enviar Reporte
+            </button>
+          </div>
+
+        </form>
+      </main>
     </div>
     `;
   }
 
   initLogic() {
-    const setupSelectableButtons = (buttonSelector, activeClass) => {
-      const buttons = this.querySelectorAll(buttonSelector);
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          buttons.forEach((b) => b.classList.remove(activeClass));
-          btn.classList.add(activeClass);
-        });
-      });
+    let cantVasos = 4;
+    const waterCountLabel = this.querySelector("#water-count");
+    const waterUnitLabel = this.querySelector(".water-unit-text");
+    const btnMinus = this.querySelector("#btn-water-minus");
+    const btnPlus = this.querySelector("#btn-water-plus");
+
+    const actualizarAguaUI = () => {
+      if (!waterCountLabel || !waterUnitLabel) return;
+      waterCountLabel.textContent = cantVasos;
+      const litros = (cantVasos * 0.25).toFixed(2).replace(".00", "");
+      waterUnitLabel.textContent = `Aprox. ${litros} Litro${litros === "1" ? "" : "s"}`;
     };
 
-    setupSelectableButtons(".dieta-btn", "dieta-btn--active");
-    setupSelectableButtons(".toggle-btn", "toggle-btn--active");
-
-    const form = this.querySelector("#daily-report-form");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const selectedDieta =
-        this.querySelector(".dieta-btn--active")?.dataset.value;
-      const exercise = this.querySelector("#exercise-type").value;
-      const duration = this.querySelector("#exercise-duration").value;
-      const completedRoutine = this.querySelector(".toggle-btn--active")
-        ?.dataset.status;
-      const notes = this.querySelector("#report-notes").value;
-
-      console.log("Reporte Diario Listo para Enviar:", {
-        dieta: selectedDieta || "No seleccionada",
-        ejercicio: exercise,
-        duracionMinutos: duration,
-        rutinaCompletada: completedRoutine || "No especificado",
-        notas: notes,
+    if (btnMinus && btnPlus) {
+      btnMinus.addEventListener("click", () => {
+        if (cantVasos > 0) {
+          cantVasos--;
+          actualizarAguaUI();
+        }
       });
 
-      alert("¡Reporte diario enviado con éxito!");
+      btnPlus.addEventListener("click", () => {
+        cantVasos++;
+        actualizarAguaUI();
+      });
+    }
+
+    const dietaButtons = this.querySelectorAll(".dieta-btn-card");
+    let dietaSeleccionada = null;
+
+    dietaButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        dietaButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        dietaSeleccionada = btn.dataset.value;
+        const errDieta = this.querySelector("#error-dieta");
+        if (errDieta) errDieta.classList.add("hidden");
+      });
     });
+
+    const form = this.querySelector("#daily-report-form");
+    const validationAlert = this.querySelector("#validation-alert");
+    const exerciseType = this.querySelector("#exercise-type");
+    const exerciseDuration = this.querySelector("#exercise-duration");
+
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let esValido = true;
+
+        if (validationAlert) validationAlert.classList.add("hidden");
+        this.querySelectorAll(".field-error-msg").forEach(m => m.classList.add("hidden"));
+
+        if (!dietaSeleccionada) {
+          const errDieta = this.querySelector("#error-dieta");
+          if (errDieta) errDieta.classList.remove("hidden");
+          esValido = false;
+        }
+
+        if (exerciseType && !exerciseType.value) {
+          const errEj = this.querySelector("#error-ejercicio");
+          if (errEj) errEj.classList.remove("hidden");
+          esValido = false;
+        }
+
+        if (exerciseDuration && (!exerciseDuration.value || exerciseDuration.value <= 0)) {
+          const errDur = this.querySelector("#error-duracion");
+          if (errDur) errDur.classList.remove("hidden");
+          esValido = false;
+        }
+
+        if (!esValido) {
+          if (validationAlert) validationAlert.classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
+        console.log("Reporte validado y listo:", {
+          dieta: dietaSeleccionada,
+          vasosAgua: cantVasos,
+          ejercicio: exerciseType.value,
+          duracion: exerciseDuration.value,
+          completado: this.querySelector("#exercise-completed")?.checked || false,
+          notas: this.querySelector("#report-notes")?.value || ""
+        });
+
+        alert("¡Reporte diario enviado exitosamente!");
+      });
+    }
   }
 
   loadUserProfile() {
-    // 1. Manejo dinámico del nombre
     const nameDisplay = this.querySelector("#user-name-display");
-    const savedName = localStorage.getItem("userName") || "Usuario";
     if (nameDisplay) {
-      nameDisplay.textContent = savedName;
+      const savedName = localStorage.getItem("userName");
+      nameDisplay.textContent = savedName && savedName.trim() !== "" ? savedName : "Usuario";
     }
 
-    // 2. Manejo dinámico e internacionalizado de la fecha real
     const dateDisplay = this.querySelector("#current-date-display");
     if (dateDisplay) {
       const today = new Date();
-
-      // Formateador nativo de JS para obtener la estructura: "día_semana, día de mes de año"
-      const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      };
-      let formattedDate = today.toLocaleDateString("es-ES", options);
-
-      // Forzar la primera letra de la fecha a mayúscula para fines estéticos (ej: "Lunes...")
-      formattedDate =
-        formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-
-      dateDisplay.textContent = formattedDate;
+      const options = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
+      
+      let formatted = today.toLocaleDateString("es-ES", options);
+      dateDisplay.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
     }
   }
 }

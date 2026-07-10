@@ -149,7 +149,6 @@ export class PacienteLoginPage extends HTMLElement {
 
       console.log("Login exitoso en frontend:", { email, rememberMe });
 
-      // 4. Salto directo al Dashboard usando la navegación por Hash correcta
       window.location.hash = "/paciente/agenda";
     });
   }

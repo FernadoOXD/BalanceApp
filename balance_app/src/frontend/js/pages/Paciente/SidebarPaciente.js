@@ -114,44 +114,60 @@ export class SidebarPaciente extends HTMLElement {
     const toggleBtn = this.querySelector(".sidebar__mobile-toggle");
     const sidebar = this.querySelector(".sidebar");
     const navLinks = this.querySelectorAll(".sidebar__nav-link");
+    const newPatientBtn = this.querySelector(".sidebar__new-patient-btn"); // 1. Capturamos el botón
+
+    if (!sidebar) return;
+
+    // Función auxiliar para cerrar el menú en móviles
+    const closeMobileMenu = () => {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove("sidebar--mobile-open");
+        if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
+      }
+    };
 
     // Lógica para abrir/cerrar menú en móvil
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("sidebar--mobile-open");
-      const isOpen = sidebar.classList.contains("sidebar--mobile-open");
-      toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("sidebar--mobile-open");
+        const isOpen = sidebar.classList.contains("sidebar--mobile-open");
+        toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    }
 
     // Cerrar menú al hacer clic en un enlace (en móvil)
     navLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        if (window.innerWidth <= 768) {
-          sidebar.classList.remove("sidebar--mobile-open");
-          toggleBtn.setAttribute("aria-expanded", "false");
-        }
-      });
+      link.addEventListener("click", closeMobileMenu);
     });
 
-    // --- NUEVA LÓGICA PARA ESTADO ACTIVO DINÁMICO ---
+    // --- NUEVA LÓGICA PARA EL BOTÓN DE AGENDAR CITA ---
+    if (newPatientBtn) {
+      newPatientBtn.addEventListener("click", () => {
+        // 2. Cambiamos el hash de la URL a la ruta de tu agenda
+        window.location.hash = "#/paciente/agenda";
+        
+        // Cierra el menú si el usuario está desde un celular
+        closeMobileMenu();
+      });
+    }
+
+    // --- LÓGICA PARA ESTADO ACTIVO DINÁMICO ---
     const updateActiveLink = () => {
-      // Obtenemos el hash actual. Si está vacío, por defecto asumimos que es el dashboard
-      const currentHash = window.location.hash || "#/dashboard";
+      const currentHash = window.location.hash || "#/paciente/dashboard";
 
       navLinks.forEach((link) => {
-        // Primero, removemos la clase activa de todos los enlaces
+        // Removemos la clase activa de todos los enlaces
         link.classList.remove("sidebar__nav-link--active");
 
-        // Luego, si el href del enlace coincide con el hash actual de la URL, le ponemos la clase
+        // Si el href coincide con la URL actual, se ilumina
         if (link.getAttribute("href") === currentHash) {
           link.classList.add("sidebar__nav-link--active");
         }
       });
     };
 
-    // 1. Ejecutamos al cargar por primera vez para iluminar la ruta correcta
+    // Ejecuciones del detector de rutas
     updateActiveLink();
-
-    // 2. Escuchamos cambios en la URL (cuando el usuario hace clic o usa las flechas del navegador)
     window.addEventListener("hashchange", updateActiveLink);
   }
 }
