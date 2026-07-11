@@ -1,0 +1,366 @@
+/* =====================================================
+   SPECIALIST LOGIN PAGE — Split-screen login view
+   ===================================================== */
+
+/* --- Layout contenedor principal (reutiliza .auth-page) --- */
+.specialist-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+}
+
+/* -------------------------------------------------------
+   Panel izquierdo — Imagen con texto overlay en la base
+   ------------------------------------------------------- */
+.specialist-image-panel {
+  position: relative;
+  flex: 0 0 30%;
+  overflow: hidden;
+  background-color: #c8d9d4;
+}
+
+.specialist-image-panel__img {
+  width: 533px;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Logo flotante */
+.specialist-image-panel__logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 2;
+}
+
+.specialist-image-panel__logo img {
+  height: 56px;
+  width: auto;
+}
+
+/* Texto de marketing en la esquina inferior izquierda */
+.specialist-image-panel__caption {
+  position: absolute;
+  bottom: 40px;
+  left: 32px;
+  right: 32px;
+  z-index: 2;
+  color: var(--text-dark);
+}
+
+.specialist-image-panel__caption-title {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+  color: var(--text-dark);
+}
+
+.specialist-image-panel__caption-subtitle {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------
+   Panel derecho — Formulario de inicio de sesión
+   ------------------------------------------------------- */
+.specialist-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 64px;
+  background-color: var(--white);
+}
+
+.specialist-form-panel__inner {
+  width: 100%;
+  max-width: 440px;
+}
+
+/* Título grande */
+.specialist-form-panel__title {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1.15;
+  margin-bottom: 36px;
+  letter-spacing: -0.8px;
+}
+
+/* -------------------------------------------------------
+   Tarjeta del formulario
+   ------------------------------------------------------- */
+.login-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+}
+
+/* Tab "Iniciar Sesión" dentro de la card */
+.login-card__tab {
+  display: flex;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 28px;
+}
+
+.login-card__tab-item {
+  padding: 0 4px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: var(--transition-fast);
+}
+
+.login-card__tab-item--active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* Subtítulo dentro de la card */
+.login-card__heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.login-card__subheading {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 22px;
+  line-height: 1.4;
+}
+
+/* -------------------------------------------------------
+   Campos del formulario
+   ------------------------------------------------------- */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font-family);
+  color: var(--text-dark);
+  background-color: var(--white);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(12, 105, 71, 0.1);
+}
+
+/* Estado de error en el input */
+.form-input--error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Mensaje de error bajo el campo */
+.form-error {
+  display: none;
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.form-error--visible {
+  display: block;
+}
+
+/* -------------------------------------------------------
+   Fila "Recordarme" + "¿Olvidaste tu contraseña?"
+   ------------------------------------------------------- */
+.login-card__options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.remember-me__checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 3px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.remember-me__label {
+  font-size: 13px;
+  color: var(--text-light);
+  cursor: pointer;
+  user-select: none;
+}
+
+.forgot-password {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.forgot-password:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------
+   Botón de envío
+   ------------------------------------------------------- */
+.login-submit-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: var(--transition-normal);
+  letter-spacing: 0.1px;
+}
+
+.login-submit-btn:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 4px 14px rgba(12, 105, 71, 0.35);
+  transform: translateY(-1px);
+}
+
+.login-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Estado deshabilitado mientras se procesa */
+.login-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* -------------------------------------------------------
+   Alerta de error general (credenciales incorrectas, etc.)
+   ------------------------------------------------------- */
+.login-alert {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.login-alert--error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.login-alert--visible {
+  display: flex;
+}
+
+.login-alert__icon {
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+/* -------------------------------------------------------
+   Enlace para volver atrás
+   ------------------------------------------------------- */
+.specialist-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-light);
+  text-decoration: none;
+  margin-top: 24px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.specialist-back-link:hover {
+  color: var(--primary-color);
+}
+
+.specialist-back-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* -------------------------------------------------------
+   Responsive — Móvil
+   ------------------------------------------------------- */
+@media (max-width: 768px) {
+  .specialist-image-panel {
+    display: none;
+  }
+
+  .specialist-form-panel {
+    padding: 40px 24px;
+  }
+
+  .specialist-form-panel__title {
+    font-size: 26px;
+    margin-bottom: 24px;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .specialist-form-panel {
+    padding: 28px 16px;
+  }
+}
