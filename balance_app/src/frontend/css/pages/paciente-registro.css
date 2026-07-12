@@ -1,0 +1,274 @@
+/* ── Layout Principal ── */
+.register-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  font-family:
+    "Inter", system-ui, sans-serif; /* Ajusta a la fuente de tu proyecto */
+  padding: 2rem;
+}
+
+/* ── Panel Izquierdo ── */
+.register-image-panel {
+  position: relative;
+  flex: 0 0 50%;
+  overflow: hidden;
+}
+
+.register-image-panel__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* Oscurecer un poco la imagen abajo para que el texto sea legible */
+.register-image-panel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  z-index: 0;
+}
+
+.register-image-panel__logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 2;
+}
+
+.register-image-panel__logo img {
+  height: 56px;
+  width: auto;
+}
+
+.register-image-panel__caption {
+  position: absolute;
+  bottom: 40px;
+  left: 32px;
+  right: 32px;
+  z-index: 2;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ── Panel Derecho (Formulario) ── */
+.register-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8faf9; /* Color cremita/verde súper claro del fondo */
+}
+
+.register-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Pestañas (Tabs) ── */
+.register-card__tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 32px;
+}
+
+.register-tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.register-tab-btn--active {
+  color: #006d5b; /* Verde principal de BalanceApp */
+}
+
+.register-tab-btn--active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #006d5b;
+}
+
+/* ── Textos del Card ── */
+.register-card__header {
+  margin-bottom: 24px;
+}
+
+.register-card__header h2 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.register-card__header p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Inputs y Formulario ── */
+.register-form-group {
+  margin-bottom: 20px;
+}
+
+.register-form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.register-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 12px;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.register-input-wrapper:focus-within {
+  border-color: #006d5b;
+  box-shadow: 0 0 0 3px rgba(0, 109, 91, 0.1);
+}
+
+.register-input-icon {
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
+  margin-right: 10px;
+}
+
+.register-form-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 0;
+  font-size: 0.95rem;
+  color: #111827;
+  background: transparent;
+}
+
+.register-form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* ── Botón Submit ── */
+.register-submit-btn {
+  width: 100%;
+  background-color: #006d5b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.register-submit-btn:hover {
+  background-color: #005648;
+}
+
+/* ── Footer Link ── */
+.register-card__footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.register-link-login {
+  color: #006d5b;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.register-link-login:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .register-layout {
+    flex-direction: column;
+  }
+  .register-image-panel {
+    display: none;
+  }
+  .register-card {
+    box-shadow: none;
+    padding: 24px;
+  }
+}
+.register-form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.register-input-wrapper {
+  width: 100%;
+}
+
+.form-error {
+  color: #c62828;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  display: none;
+}
+
+.form-error--visible {
+  display: block;
+}
+
+.register-input-wrapper:has(.register-form-input--error),
+.register-input-wrapper:has(.form-input--error) {
+  border-color: #c62828 !important;
+  background-color: #ffebee !important;
+}
+
+.register-form-input--error,
+.form-input--error {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 100%;
+}

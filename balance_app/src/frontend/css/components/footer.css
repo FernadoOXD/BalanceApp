@@ -1,0 +1,85 @@
+/* --- Footer Component --- */
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--white);
+  padding: 60px 0 30px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 40px;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+}
+
+.footer-logo .logo-img {
+  height: 100px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.footer-desc {
+  font-size: 14px;
+  color: var(--footer-text);
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.footer-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.footer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-link {
+  font-size: 14px;
+  color: var(--footer-text);
+  transition: var(--transition-fast);
+}
+
+.footer-link:hover {
+  color: var(--white);
+}
+
+/* Divider & Copyright */
+.footer-divider {
+  border: 0;
+  height: 1px;
+  background-color: rgba(255,255,255,0.08);
+  margin-bottom: 24px;
+}
+
+.footer-bottom {
+  text-align: center;
+}
+
+.copyright {
+  font-size: 13px;
+  color: var(--footer-text);
+}
+
+/* Responsiveness for Footer */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
