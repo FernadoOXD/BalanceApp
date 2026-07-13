@@ -92,10 +92,11 @@ export class AgendamientoEncuestaPage extends HTMLElement {
         </div>
 
         <div class="n-card__footer">
+        <button type="button" class="n-btn n-btn--outline"><a href="#/paciente/agenda">Volver</a></button>
           <button id="btn-next-phase" class="n-btn n-btn--primary">
             Next 
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </button>
+            </button>
         </div>
       </div>
     </section>
@@ -1520,7 +1521,6 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       if (isPastTime) {
         btn.disabled = true;
         btn.classList.remove("n-time-btn--selected");
-        o;
         if (this.state.selectedTime === timeText) {
           this.state.selectedTime = null;
         }
@@ -1534,7 +1534,6 @@ export class AgendamientoEncuestaPage extends HTMLElement {
     this.timeButtons.forEach((btn) =>
       btn.classList.remove("n-time-btn--selected"),
     );
-    o;
     selectedElement.classList.add("n-time-btn--selected");
 
     this.state.selectedTime = selectedElement.textContent;
@@ -1592,10 +1591,38 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       }
     }
 
+    // Convertir formato de fecha de "13 de Julio de 2026" a "YYYY-MM-DD"
+    const formatDateToMySQL = (dateStr) => {
+      if (!dateStr) return null;
+      
+      // Mapeo de meses en español a números
+      const months = {
+        'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+        'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+        'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+      };
+      
+      // Parsear formato "13 de Julio de 2026"
+      const parts = dateStr.toLowerCase().split(' de ');
+      if (parts.length === 3) {
+        const day = parts[0].padStart(2, '0');
+        const month = months[parts[1]] || '01';
+        const year = parts[2];
+        return `${year}-${month}-${day}`;
+      }
+      
+      // Si ya está en formato YYYY-MM-DD, retornarlo
+      if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return dateStr;
+      }
+      
+      return dateStr; // fallback
+    };
+
     const finalPayload = {
       appointment: {
         month: "October 2026", // hacerlo dinamico con el DOM
-        day: this.state.selectedDate,
+        day: formatDateToMySQL(this.state.selectedDate),
         time: this.state.selectedTime,
       },
       survey: surveyData,
@@ -1609,17 +1636,33 @@ export class AgendamientoEncuestaPage extends HTMLElement {
     submitBtn.disabled = true;
 
     try {
-      // Simular llamada a API (Backend)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Llamada real al API del Backend
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/encuestas/agendar-con-encuesta?paciente_id=1",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalPayload),
+        },
+      );
 
-      this.step3Indicator.classList.add("n-stepper__step--active");
-      this.stepperLines[1].classList.add("n-stepper__line--active");
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Error al guardar la información");
+      }
 
       alert("¡Cita agendada y encuesta guardada con éxito!");
 
       window.location.hash = "/paciente/agenda";
     } catch (error) {
-      alert("Hubo un error al guardar la información. Intenta nuevamente.");
+      console.error("Error:", error);
+      alert(
+        "Hubo un error al guardar la información. Intenta nuevamente. " +
+          error.message,
+      );
       submitBtn.textContent = originalBtnText;
       submitBtn.disabled = false;
     }

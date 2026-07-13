@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from backend.models.paciente import PacienteModel
 
 auth_bp = Blueprint('auth', __name__)
@@ -39,6 +39,26 @@ def login():
     result = PacienteModel.login(email, contrasena)
     
     if result['success']:
+        # Store user session
+        session['idPaciente'] = result['data']['idPaciente']
+        session['email'] = result['data']['email']
         return jsonify(result), 200
     else:
         return jsonify(result), 401
+
+@auth_bp.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({"success": True, "message": "Sesión cerrada exitosamente."}), 200
+
+@auth_bp.route('/me', methods=['GET'])
+def get_current_user():
+    if 'idPaciente' not in session:
+        return jsonify({"success": False, "message": "No autenticado."}), 401
+    return jsonify({
+        "success": True,
+        "data": {
+            "idPaciente": session['idPaciente'],
+            "email": session['email']
+        }
+    }), 200
