@@ -3,12 +3,36 @@ export class AgendaEspecialistaPage extends HTMLElement {
     super();
     this.currentMonth = 9; // Octubre
     this.currentYear = 2024;
-    
+
     this.eventos = [
-      { dia: 1, mes: 9, anio: 2024, titulo: "9:00 J. Doe", clase: "bg-dark-green" },
-      { dia: 3, mes: 9, anio: 2024, titulo: "14:00 M. Smith", clase: "bg-dark-green" },
-      { dia: 3, mes: 9, anio: 2024, titulo: "16:00 L. Gomez", clase: "bg-gray" },
-      { dia: 8, mes: 9, anio: 2024, titulo: "10:00 A. Perez", clase: "text-red" }
+      {
+        dia: 1,
+        mes: 9,
+        anio: 2024,
+        titulo: "9:00 J. Doe",
+        clase: "bg-dark-green",
+      },
+      {
+        dia: 3,
+        mes: 9,
+        anio: 2024,
+        titulo: "14:00 M. Smith",
+        clase: "bg-dark-green",
+      },
+      {
+        dia: 3,
+        mes: 9,
+        anio: 2024,
+        titulo: "16:00 L. Gomez",
+        clase: "bg-gray",
+      },
+      {
+        dia: 8,
+        mes: 9,
+        anio: 2024,
+        titulo: "10:00 A. Perez",
+        clase: "text-red",
+      },
     ];
   }
 
@@ -56,16 +80,35 @@ export class AgendaEspecialistaPage extends HTMLElement {
         </main>
       </div>
     `;
-    this.querySelector("#prev-month").addEventListener("click", () => { this.currentMonth--; this.renderCalendar(); });
-    this.querySelector("#next-month").addEventListener("click", () => { this.currentMonth++; this.renderCalendar(); });
+    this.querySelector("#prev-month").addEventListener("click", () => {
+      this.currentMonth--;
+      this.renderCalendar();
+    });
+    this.querySelector("#next-month").addEventListener("click", () => {
+      this.currentMonth++;
+      this.renderCalendar();
+    });
   }
 
   renderCalendar() {
     const grid = this.querySelector("#calendar-grid");
     const title = this.querySelector("#calendar-title");
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    const meses = [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ];
     title.textContent = `${meses[this.currentMonth]} ${this.currentYear}`;
-    
+
     // Generar encabezados (LUN a DOM) asegurando los 7 elementos
     let html = `
       <div class="day-name">LUN</div><div class="day-name">MAR</div><div class="day-name">MIE</div>
@@ -74,16 +117,24 @@ export class AgendaEspecialistaPage extends HTMLElement {
 
     // Calcular espacios vacíos (Oct 2024 empieza en Martes -> 1 espacio)
     const primerDia = new Date(this.currentYear, this.currentMonth, 1).getDay();
-    let espacios = (primerDia === 0) ? 6 : primerDia - 1;
+    let espacios = primerDia === 0 ? 6 : primerDia - 1;
 
     for (let i = 0; i < espacios; i++) {
       html += `<div class="calendar-cell" style="background:transparent; border:none;"></div>`;
     }
 
-    const diasEnMes = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+    const diasEnMes = new Date(
+      this.currentYear,
+      this.currentMonth + 1,
+      0,
+    ).getDate();
     for (let dia = 1; dia <= diasEnMes; dia++) {
-      const eventosDia = this.eventos.filter(e => e.dia === dia && e.mes === this.currentMonth);
-      let evs = eventosDia.map(e => `<div class="event ${e.clase}">${e.titulo}</div>`).join("");
+      const eventosDia = this.eventos.filter(
+        (e) => e.dia === dia && e.mes === this.currentMonth,
+      );
+      let evs = eventosDia
+        .map((e) => `<div class="event ${e.clase}">${e.titulo}</div>`)
+        .join("");
       html += `<div class="calendar-cell"><span class="date-number">${dia}</span>${evs}</div>`;
     }
     grid.innerHTML = html;

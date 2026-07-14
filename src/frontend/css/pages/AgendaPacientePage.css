@@ -15,7 +15,7 @@
 .agenda-main {
   flex: 1;
   padding: 2rem;
-  margin-left: 300px;
+  margin-left: 60px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
