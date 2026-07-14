@@ -43,8 +43,8 @@ export class AgendaEspecialistaPage extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <app-sidebar-especialista active-page="agenda"></app-sidebar-especialista>
-      <div class="sidebar-layout">
+    <div class="sidebar-layout">
+    <app-sidebar-especialista></app-sidebar-especialista>
         <main class="sidebar-content">
           <header class="agenda-topbar">
             <h1>Mi Agenda</h1>

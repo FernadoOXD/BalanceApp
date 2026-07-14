@@ -102,9 +102,7 @@ export class AgendaPacientePage extends HTMLElement {
 
     // El campo puede llamarse idPaciente o id según el backend
     const idPaciente =
-      this.paciente.idPaciente ||
-      this.paciente.id ||
-      this.paciente.paciente_id;
+      this.paciente.idPaciente || this.paciente.id || this.paciente.paciente_id;
 
     try {
       const response = await fetch(
