@@ -208,13 +208,12 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         <!-- SECCIÓN TRATAMIENTO ALINEADA A LA IZQUIERDA -->
         <div class="mini-perfil-tratamientos-section" style="text-align: left;">
           
-          <!-- FILA DE BOTONES DE ACCIÓN (AHORA VAN ARRIBA) -->
+          <!-- FILA DE BOTONES DE ACCIÓN -->
           <div class="section-title-row modification-buttons-bar" style="display: flex; gap: 10px; margin-bottom: 20px;">
             <button id="btn-add-treatment" class="btn-primary-sm">Añadir tratamiento</button>
             <button id="btn-add-exercise-modular" class="btn-primary-sm">Añadir ejercicios</button>
           </div>
           
-          <!-- CAMBIO DE TÍTULO A: Tratamiento asignado -->
           <h3 style="margin-bottom: 15px;">Tratamiento asignado</h3>
 
           <div class="mp-tratamiento-content-box" style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
@@ -262,7 +261,6 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                   </div>
                 </div>
 
-                <!-- Botones de Acción abajo a la derecha condicionales -->
                 <div class="botones-accion-derecha" style="display: flex; gap: 10px; flex-shrink: 0; margin-left: 20px;">
                   <button id="btn-ver-ejercicios" class="btn-primary-sm">Ver ejercicios</button>
                   <button id="btn-ver-menu" class="btn-primary-sm">Ver menú completo</button>
@@ -289,19 +287,26 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 1100px;">
                 <thead>
                   <tr style="background: #f2f2f2; position: sticky; top: 0; z-index: 10;">
-                    <th style="border: 1px solid #ccc; padding: 12px; width: 160px;">Comida / Horario</th>
+                    <th style="border: 1px solid #ccc; padding: 12px; width: 200px;">Comida / Horario</th>
                     ${diasSemana.map(d => `<th style="border: 1px solid #ccc; padding: 12px;">${d}</th>`).join('')}
                   </tr>
                 </thead>
                 <tbody id="tbody-excel-rows">
                   ${(p.menuExcel && p.menuExcel.length > 0 ? p.menuExcel : [
-                    { comida: "Desayuno" }, { comida: "Colación 1" }, { comida: "Comida" }, { comida: "Colación 2" }, { comida: "Cena" }
+                    { comida: "Desayuno" }, { comida: "Media Mañana" }, { comida: "Comida" }, { comida: "Merienda" }, { comida: "Cena" }
                   ]).map((fila, index) => `
                     <tr style="background: ${index % 2 === 0 ? '#ffffff' : '#f9f9f9'}">
-                      <td style="border: 1px solid #ccc; padding: 6px; background: #fafafa;">
-                        <input type="text" class="excel-cell-input row-meal-name" value="${fila.comida || ''}" 
-                          ${this.modoModalSoloLectura ? 'disabled' : ''} 
-                          style="width: 100%; border: none; font-weight: bold; background: transparent; outline: none;">
+                      <td style="border: 1px solid #ccc; padding: 6px; background: #fafafa; vertical-align: middle;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          ${!this.modoModalSoloLectura ? `
+                            <button type="button" class="btn-delete-row" data-index="${index}" style="background: none; border: none; cursor: pointer; padding: 0 4px; display: flex; align-items: center;">
+                              <img src="assets/icons/eliminarRojo.png" alt="Eliminar Fila" class="excel-row-delete-icon" style="width: 16px; height: 16px;">
+                            </button>
+                          ` : ''}
+                          <input type="text" class="excel-cell-input row-meal-name" value="${fila.comida || ''}" 
+                            ${this.modoModalSoloLectura ? 'disabled' : ''} 
+                            style="width: 100%; border: none; font-weight: bold; background: transparent; outline: none;">
+                        </div>
                       </td>
                       ${diasSemana.map(d => `
                         <td style="border: 1px solid #ccc; padding: 6px; vertical-align: top;">
@@ -329,7 +334,6 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                 ${!this.modoModalSoloLectura ? `
                   <button type="button" id="btn-excel-save" class="btn-primary-sm" style="padding: 10px 20px;">Guardar Tabla de Menú</button>
                 ` : ''}
-                <button type="button" id="btn-excel-cancel" class="btn-perfil" style="padding: 10px 20px;">Cerrar</button>
               </div>
             </div>
           </div>
@@ -366,7 +370,6 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               ${!this.modoModalSoloLectura ? `
                 <button type="button" id="btn-save-exercise" class="btn-primary-sm" style="padding: 10px 20px;">Guardar Ejercicios</button>
               ` : ''}
-              <button type="button" id="btn-cancel-exercise" class="btn-perfil" style="padding: 10px 20px;">Cerrar</button>
             </div>
           </div>
         </div>
@@ -623,16 +626,23 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         this.viendoModalExcel = false;
         this.renderMiniPerfil();
       });
-      this.querySelector('#btn-excel-cancel')?.addEventListener('click', () => {
-        this.viendoModalExcel = false;
-        this.renderMiniPerfil();
-      });
 
       this.querySelector('#btn-excel-add-row')?.addEventListener('click', () => {
         this.sincronizarEstructuraExcelTemporal();
         if (!p.menuExcel) p.menuExcel = [];
-        p.menuExcel.push({ comida: "Nueva Merienda", Lunes: "", Martes: "", Miercoles: "", Jueves: "", Viernes: "", Sabado: "", Domingo: "" });
+        p.menuExcel.push({ comida: "Nueva Fila", Lunes: "", Martes: "", Miercoles: "", Jueves: "", Viernes: "", Sabado: "", Domingo: "" });
         this.renderMiniPerfil();
+      });
+
+      this.querySelectorAll('.btn-delete-row').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          this.sincronizarEstructuraExcelTemporal();
+          const index = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+          if (p.menuExcel && p.menuExcel[index]) {
+            p.menuExcel.splice(index, 1);
+            this.renderMiniPerfil();
+          }
+        });
       });
 
       this.querySelector('#btn-excel-save')?.addEventListener('click', () => {
@@ -644,10 +654,6 @@ export class TratamientoEspecialistaPage extends HTMLElement {
 
     if (this.viendoModalEjercicios) {
       this.querySelector('#btn-close-exercise-modal')?.addEventListener('click', () => {
-        this.viendoModalEjercicios = false;
-        this.renderMiniPerfil();
-      });
-      this.querySelector('#btn-cancel-exercise')?.addEventListener('click', () => {
         this.viendoModalEjercicios = false;
         this.renderMiniPerfil();
       });
@@ -700,10 +706,27 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     });
 
     this.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const pacienteId = e.currentTarget.getAttribute('data-id');
-        if(confirm(`¿Estás seguro de eliminar el tratamiento del ID ${pacienteId}?`)) {
+        
+        // Mensaje explícito de confirmación (Aceptar / Cancelar)
+        const confirmar = confirm(`¿Estás seguro? ¿Quieres eliminar este paciente del sistema por completo?`);
+        
+        if (confirmar) {
+          // 1. Borrado completo de la memoria local (Ambas listas)
           this.pacientesRecientes = this.pacientesRecientes.filter(p => p.id !== pacienteId);
+          this.pacientes = this.pacientes.filter(p => p.id !== pacienteId);
+
+          // 2. Petición HTTP DELETE real a tu API para evitar el "respawn"
+          try {
+            await fetch(`${this.apiUrl}/${pacienteId}`, {
+              method: 'DELETE'
+            });
+          } catch (error) {
+            console.error("No se pudo borrar en el servidor, pero se removió de la vista local.", error);
+          }
+
+          // 3. Re-renderizado de la lista actual
           this.renderListaRecientes();
         }
       });
