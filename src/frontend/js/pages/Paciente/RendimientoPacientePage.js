@@ -8,7 +8,7 @@ export class RendimientoPacientePage extends HTMLElement {
   render() {
     this.innerHTML = `
     <div class="paciente-layout">
-      <app-sidebar-paciente></app-sidebar-paciente>
+    <app-sidebar-paciente style="position: fixed;"></app-sidebar-paciente>
       
       <main class="rendimiento-main">
         <header class="rendimiento-header">
@@ -32,17 +32,17 @@ export class RendimientoPacientePage extends HTMLElement {
             
             <div class="dieta-grid-options">
               <button type="button" class="dieta-btn-card" data-value="100">
-                <img src="assets/images/smile-verde.png" alt="Excelente" class="mood-icon">
+                <img src="./assets/icons/cara-feliz.png" alt="Excelente" class="mood-icon">
                 <span class="btn-text-main">Seguí la dieta 100%</span>
               </button>
               
               <button type="button" class="dieta-btn-card" data-value="deslices">
-                <img src="assets/images/smile-azul.png" alt="Regular" class="mood-icon">
+                <img src="./assets/icons/cara-neutra.png" alt="Regular" class="mood-icon">
                 <span class="btn-text-main">Algunos deslices</span>
               </button>
               
               <button type="button" class="dieta-btn-card" data-value="no">
-                <img src="assets/images/smile-rojo.png" alt="Mal" class="mood-icon">
+                <img src="./assets/icons/cara-triste.png" alt="Mal" class="mood-icon">
                 <span class="btn-text-main">No la seguí</span>
               </button>
             </div>
@@ -173,7 +173,9 @@ export class RendimientoPacientePage extends HTMLElement {
         let esValido = true;
 
         if (validationAlert) validationAlert.classList.add("hidden");
-        this.querySelectorAll(".field-error-msg").forEach(m => m.classList.add("hidden"));
+        this.querySelectorAll(".field-error-msg").forEach((m) =>
+          m.classList.add("hidden"),
+        );
 
         if (!dietaSeleccionada) {
           const errDieta = this.querySelector("#error-dieta");
@@ -187,7 +189,10 @@ export class RendimientoPacientePage extends HTMLElement {
           esValido = false;
         }
 
-        if (exerciseDuration && (!exerciseDuration.value || exerciseDuration.value <= 0)) {
+        if (
+          exerciseDuration &&
+          (!exerciseDuration.value || exerciseDuration.value <= 0)
+        ) {
           const errDur = this.querySelector("#error-duracion");
           if (errDur) errDur.classList.remove("hidden");
           esValido = false;
@@ -195,7 +200,7 @@ export class RendimientoPacientePage extends HTMLElement {
 
         if (!esValido) {
           if (validationAlert) validationAlert.classList.remove("hidden");
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({ top: 0, behavior: "smooth" });
           return;
         }
 
@@ -204,8 +209,9 @@ export class RendimientoPacientePage extends HTMLElement {
           vasosAgua: cantVasos,
           ejercicio: exerciseType.value,
           duracion: exerciseDuration.value,
-          completado: this.querySelector("#exercise-completed")?.checked || false,
-          notas: this.querySelector("#report-notes")?.value || ""
+          completado:
+            this.querySelector("#exercise-completed")?.checked || false,
+          notas: this.querySelector("#report-notes")?.value || "",
         });
 
         alert("¡Reporte diario enviado exitosamente!");
@@ -217,16 +223,23 @@ export class RendimientoPacientePage extends HTMLElement {
     const nameDisplay = this.querySelector("#user-name-display");
     if (nameDisplay) {
       const savedName = localStorage.getItem("userName");
-      nameDisplay.textContent = savedName && savedName.trim() !== "" ? savedName : "Usuario";
+      nameDisplay.textContent =
+        savedName && savedName.trim() !== "" ? savedName : "Usuario";
     }
 
     const dateDisplay = this.querySelector("#current-date-display");
     if (dateDisplay) {
       const today = new Date();
-      const options = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
-      
+      const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      };
+
       let formatted = today.toLocaleDateString("es-ES", options);
-      dateDisplay.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+      dateDisplay.textContent =
+        formatted.charAt(0).toUpperCase() + formatted.slice(1);
     }
   }
 }

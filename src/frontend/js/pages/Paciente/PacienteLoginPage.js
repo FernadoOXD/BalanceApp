@@ -147,37 +147,10 @@ export class PacienteLoginPage extends HTMLElement {
 
       if (hasErrors) return;
 
-      const submitBtn = this.querySelector(".btn-submit");
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = "Iniciando...";
-      submitBtn.disabled = true;
+      console.log("Login exitoso en frontend:", { email, rememberMe });
 
-      fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, contrasena: password })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          localStorage.setItem("user", JSON.stringify(data.data));
-          window.location.hash = "/paciente/agenda";
-        } else {
-          generalAlertMsg.textContent = data.message || "Error al iniciar sesión.";
-          generalAlert.style.display = "flex";
-        }
-      })
-      .catch(error => {
-        generalAlertMsg.textContent = "Error de conexión con el servidor.";
-        generalAlert.style.display = "flex";
-        console.error("Login error:", error);
-      })
-      .finally(() => {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      });
+      // 4. Salto directo al Dashboard usando la navegación por Hash correcta
+      window.location.hash = "/paciente/dashboard";
     });
   }
 
