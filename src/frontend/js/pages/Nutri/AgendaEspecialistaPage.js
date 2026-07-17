@@ -60,12 +60,31 @@ export class AgendaEspecialistaPage extends HTMLElement {
 
               </div>
             </section>
+<<<<<<< Updated upstream
 
             <!-- 2. LISTA DE CITAS DEL DÍA -->
             <section class="appointments-section panel-card">
               <div class="appointments-header">
                 <h2>Citas</h2>
                 <span class="date-badge" id="selected-date-display">...</span>
+=======
+            <aside class="appointments-sidebar">
+              <h2>Citas para hoy</h2>
+              <div id="appointments-list">
+                <div class="appointment-card">
+                  <strong>Ana Perez</strong><span class="status-badge status-pending">
+                  </span>
+                  <p>10:00 AM - Consulta inicial</p>
+                </div>
+                <div class="appointment-card">
+                  <strong>Carlos Ruiz</strong><span class="status-badge status-confirmed">Confirmada ▾</span>
+                  <p>12:30 PM - Seguimiento</p>
+                </div>
+                <div class="appointment-card">
+                  <strong>Maria Silva</strong><span class="status-badge status-canceled">Cancelada ▾</span>
+                  <p>03:00 PM - Plan Dieta</p>
+                </div>
+>>>>>>> Stashed changes
               </div>
               
               <div class="appointments-list" id="appointments-list">
