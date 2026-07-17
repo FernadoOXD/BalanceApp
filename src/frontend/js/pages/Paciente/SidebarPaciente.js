@@ -36,17 +36,6 @@ export class SidebarPaciente extends HTMLElement {
         <nav class="sidebar__nav">
           <ul class="sidebar__nav-list">
             <li class="sidebar__nav-item">
-              <a href="#/paciente/dashboard" class="sidebar__nav-link">
-                <svg class="sidebar__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="7" height="7"></rect>
-                  <rect x="14" y="3" width="7" height="7"></rect>
-                  <rect x="14" y="14" width="7" height="7"></rect>
-                  <rect x="3" y="14" width="7" height="7"></rect>
-                </svg>
-                Dashboard
-              </a>
-            </li>
-            <li class="sidebar__nav-item">
               <a href="#/paciente/agenda" class="sidebar__nav-link">
                 <svg class="sidebar__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -145,7 +134,7 @@ export class SidebarPaciente extends HTMLElement {
       newPatientBtn.addEventListener("click", () => {
         // 2. Cambiamos el hash de la URL a la ruta de tu agenda
         window.location.hash = "#/paciente/agenda";
-        
+
         // Cierra el menú si el usuario está desde un celular
         closeMobileMenu();
       });

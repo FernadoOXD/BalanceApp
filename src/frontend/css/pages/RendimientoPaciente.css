@@ -1,4 +1,3 @@
-
 .paciente-layout {
   display: flex !important;
   flex-direction: row !important;
@@ -6,7 +5,8 @@
   min-height: 100vh;
   background-color: #f8f9fa;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .rendimiento-main {
@@ -15,8 +15,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  max-width: 900px;
-  margin: 0 auto;
+  margin-left: 280px;
 }
 
 /* --- CABECERA --- */
@@ -334,12 +333,13 @@
     padding: 20px 16px !important;
     width: 100% !important;
     max-width: 100% !important;
+    margin-left: 0 !important;
   }
 
   .rendimiento-header h1 {
     font-size: 24px !important;
   }
-  
+
   .rendimiento-date {
     font-size: 13px !important;
   }
@@ -356,7 +356,7 @@
   }
 
   .dieta-grid-options {
-    grid-template-columns: 1fr !important; 
+    grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
 
@@ -374,8 +374,8 @@
     flex-direction: row !important;
     justify-content: flex-start !important;
     align-items: center !important;
-    padding: 16px 24px !important;    /* Más espacio interno a los lados */
-    gap: 24px !important;             /* Aumentamos la separación entre icono y texto */
+    padding: 16px 24px !important; /* Más espacio interno a los lados */
+    gap: 24px !important; /* Aumentamos la separación entre icono y texto */
     width: 100% !important;
     height: auto !important;
     box-sizing: border-box !important;
@@ -384,7 +384,7 @@
   .dieta-btn-card .mood-icon {
     width: 32px !important;
     height: 32px !important;
-    min-width: 32px !important;        /* Esto evita que el texto empuje o achique el icono */
+    min-width: 32px !important; /* Esto evita que el texto empuje o achique el icono */
     max-width: 32px !important;
     object-fit: contain !important;
   }
@@ -393,7 +393,7 @@
     font-size: 15px !important;
     text-align: left !important;
     flex-grow: 1 !important;
-    padding-left: 4px !important;     /* Margen extra de seguridad para el texto */
+    padding-left: 4px !important; /* Margen extra de seguridad para el texto */
     white-space: normal !important;
     line-height: 1.4 !important;
   }
@@ -406,7 +406,7 @@
     font-size: 28px !important;
   }
 
-  .custom-form-input, 
+  .custom-form-input,
   .custom-form-textarea {
     padding: 12px !important;
     font-size: 14px !important;
