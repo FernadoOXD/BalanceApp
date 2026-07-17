@@ -92,6 +92,24 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     this.vistaActual = 'lista';
     this.pacienteSeleccionado = null;
     this.mostrarModalDiagnostico = false;
+    
+    // Control para modal de resumen de citas pasadas
+    this.mostrarModalResumenCita = false;
+    this.citaSeleccionadaDetalle = null;
+
+    // Control para la nueva vista modal de Cita Programada (Prospectiva)
+    this.mostrarModalCitaProgramada = false;
+    this.citaProgramadaActual = {
+      id: "CITA-PROG-001",
+      fecha: "Sábado, 25 Mayo",
+      fechaIso: "2024-05-25",
+      hora: "10:00 AM",
+      duracion: "45 min",
+      estatus: "Confirmada", // Opciones de base de datos: 'Confirmada', 'Pendiente', 'Cancelada'
+      motivo: "Ajuste de macronutrientes tras la Fase 2",
+      cuestionario: "Completado",
+      notasPreparatorias: "Verificar adherencia al plan actual y discutir síntomas de inflamación mencionados en la consulta anterior."
+    };
 
     this.limitePacientes = 3;
     this.limiteCitas = 4;
@@ -105,12 +123,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     ];
 
     this.todasLasCitas = [
-      { fecha: "25 May 2024", doctor: "Dr. Margarita", estatus: "Activo" },
-      { fecha: "18 May 2024", doctor: "Dr. Margarita", estatus: "Activo" },
-      { fecha: "11 May 2024", doctor: "Dr. Margarita", estatus: "Activo" },
-      { fecha: "04 May 2024", doctor: "Dr. Margarita", estatus: "Activo" },
-      { fecha: "27 Apr 2024", doctor: "Dr. Margarita", estatus: "Activo" },
-      { fecha: "20 Apr 2024", doctor: "Dr. Margarita", estatus: "Activo" }
+      { id: "CITA-001", fecha: "25 May 2024", fechaIso: "2024-05-25", doctor: "Dr. Margarita", estatus: "Activo" },
+      { id: "CITA-002", fecha: "18 May 2024", fechaIso: "2024-05-18", doctor: "Dr. Margarita", estatus: "Activo" },
+      { id: "CITA-003", fecha: "11 May 2024", fechaIso: "2024-05-11", doctor: "Dr. Margarita", estatus: "Activo" },
+      { id: "CITA-004", fecha: "04 May 2024", doctor: "Dr. Margarita", estatus: "Activo" },
+      { id: "CITA-005", fecha: "27 Apr 2024", doctor: "Dr. Margarita", estatus: "Activo" },
+      { id: "CITA-006", fecha: "20 Apr 2024", doctor: "Dr. Margarita", estatus: "Activo" }
     ];
 
     this.historialExpedientes = [];
@@ -122,10 +140,10 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     this.expedientes = {
       "PAC-1043": {
         ...crearExpedienteVacio(),
-        fecha: "2020-10-23",
-        nombrePaciente: "Deysi Alejandra Ruiz Hernández",
-        apellidoPaterno: "Ruiz",
-        apellidoMaterno: "Hernández",
+        fecha: "2024-05-25",
+        nombrePaciente: "Laura Sánchez",
+        apellidoPaterno: "Sánchez",
+        apellidoMaterno: "",
         edad: 28,
         ocupacion: "Ama de casa",
         procedencia: "Tuxtla Gutiérrez, Chiapas",
@@ -133,10 +151,10 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
         ejercicio: "No realiza",
         objetivo: "Aplicar la metodología adecuada para realizar diagnósticos del estado nutricio en la juventud...",
         altura: 1.48,
-        peso: 43.3,
+        peso: 64.5,
         talla: 1.48,
-        imc: 19.7,
-        cintura: 73.8,
+        imc: 22.8,
+        cintura: 72,
         frecuenciaAlimentos: [
           { grupoAlimento: "Lácteos", frecuencia: "Diario, 2 veces al día", observaciones: "Leche entera" },
           { grupoAlimento: "Leguminosas", frecuencia: "Diario, 1 o 2 veces al día", observaciones: "Frijoles refritos" }
@@ -148,8 +166,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
           { comida: "Merienda", lunes: "Galletas de avena", martes: "", miercoles: "", jueves: "", viernes: "", sabado: "", domingo: "" },
           { comida: "Cena", lunes: "Cereal con leche", martes: "", miercoles: "", jueves: "", viernes: "", sabado: "", domingo: "" }
         ],
-        diagnosticoGeneral: "Paciente con estado nutricio adecuado.",
-        observaciones: "• Ninguna.\n• Mantener hidratación.",
+        diagnosticoGeneral: "Se ajustan los macronutrientes para la Fase 2 del plan desinflamatorio.",
+        observaciones: "• Paciente refiere sentirse muy bien, con menor inflamación abdominal.\n• Hubo algunos deslices el fin de semana por un evento social, pero retomó el plan con facilidad.",
         clinicos: {
           alcohol: "No", tabaco: "No", habitosToxicos: "• Ninguno reportado", patologias: "Ninguna", gastritis: "No", colitis: "No", estrenimiento: "No", hemorroides: "No", medicamentos: "Ninguno", alergias: "• Ninguna reportada", antecedentesFamiliares: "• Sin antecedentes familiares relevantes reportados"
         },
@@ -179,12 +197,44 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     document.removeEventListener('click', this.cerrarMenuContextualGlobal);
   }
 
-  // Función para convertir fecha "2020-10-23" a "23 de Octubre de 2020"
+  // ==========================================
+  // CONEXIÓN CON EL BACKEND (MÉTODOS API)
+  // ==========================================
+  async obtenerDetallesCitaBackend(citaId, pacienteId, fechaIso) {
+    try {
+      const expCoincidente = this.historialExpedientes.find(
+        entry => entry.pacienteId === pacienteId && entry.datos.fecha === fechaIso
+      );
+
+      if (expCoincidente) {
+        return {
+          peso: expCoincidente.datos.peso || "---",
+          imc: expCoincidente.datos.imc || "---",
+          grasa: "24.1%",
+          cintura: expCoincidente.datos.cintura || "---",
+          diagnostico: expCoincidente.datos.diagnosticoGeneral || "Sin diagnóstico.",
+          observaciones: expCoincidente.datos.observaciones || "Sin notas."
+        };
+      }
+      
+      return {
+        peso: "64.5",
+        imc: "22.8",
+        grasa: "24.1%",
+        cintura: "72",
+        diagnostico: "Se ajustan los macronutrientes para la Fase 2.",
+        observaciones: "Paciente refiere sentirse muy bien."
+      };
+    } catch (error) {
+      console.error("Error pidiendo datos al backend:", error);
+      return null;
+    }
+  }
+
   formatearFechaEs(fechaStr) {
     if (!fechaStr) return '---';
     const partes = String(fechaStr).split('-');
     if (partes.length === 3) {
-      const meses = ['Octubre', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const mesIdx = parseInt(partes[1], 10);
       const mesNombre = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mesIdx - 1] || partes[1];
       return `${partes[2]} de ${mesNombre} de ${partes[0]}`;
@@ -228,6 +278,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
   cambiarVista(nuevaVista, idPaciente = null) {
     this.vistaActual = nuevaVista;
     this.mostrarModalDiagnostico = false;
+    this.mostrarModalResumenCita = false;
+    this.mostrarModalCitaProgramada = false;
 
     if (idPaciente) {
       this.pacienteSeleccionado = this.pacientes.find(p => p.id === idPaciente) || this.pacientes[2];
@@ -299,7 +351,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                 <div class="dropdown-header-toggle">
                   <span>Clientes nuevos</span>
                   <label class="switch-toggle">
-                    <input type="checkbox" id="toggle-new-clients" checked>
+                    <input type="checkbox" id="toggle-new-clients">
                     <span class="slider-round"></span>
                   </label>
                 </div>
@@ -317,7 +369,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                 <h2>Gestión de Pacientes</h2>
                 <p>Administra y da seguimiento a tus pacientes activos.</p>
               </div>
-              <button class="btn-nuevo-paciente"><span>+</span> Nuevo Paciente</button>
             </div>
 
             <h3 class="section-subtitle-label">Atendidos recientemente</h3>
@@ -396,7 +447,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   </div>
                 </div>
                 
-
                 <div class="header-actions-container" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end; justify-content: center;">
                   <button class="btn-header-action" id="btn-anadir-nuevo-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid #0f5132; border-radius: 6px; background: #ffffff; color: #000000; font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                     <img src="assets/icons/añadir.png" alt="Añadir" style="width:16px; height:16px; object-fit: contain;">
@@ -425,12 +475,16 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                     </tr>
                   </thead>
                   <tbody>
-                    ${citasVisibles.map(c => `
+                    ${citasVisibles.map((c, index) => `
                       <tr>
                         <td>${c.fecha}</td>
                         <td>${c.doctor}</td>
                         <td><span class="badge-activo">${c.estatus}</span></td>
-                        <td class="cell-align-right"><button class="btn-table-details">Ver Detalles</button></td>
+                        <td class="cell-align-right">
+                          <button class="btn-table-details btn-ver-resumen-cita" data-id="${c.id}" data-fecha="${c.fecha}" data-fecha-iso="${c.fechaIso || '2024-05-25'}" data-doctor="${c.doctor}">
+                            Ver Detalles
+                          </button>
+                        </td>
                       </tr>
                     `).join('')}
                   </tbody>
@@ -451,7 +505,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   <span class="next-appointment-title">Siguiente Cita:</span>
                   <p class="next-appointment-date">25 May, 10:00 AM</p>
                 </div>
-                <button class="btn-table-details full-width-btn">Ver Detalles de la Cita</button>
+                <!-- ID agregado al botón para vincular el nuevo Modal de Cita Programada -->
+                <button class="btn-table-details full-width-btn" id="btn-abrir-cita-programada">Ver Detalles de la Cita</button>
               </div>
 
               <div class="card-container-white">
@@ -473,6 +528,231 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
         </div>
       </div>
       ${this.mostrarModalDiagnostico ? this.getTemplateModalDiagnostico() : ''}
+      ${this.mostrarModalResumenCita ? this.getTemplateModalResumenCita() : ''}
+      ${this.mostrarModalCitaProgramada ? this.getTemplateModalCitaProgramada() : ''}
+    `;
+  }
+
+  // =========================================================
+  // NUEVO MODAL: CITA PROGRAMADA / PROSPECTIVA (MODIFICADO)
+  // =========================================================
+  getTemplateModalCitaProgramada() {
+    const p = this.pacienteSeleccionado || this.pacientes[1]; // Laura Sánchez por defecto
+    const c = this.citaProgramadaActual;
+
+    // Colores dinámicos del botón único según el estatus de la base de datos
+    let bgEstatus = "#166534"; // Verde por defecto (Confirmada)
+    let colorEstatus = "#ffffff";
+    if (c.estatus === "Pendiente") {
+      bgEstatus = "#f59e0b";
+      colorEstatus = "#000000";
+    } else if (c.estatus === "Cancelada") {
+      bgEstatus = "#dc2626";
+      colorEstatus = "#ffffff";
+    }
+
+    return `
+      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box;">
+        <div class="modal-resumen-card" style="background: #ffffff; width: 100%; max-width: 580px; border-radius: 14px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2); font-family: inherit; display: flex; flex-direction: column;">
+          
+          <!-- Encabezado con Botón Único de Estatus -->
+          <div style="background: #f8fafc; padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: column;">
+              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Detalles de Siguiente Cita — 25 May 2024</h3>
+              <span style="font-size: 13px; color: #64748b; margin-top: 4px;">10:00 AM</span>
+            </div>
+            <!-- Botón Único de Estatus -->
+            <div style="background: ${bgEstatus}; color: ${colorEstatus}; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px; text-transform: capitalize; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              [ ${c.estatus} ]
+            </div>
+          </div>
+
+          <!-- Cuerpo del Modal -->
+          <div style="padding: 24px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 22px; box-sizing: border-box;">
+            
+            <!-- Contenedor de Paciente (SIN TÍTULO "Pacientes Info Breve") -->
+            <div>
+              <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; overflow: hidden; position: relative;">
+                  <img src="${p.avatar}" alt="${p.nombre}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+                  <span style="position: absolute;">${p.iniciales}</span>
+                </div>
+                <div>
+                  <h5 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">${p.nombre}</h5>
+                  <span style="font-size: 13px; color: #64748b;">ID: ${p.id}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información de la Cita (Prospectiva) - 3 Cuadros Repartidos y Centrados -->
+            <div>
+              <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Información de la Cita (Prospectiva)</h4>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+                
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; background: #f8fafc;">
+                  <span style="font-size: 12px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Fecha</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${c.fecha}</strong>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; background: #f8fafc;">
+                  <span style="font-size: 12px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Hora</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${c.hora}</strong>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; background: #f8fafc;">
+                  <span style="font-size: 12px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Duración Estimada</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${c.duracion}</strong>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Preparación para la Sesión (Citas Futuras) - Lógica BD -->
+            <div>
+              <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Preparación para la Sesión (Citas Futuras)</h4>
+              <div style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px; background: #ffffff; font-size: 14px; line-height: 1.5; color: #334155; display: flex; flex-direction: column; gap: 14px;">
+                
+                <div>
+                  <strong style="color: #0f172a; display: block; margin-bottom: 2px;">Motivo de Consulta:</strong> 
+                  <span style="color: #475569;">${c.motivo}</span>
+                </div>
+
+                <div>
+                  <strong style="color: #0f172a; display: block; margin-bottom: 2px;">Cuestionario Previo de Salud:</strong> 
+                  <span style="color: #16a34a; font-weight: 600;">[ ✓ ${c.cuestionario} ]</span>
+                </div>
+
+                <div>
+                  <strong style="color: #0f172a; display: block; margin-bottom: 2px;">Notas Preparatorias (Nutriólogo):</strong> 
+                  <span style="color: #475569; white-space: pre-wrap;">${c.notasPreparatorias}</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Footer Optimizado: Botón Cerrar a la Izquierda | Select Box & Ver Detalles a la Derecha -->
+          <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-sizing: border-box;">
+            
+            <!-- Botón Cerrar a la Izquierda -->
+            <button type="button" id="btn-cerrar-cita-programada" style="padding: 10px 24px; font-size: 13px; font-weight: 600; color: #475569; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+              [ Cerrar ]
+            </button>
+
+            <!-- Acciones a la Derecha: Select Box (Reagendar/Cancelar) + Botón Detalles -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+              
+              <!-- Select Box para evitar ruido visual de 2 botones -->
+              <select id="select-accion-cita" style="padding: 10px 14px; font-size: 13px; font-weight: 600; color: #b91c1c; background: #ffffff; border: 1.5px solid #ef4444; border-radius: 8px; cursor: pointer; outline: none; transition: all 0.2s;">
+                <option value="" disabled selected>Acciones de cita...</option>
+                <option value="reagendar">🗓️ Reagendar Cita</option>
+                <option value="cancelar">🚫 Cancelar Cita</option>
+              </select>
+
+              <!-- Botón Ver Detalles Completos -->
+              <button type="button" id="btn-ver-detalles-completos" style="padding: 10px 20px; font-size: 13px; font-weight: 600; color: #ffffff; background: #0f5132; border: 1.5px solid #0f5132; border-radius: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(15, 81, 50, 0.2);">
+                [ Ver Detalles Completos ]
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    `;
+  }
+
+  // ==========================================
+  // TEMPLATE DEL MODAL RESUMEN CITAS PASADAS
+  // ==========================================
+  getTemplateModalResumenCita() {
+    const p = this.pacienteSeleccionado || this.pacientes[2];
+    const data = this.citaSeleccionadaDetalle;
+
+    if (!data) return '';
+
+    return `
+      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box;">
+        <div class="modal-resumen-card" style="background: #ffffff; width: 100%; max-width: 550px; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.15); font-family: inherit; display: flex; flex-direction: column;">
+          
+          <div style="background: #f1f5f9; padding: 20px 24px; border-bottom: 1px solid #cbd5e1; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Resumen de Cita Pasada — ${data.fecha}</h3>
+            </div>
+            <div style="margin-top: 6px; display: flex; justify-content: space-between; font-size: 13px; color: #475569;">
+              <span>Atendida por: ${data.doctor}</span>
+              <span>10:00 AM</span>
+            </div>
+          </div>
+
+          <div style="padding: 24px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box;">
+            <div>
+              <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; overflow: hidden;">
+                  <img src="${p.avatar}" alt="${p.nombre}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+                  <span style="position: absolute;">${p.iniciales}</span>
+                </div>
+                <div>
+                  <h5 style="margin: 0; font-size: 15px; font-weight: 700; color: #0f172a;">${p.nombre}</h5>
+                  <span style="font-size: 12px; color: #64748b;">ID: ${p.id}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Mediciones Registradas</h4>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">Peso</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.peso} kg</strong>
+                </div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">IMC</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.imc}</strong>
+                </div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">% Grasa</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.grasa}</strong>
+                </div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">Cintura</span>
+                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.cintura} cm</strong>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Diagnóstico</h4>
+              <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; background: #ffffff; font-size: 14px; line-height: 1.5; color: #334155; display:flex; flex-direction:column; gap:8px;">
+                <div>
+                  <strong style="color:#0f172a;">Observaciones:</strong> 
+                  <span style="white-space: pre-wrap;">${data.observaciones}</span>
+                </div>
+                <div style="margin-top: 4px;">
+                  <strong style="color:#0f172a;">Diagnóstico:</strong> 
+                  <span style="white-space: pre-wrap;">${data.diagnostico}</span>
+                </div>
+              </div>
+            </div>
+            <div> 
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Plan Alimenticio Entregado</h4>
+              <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 17px; background: #f8fafc; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <strong style="font-size: 14px; color: #0f172a;">Dieta Desinflamatoria - Fase 2</strong>
+                </div>
+                <button type="button" style="background: none; border: none; color: #0f5132; font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: underline; padding: 0;">Ver Dieta</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
+            <button type="button" id="btn-cerrar-resumen-cita" style="padding: 10px 40px; font-size: 14px; font-weight: 600; color: #475569; background: #ffffff; border: 1.5px solid #9c000559; border-radius: 6px; cursor: pointer; width: 100%; max-width: 200px; transition: all 0.2s;">
+              Cerrar 
+            </button>
+          </div>
+
+        </div>
+      </div>
     `;
   }
 
@@ -488,12 +768,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             <button type="button" id="btn-cerrar-modal-diagnostico" class="modal-close-btn">×</button>
           </div>
           ${exp ? `
-            <div class ="modal-diagnostic-name">
+            <div class="modal-name">
               <p><strong>Paciente:</strong> ${p.nombre}</p>
             </div>
             <br>
             <div class="modal-2col">
-              
               <p><strong>Altura:</strong> ${exp.altura || 'Sin registrar'} m</p>
               <p><strong>Peso:</strong> ${exp.peso || 'Sin registrar'} kg</p>
               <p><strong>Talla:</strong> ${exp.talla || 'Sin registrar'} m</p>
@@ -502,7 +781,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             <div class="modal-diagnostic-body">
               <p style="border:none; margin-top:10px;">
                 <strong>Diagnóstico General:</strong><br>
-                 ${exp.diagnosticoGeneral || 'No se ha redactado un diagnóstico aún.'}
+                ${exp.diagnosticoGeneral || 'No se ha redactado un diagnóstico aún.'}
               </p>
             </div>
           ` : `
@@ -535,7 +814,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   No hay expedientes clínicos registrados para este paciente.
                 </p>
                 <button class="btn-nuevo-paciente no-float" id="btn-anadir-expediente" style="display: inline-flex; align-items: center; justify-content: center;">
-                  <img src="assets/icons/añadir.png" alt="Añadir" style="width:14px; height:14px; margin-right:6px;">
+                  <img src="assets/icons/añadirBlanco.png" alt="Añadir" style="width:14px; height:14px; margin-right:6px;">
                   Añadir Expediente
                 </button>
               </div>
@@ -698,12 +977,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     `;
   }
 
-  // Generador de lista de tarjetas para el historial
   renderListaTarjetasHistorial(lista, termino = '') {
     if (lista.length === 0) {
       return `
         <div class="card-container-white history-empty-state">
-          <p>${termino ? `No se encontraron evaluaciones que coincidan con "${termino}".` : 'No se han encontrado registros previos en el historial de este paciente.'}</p>
+          <p>${termino ? `No se encontraron evaluations que coincidan con "${termino}".` : 'No se han encontrado registros previos en el historial de este paciente.'}</p>
         </div>
       `;
     }
@@ -768,7 +1046,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     `;
   }
 
-  // Filtrado en tiempo real (tipo YouTube)
   filtrarHistorialLive(query = '') {
     const p = this.pacienteSeleccionado || this.pacientes[2];
     const termino = query.trim().toLowerCase();
@@ -782,7 +1059,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
         if (!termino) return true;
         const fechaOrig = `${entry.datos?.fecha || ''}`.toLowerCase();
         const fechaFormateada = this.formatearFechaEs(entry.datos?.fecha).toLowerCase();
-        const fechaPartes = fechaOrig.split('-').reverse().join('/'); // dd/mm/yyyy
+        const fechaPartes = fechaOrig.split('-').reverse().join('/'); 
         const nombre = `${entry.datos?.nombrePaciente || ''} ${entry.datos?.apellidoPaterno || ''} ${entry.datos?.apellidoMaterno || ''}`.toLowerCase();
         return fechaOrig.includes(termino) || fechaFormateada.includes(termino) || fechaPartes.includes(termino) || nombre.includes(termino);
       });
@@ -974,7 +1251,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <div style="margin-top: 25px; display:flex; justify-content: flex-end;">
                 <button type="submit" class="btn-nuevo-paciente" style="padding: 12px 30px;">
-                  <img src="assets/icons/añadir.png" alt="Guardar" style="width:14px;height:14px;margin-right:8px;">
+                  <img src="assets/icons/añadirBlanco.png" alt="Guardar" style="width:14px;height:14px;margin-right:8px;">
                   Guardar Expediente
                 </button>
               </div>
@@ -1241,7 +1518,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     });
   }
 
-  // Listener para clics en tarjetas del historial
   setupHistorialCardClicks() {
     this.querySelectorAll('.tarjeta-historial-click').forEach(tarjeta => {
       tarjeta.addEventListener('click', (e) => {
@@ -1290,6 +1566,91 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     });
 
+    // ========================================================
+    // EVENTOS Y LOGICA: MODAL DE RESUMEN DE CITAS PASADAS
+    // ========================================================
+    this.querySelectorAll('.btn-ver-resumen-cita').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const citaId = e.currentTarget.getAttribute('data-id');
+        const fecha = e.currentTarget.getAttribute('data-fecha');
+        const fechaIso = e.currentTarget.getAttribute('data-fecha-iso');
+        const doctor = e.currentTarget.getAttribute('data-doctor');
+        const pacienteId = this.pacienteSeleccionado?.id || "PAC-1043";
+
+        const citaDetalles = await this.obtenerDetallesCitaBackend(citaId, pacienteId, fechaIso);
+        
+        if (citaDetalles) {
+          this.citaSeleccionadaDetalle = {
+            id: citaId,
+            fecha: fecha,
+            doctor: doctor,
+            ...citaDetalles
+          };
+          this.mostrarModalResumenCita = true;
+          this.render();
+        }
+      });
+    });
+
+    const btnCerrarResumenCita = this.querySelector('#btn-cerrar-resumen-cita');
+    if (btnCerrarResumenCita) {
+      btnCerrarResumenCita.addEventListener('click', () => {
+        this.mostrarModalResumenCita = false;
+        this.citaSeleccionadaDetalle = null;
+        this.render();
+      });
+    }
+
+    // ===================================================================
+    // EVENTOS Y LOGICA: MODAL DE CITA PROGRAMADA / PROSPECTIVA (NUEVO)
+    // ===================================================================
+    const btnAbrirCitaProg = this.querySelector('#btn-abrir-cita-programada');
+    if (btnAbrirCitaProg) {
+      btnAbrirCitaProg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.mostrarModalCitaProgramada = true;
+        this.render();
+      });
+    }
+
+    const btnCerrarCitaProg = this.querySelector('#btn-cerrar-cita-programada');
+    if (btnCerrarCitaProg) {
+      btnCerrarCitaProg.addEventListener('click', () => {
+        this.mostrarModalCitaProgramada = false;
+        this.render();
+      });
+    }
+
+    const selectAccionCita = this.querySelector('#select-accion-cita');
+    if (selectAccionCita) {
+      selectAccionCita.addEventListener('change', (e) => {
+        const accion = e.target.value;
+        if (accion === 'cancelar') {
+          if (confirm("¿Estás seguro de que quieres CANCELAR esta cita programada?")) {
+            this.citaProgramadaActual.estatus = 'Cancelada';
+            alert("⚠️ La cita ha sido marcada como Cancelada.");
+            this.render();
+          } else {
+            e.target.value = ""; // Reset del select
+          }
+        } else if (accion === 'reagendar') {
+          alert("🗓️ Abriendo módulo/calendario para Reagendar la cita...");
+          this.citaProgramadaActual.estatus = 'Pendiente';
+          this.render();
+        }
+      });
+    }
+
+    const btnVerDetallesComp = this.querySelector('#btn-ver-detalles-completos');
+    if (btnVerDetallesComp) {
+      btnVerDetallesComp.addEventListener('click', () => {
+        this.mostrarModalCitaProgramada = false;
+        this.cambiarVista('ver-expediente'); // Te lleva directo a su expediente completo
+      });
+    }
+
+    // Resto de listeners de la arquitectura general
     const btnAnadirNuevoExpediente = this.querySelector('#btn-anadir-nuevo-expediente');
     if (btnAnadirNuevoExpediente) {
       btnAnadirNuevoExpediente.addEventListener('click', () => this.cambiarVista('crear-expediente'));
@@ -1363,7 +1724,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     }
 
-    // Configuración de búsqueda en tiempo real en el Historial
     const inputBuscarHist = this.querySelector('#buscar-expedientes-input');
     const btnBuscarHist = this.querySelector('#btn-buscar-expediente-historico');
     if (inputBuscarHist) {

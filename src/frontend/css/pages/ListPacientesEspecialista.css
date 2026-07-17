@@ -254,7 +254,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #4cd964;
+  background-color: #ef4444;
   transition: 0.3s;
   border-radius: 20px;
 }
@@ -538,6 +538,13 @@ input:checked + .slider-round:before {
   padding: 22px;
   margin-bottom: 25px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  white-space: normal;
+  word-break: break-word;
+
+
 }
 
 #expediente-form label {
@@ -558,6 +565,8 @@ input:checked + .slider-round:before {
   font-size: 14px;
   color: #1e293b;
   background: #fff;
+  white-space: normal;
+  word-break: break-word;
 }
 
 #expediente-form input:not(table input):focus,
@@ -566,6 +575,9 @@ input:checked + .slider-round:before {
   outline: none;
   border-color: #62a374;
   box-shadow: 0 0 0 2px rgba(98, 163, 116, 0.15);
+  background: #fff;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .form-grid-3-col {
@@ -915,6 +927,17 @@ input:checked + .slider-round:before {
   display: grid;
   grid-template-columns: repeat(4, minmax(0,1fr));
   gap: 20px;
+  font-size: 14px;
+}
+
+.modal-name {
+  font-size: 18px;
+}
+
+.modal-2col {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
   font-size: 14px;
 }
 
