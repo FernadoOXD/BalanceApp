@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 
 C:\Users\ferey\OneDrive\Desktop\UPChiapas\Cuatri_03\BalanceApp_Porject\src\backend\src\main\java\config\Database.java
 C:\Users\ferey\OneDrive\Desktop\UPChiapas\Cuatri_03\BalanceApp_Porject\src\backend\src\main\java\controllers\CitaController.java
@@ -9,14 +8,3 @@ C:\Users\ferey\OneDrive\Desktop\UPChiapas\Cuatri_03\BalanceApp_Porject\src\backe
 C:\Users\ferey\OneDrive\Desktop\UPChiapas\Cuatri_03\BalanceApp_Porject\src\backend\src\main\java\models\Paciente.java
 C:\Users\ferey\OneDrive\Desktop\UPChiapas\Cuatri_03\BalanceApp_Porject\src\backend\src\main\java\routes\PacienteRoutes.java
 
-
-=======
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\config\Database.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\controllers\CitaController.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\controllers\PacienteController.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\Main.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\models\Cita.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\models\Encuesta.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\models\Paciente.java
-C:\Users\tksma\Downloads\BalanceApp\BalanceApp\src\backend\src\main\java\routes\PacienteRoutes.java
->>>>>>> Stashed changes
