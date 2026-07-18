@@ -4,6 +4,8 @@ import routes.DiagnosticoRoutes;
 import routes.EncuestaRoutes;
 import routes.ExpedienteNuevoRoutes;
 import routes.ExpedienteSeguimientoRoutes;
+import routes.MedicionRoutes;
+import routes.MenuRoutes;
 import routes.PacienteRoutes;
 import routes.TratamientoRoutes;
 
@@ -13,7 +15,7 @@ public class Main {
             config.bundledPlugins.enableCors(cors -> cors.addRule(it -> it.anyHost()));
         }).start(5000);
 
-        // Llamamos al método registrar que acabamos de simplificar
+        // Llamamos de las rutas
         PacienteRoutes.registrar(app);
         CitaRoutes.registrar(app);
         EncuestaRoutes.registrar(app);
@@ -21,5 +23,7 @@ public class Main {
         ExpedienteNuevoRoutes.registrar(app);
         TratamientoRoutes.registrar(app);
         ExpedienteSeguimientoRoutes.registrar(app);
+        MedicionRoutes.registrar(app);
+        MenuRoutes.registrar(app);
     }
 }

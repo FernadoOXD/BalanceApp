@@ -49,3 +49,19 @@ logs/
 .tmp/
 temp/
 tmp/
+
+# Maven
+target/
+.mvn/
+*.jar
+*.war
+*.hprof
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# Sistema
+.DS_Store
+Thumbs.db
