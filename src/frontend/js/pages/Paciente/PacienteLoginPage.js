@@ -56,8 +56,7 @@ export class PacienteLoginPage extends HTMLElement {
                     <input type="checkbox" id="rememberMe">
                     <span class="custom-checkbox__box"></span>
                     Recordarme
-                  </label>
-                  <a href="#" class="form-options__link">¿Olvidaste tu contraseña?</a>
+                  </label>                 
                 </div>
 
                 <button type="submit" class="btn-submit">Entrar</button>
@@ -150,7 +149,7 @@ export class PacienteLoginPage extends HTMLElement {
       console.log("Login exitoso en frontend:", { email, rememberMe });
 
       // 4. Salto directo al Dashboard usando la navegación por Hash correcta
-      window.location.hash = "/paciente/dashboard";
+      window.location.hash = "/paciente/agenda";
     });
   }
 

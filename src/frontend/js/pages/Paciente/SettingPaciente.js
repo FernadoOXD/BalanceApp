@@ -124,17 +124,14 @@ export class SettingPaciente extends HTMLElement {
     const modalDelete = this.querySelector("#modal-delete-account");
 
     this.addEventListener("click", (e) => {
-      // Abrir modal
       if (e.target.id === "btn-open-delete") {
         modalDelete.classList.remove("hidden");
       }
 
-      // Cerrar modal
       if (e.target.classList.contains("close-modal")) {
         modalDelete.classList.add("hidden");
       }
 
-      // Cerrar si hace clic en el fondo gris
       if (e.target === modalDelete) {
         modalDelete.classList.add("hidden");
       }
@@ -156,14 +153,13 @@ export class SettingPaciente extends HTMLElement {
     const modalDelete = this.querySelector("#modal-delete-account");
 
     try {
-      // Estado de carga visual
       btnConfirmDelete.textContent = "Eliminando...";
       btnConfirmDelete.disabled = true;
 
       /* ========================================================
-         AQUÍ CONECTARÁS CON TU API PARA BORRAR EL REGISTRO
+         AQUÍ SE CONECTARÁ CON LA API PARA BORRAR EL REGISTRO
          const pacienteId = localStorage.getItem('userId'); // O de donde saques el ID
-         await fetch(`https://tu-api.com/pacientes/${pacienteId}`, {
+         await fetch(`https://api.com/pacientes/${pacienteId}`, {
            method: 'DELETE',
            headers: { 'Authorization': 'Bearer ' + tuToken }
          });
@@ -172,18 +168,16 @@ export class SettingPaciente extends HTMLElement {
       // Simulación de respuesta de red
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Éxito: Limpiar sesión y redirigir
       console.log("Cuenta eliminada exitosamente en la DB.");
       localStorage.clear(); // Limpiamos la sesión
 
       // Redirigir al inicio o login
       alert("Tu cuenta ha sido eliminada. Serás redirigido al inicio.");
-      window.location.href = "/"; // Cambia esta ruta por la de tu login
+      window.location.hash = "#/";
     } catch (error) {
       console.error("Error al eliminar la cuenta:", error);
       alert("Hubo un problema de conexión. Intenta de nuevo más tarde.");
 
-      // Restaurar el botón si falla
       btnConfirmDelete.textContent = "Confirmar Eliminación";
       btnConfirmDelete.disabled = false;
       modalDelete.classList.add("hidden");

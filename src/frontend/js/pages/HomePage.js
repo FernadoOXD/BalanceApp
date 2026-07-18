@@ -51,7 +51,7 @@ export class HomePage extends HTMLElement {
             </a>
           </div>
           <div class="hero-image-wrapper">
-            <img src="assets/images/default_image.webp" alt="Dra. Margarita - Nutrióloga Profesional" class="hero-img">
+            <img src="assets/images/imagen_home_consultorio.png" alt="Dra. Margarita - Nutrióloga Profesional" class="hero-img">
           </div>
         </div>
       </section>

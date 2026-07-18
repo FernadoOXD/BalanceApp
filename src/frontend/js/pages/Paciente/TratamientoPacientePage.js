@@ -110,7 +110,7 @@ export class TratamientoPacientePage extends HTMLElement {
     try {
       /* ========================================================
          AQUÍ SE CONECTARÁ CON LA API. Ejemplo:
-         const response = await fetch('https://tu-api.com/tratamiento/1');
+         const response = await fetch('https://api.com/tratamiento/1');
          this.data = await response.json();
       ======================================================== */
 
@@ -233,7 +233,6 @@ export class TratamientoPacientePage extends HTMLElement {
   renderDynamicContent() {
     if (!this.data) return;
 
-    // 1. Inyectar valores en las Tarjetas de Resumen (Estáticas en HTML)
     const valObjetivo = this.querySelector("#val-objetivo");
     const valNutricion = this.querySelector("#val-nutricion");
     const valFisico = this.querySelector("#val-fisico");
@@ -242,7 +241,7 @@ export class TratamientoPacientePage extends HTMLElement {
     if (valNutricion) valNutricion.textContent = this.data.resumen.nutricion;
     if (valFisico) valFisico.textContent = this.data.resumen.fisico;
 
-    // 2. Llenar Tabla del Menú Semanal
+    // Llenar Tabla del Menú Semanal
     const menuTbody = this.querySelector("#menu-tbody");
     if (menuTbody) {
       menuTbody.innerHTML = this.data.menuSemanal
@@ -263,7 +262,7 @@ export class TratamientoPacientePage extends HTMLElement {
         .join("");
     }
 
-    // 3. Llenar Sección de Ejercicios
+    //Llenar Sección de Ejercicios
     const rutinaTag = this.querySelector("#rutina-tag");
     if (rutinaTag) rutinaTag.textContent = this.data.rutina.etiqueta;
 

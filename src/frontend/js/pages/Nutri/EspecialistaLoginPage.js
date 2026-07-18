@@ -133,9 +133,6 @@ export class EspecialistaLoginPage extends HTMLElement {
                     />
                     <span class="remember-me__label">Recordarme</span>
                   </label>
-                  <a href="#" class="forgot-password" id="forgot-password-link">
-                    ¿Olvidaste tu contraseña?
-                  </a>
                 </div>
 
                 <!-- Botón de envío -->

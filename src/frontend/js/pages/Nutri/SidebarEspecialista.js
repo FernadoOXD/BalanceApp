@@ -5,8 +5,6 @@ export class SidebarEspecialista extends HTMLElement {
   }
 
   render() {
-    // Nota: Le quité la clase 'sidebar__nav-link--active' que estaba fija en el Dashboard
-    // para que el JavaScript decida cuál iluminar desde el inicio.
     this.innerHTML = `
       <aside class="sidebar">
         <div class="sidebar__header">
@@ -24,14 +22,6 @@ export class SidebarEspecialista extends HTMLElement {
             <p class="sidebar__profile-title">Nutrióloga</p>
           </div>
         </div>
-
-        <button class="sidebar__new-patient-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Nuevo Paciente
-        </button>
 
         <nav class="sidebar__nav">
           <ul class="sidebar__nav-list">
@@ -100,13 +90,14 @@ export class SidebarEspecialista extends HTMLElement {
         </nav>
 
         <div class="sidebar__footer">
-          <a href="#/help" class="sidebar__help-link">
-            <svg class="sidebar__help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          <!-- Botón de Cerrar Sesión -->
+          <a href="#" id="btn-open-logout" class="sidebar__help-link" style="color: var(--color-danger, #DC2626);">
+            <svg class="sidebar__help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-danger, #DC2626);">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
-            Centro de Ayuda
+            Cerrar Sesión
           </a>
         </div>
 
@@ -118,6 +109,32 @@ export class SidebarEspecialista extends HTMLElement {
           </svg>
         </button>
       </aside>
+
+      <!-- ==========================================
+           VENTANA MODAL: CONFIRMAR CERRAR SESIÓN
+           ========================================== -->
+      <div id="modal-logout" class="modal-overlay hidden">
+        <div class="modal-content modal-small">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px; color: var(--color-danger, #DC2626);">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <h3 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin:0;">Cerrar Sesión</h3>
+            </div>
+            <button class="btn-close-modal close-modal-logout" style="background:transparent; border:none; font-size:16px; cursor:pointer; color: var(--text-secondary);">✖</button>
+          </div>
+          <div class="modal-body text-left" style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
+            <p>¿Estás seguro de que deseas salir de tu cuenta? Tendrás que volver a ingresar tus credenciales para acceder al sistema.</p>
+          </div>
+          <div class="modal-footer centered-footer" style="display:flex; justify-content:flex-end; gap:12px; border-top:1px solid var(--border-color); padding-top:16px;">
+            <button class="btn-cancel close-modal-logout">Cancelar</button>
+            <button id="btn-confirm-logout" class="btn-danger-solid">Sí, cerrar sesión</button>
+          </div>
+        </div>
+      </div>
     `;
   }
 
@@ -143,26 +160,62 @@ export class SidebarEspecialista extends HTMLElement {
       });
     });
 
-    // --- NUEVA LÓGICA PARA ESTADO ACTIVO DINÁMICO ---
+    // --- LÓGICA PARA ESTADO ACTIVO DINÁMICO ---
     const updateActiveLink = () => {
-      // Obtenemos el hash actual. Si está vacío, por defecto asumimos que es el dashboard
       const currentHash = window.location.hash || "#/dashboard";
 
       navLinks.forEach((link) => {
-        // Primero, removemos la clase activa de todos los enlaces
         link.classList.remove("sidebar__nav-link--active");
-
-        // Luego, si el href del enlace coincide con el hash actual de la URL, le ponemos la clase
         if (link.getAttribute("href") === currentHash) {
           link.classList.add("sidebar__nav-link--active");
         }
       });
     };
 
-    // 1. Ejecutamos al cargar por primera vez para iluminar la ruta correcta
     updateActiveLink();
-
-    // 2. Escuchamos cambios en la URL (cuando el usuario hace clic o usa las flechas del navegador)
     window.addEventListener("hashchange", updateActiveLink);
+
+    // --- LÓGICA DEL MODAL DE CERRAR SESIÓN ---
+    const btnOpenLogout = this.querySelector("#btn-open-logout");
+    const modalLogout = this.querySelector("#modal-logout");
+    const btnConfirmLogout = this.querySelector("#btn-confirm-logout");
+    const closeButtons = this.querySelectorAll(".close-modal-logout");
+
+    if (btnOpenLogout) {
+      btnOpenLogout.addEventListener("click", (e) => {
+        e.preventDefault();
+        modalLogout.classList.remove("hidden");
+      });
+    }
+
+    closeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        modalLogout.classList.add("hidden");
+      });
+    });
+
+    //Cerrar Modal si se hace clic fuera del contenido
+    if (modalLogout) {
+      modalLogout.addEventListener("click", (e) => {
+        if (e.target === modalLogout) {
+          modalLogout.classList.add("hidden");
+        }
+      });
+    }
+
+    if (btnConfirmLogout) {
+      btnConfirmLogout.addEventListener("click", () => {
+        btnConfirmLogout.textContent = "Saliendo...";
+        btnConfirmLogout.disabled = true;
+
+        // Limpia todas las variables de sesión guardadas
+        localStorage.clear();
+        sessionStorage.clear();
+
+        setTimeout(() => {
+          window.location.href = "#/";
+        }, 400);
+      });
+    }
   }
 }
