@@ -8,7 +8,7 @@ export class RendimientoPacientePage extends HTMLElement {
   render() {
     this.innerHTML = `
     <div class="paciente-layout">
-    <app-sidebar-paciente style="position: fixed;"></app-sidebar-paciente>
+      <app-sidebar-paciente class="sidebar-component"></app-sidebar-paciente>
       
       <main class="rendimiento-main">
         <header class="rendimiento-header">
@@ -167,6 +167,26 @@ export class RendimientoPacientePage extends HTMLElement {
     const exerciseType = this.querySelector("#exercise-type");
     const exerciseDuration = this.querySelector("#exercise-duration");
 
+    // --- FUNCIÓN PARA LIMPIAR EL FORMULARIO ---
+    const resetFormUI = () => {
+      // 1. Resetea inputs nativos (select, number, checkbox, textarea)
+      if (form) form.reset();
+
+      // 2. Resetea la selección de dieta
+      dietaButtons.forEach((b) => b.classList.remove("active"));
+      dietaSeleccionada = null;
+
+      // 3. Resetea el contador de agua al valor por defecto (4 vasos)
+      cantVasos = 4;
+      actualizarAguaUI();
+
+      // 4. Asegura que los mensajes de error estén ocultos
+      if (validationAlert) validationAlert.classList.add("hidden");
+      this.querySelectorAll(".field-error-msg").forEach((m) =>
+        m.classList.add("hidden"),
+      );
+    };
+
     if (form) {
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -215,6 +235,10 @@ export class RendimientoPacientePage extends HTMLElement {
         });
 
         alert("¡Reporte diario enviado exitosamente!");
+        
+        // --- AQUÍ SE EJECUTA EL RESET ---
+        resetFormUI();
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
     }
   }

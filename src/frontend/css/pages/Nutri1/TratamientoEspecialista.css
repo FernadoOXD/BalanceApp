@@ -8,6 +8,7 @@
   box-sizing: border-box;
   background-color: #f8fafc;
   font-family: "Segoe UI", system-ui, sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 .sidebar-wrapper {
@@ -22,6 +23,7 @@
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  width: 100%;
 }
 
 /* ==========================================================================
@@ -33,18 +35,21 @@
   align-items: flex-start;
   margin-bottom: 2rem;
   width: 100%;
+  gap: 15px;
 }
 
 .header-text h1 {
   margin: 0 0 0.5rem 0;
   font-size: 1.8rem;
   color: #1e293b;
+  transition: color 0.3s ease;
 }
 
 .header-text p {
   margin: 0;
   color: #64748b;
   font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
 .divider {
@@ -52,6 +57,7 @@
   height: 1px;
   background: #e2e8f0;
   margin-bottom: 20px;
+  transition: background-color 0.3s ease;
 }
 
 /* ==========================================================================
@@ -67,6 +73,7 @@
 .search-container-relative {
   position: relative;
   flex-grow: 1;
+  width: 100%;
 }
 
 .search-input-wrapper {
@@ -83,6 +90,7 @@
   height: 20px;
   pointer-events: none;
   opacity: 0.6;
+  transition: filter 0.3s ease;
 }
 
 .search-input-wrapper input {
@@ -93,7 +101,7 @@
   font-size: 1rem;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .search-input-wrapper input:focus {
@@ -115,6 +123,7 @@
   max-height: 250px;
   overflow-y: auto;
   margin-top: 4px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .dropdown-item {
@@ -123,7 +132,7 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, border-color 0.3s ease;
   border-bottom: 1px solid #f1f5f9;
 }
 
@@ -139,6 +148,7 @@
   font-size: 14px;
   font-weight: 500;
   color: #1e293b;
+  transition: color 0.3s ease;
 }
 
 .dropdown-id {
@@ -182,6 +192,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 
 .btn-primary-sm:hover {
@@ -196,7 +207,7 @@
   border-radius: 8px;
   background-color: white;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-perfil {
@@ -223,6 +234,7 @@
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  transition: filter 0.3s ease;
 }
 
 .btn-icon-white {
@@ -254,11 +266,13 @@
   font-size: 1.4rem;
   color: #1e293b;
   margin-bottom: 1.5rem;
+  transition: color 0.3s ease;
 }
 
 .section-icon {
   width: 22px;
   height: 22px;
+  transition: filter 0.3s ease;
 }
 
 .pacientes-grid {
@@ -277,6 +291,7 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-header {
@@ -296,6 +311,8 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .paciente-info {
@@ -307,19 +324,22 @@
   margin: 0;
   font-size: 1.1rem;
   color: #1e293b;
+  transition: color 0.3s ease;
 }
 
 .paciente-id {
   font-size: 0.85rem;
   color: #64748b;
+  transition: color 0.3s ease;
 }
 
-/* Badges Dinámicos basados en la captura */
 .badge {
   padding: 0.2rem 0.6rem;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .status-activo {
@@ -336,7 +356,6 @@
   flex: 1;
 }
 
-/* Corrección de la fila de Objetivo alineada en flujo continuo */
 .row-objetivo {
   display: flex;
   align-items: flex-start;
@@ -345,11 +364,13 @@
   color: #475569;
   line-height: 1.4;
   margin: 0.6rem 0;
+  transition: color 0.3s ease;
 }
 
 .row-objetivo strong {
   color: #1e293b;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .card-body p {
@@ -358,12 +379,14 @@
   gap: 8px;
   margin: 0.6rem 0;
   color: #334155;
+  transition: color 0.3s ease;
 }
 
 .card-icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
+  transition: filter 0.3s ease;
 }
 
 .card-footer {
@@ -371,6 +394,7 @@
   justify-content: space-between;
   margin-top: 1.2rem;
   align-items: center;
+  gap: 10px;
 }
 
 .no-results,
@@ -379,6 +403,7 @@
   text-align: center;
   color: #64748b;
   padding: 2rem;
+  transition: color 0.3s ease;
 }
 
 /* ==========================================================================
@@ -393,10 +418,10 @@
   margin: 20px auto;
   position: relative;
   border: 1px solid #eef2f6;
-  transition: max-width 0.2s ease;
+  transition: max-width 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
-/* Ampliación de espacio si está el formulario o la tabla activa */
 .perfil-vista-ampliada {
   max-width: 750px;
 }
@@ -414,7 +439,6 @@
   margin-bottom: 12px;
 }
 
-/* Encabezado del perfil */
 .mini-perfil-card-header {
   background: #f8fafc;
   border-radius: 12px;
@@ -424,6 +448,7 @@
   gap: 20px;
   margin-bottom: 24px;
   border: 1px solid #f1f5f9;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .large-avatar {
@@ -437,6 +462,8 @@
   justify-content: center;
   font-weight: 600;
   font-size: 18px;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .mp-user-info {
@@ -448,11 +475,13 @@
   font-size: 20px;
   color: #1e293b;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .mp-meta-data {
   display: flex;
   gap: 32px;
+  flex-wrap: wrap;
 }
 
 .meta-label {
@@ -462,6 +491,7 @@
   letter-spacing: 0.5px;
   margin-bottom: 2px;
   display: block;
+  transition: color 0.3s ease;
 }
 
 .meta-value {
@@ -469,15 +499,16 @@
   font-size: 14px;
   color: #334155;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-/* Pestañas (Tabs) */
 .mini-perfil-tratamientos-section h3 {
   margin: 0;
   font-size: 14px;
   letter-spacing: 0.5px;
   color: #334155;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .mp-tabs-container {
@@ -495,6 +526,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
+  white-space: nowrap;
 }
 
 .tab-btn.active-tab {
@@ -513,12 +545,12 @@
   background: #f1f5f9;
 }
 
-/* Área de contenido interno del Perfil */
 .mp-tratamiento-content-box {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 24px 20px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tratamiento-activo-detalle {
@@ -531,6 +563,7 @@
 .mp-row-info strong {
   font-size: 13px;
   color: #1e293b;
+  transition: color 0.3s ease;
 }
 
 .mp-row-info p {
@@ -538,6 +571,7 @@
   color: #475569;
   font-size: 14px;
   line-height: 1.4;
+  transition: color 0.3s ease;
 }
 
 /* ==========================================================================
@@ -560,6 +594,7 @@
   font-size: 12px;
   font-weight: 600;
   color: #475569;
+  transition: color 0.3s ease;
 }
 
 .form-perfil-modular textarea,
@@ -572,7 +607,7 @@
   outline: none;
   box-sizing: border-box;
   width: 100%;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .form-perfil-modular textarea:focus,
@@ -601,6 +636,7 @@
   font-weight: 600;
   border-bottom: 1px dashed #e2e8f0;
   padding-bottom: 4px;
+  transition: color 0.3s ease, border-bottom-color 0.3s ease;
 }
 
 .grid-dias-inputs {
@@ -621,6 +657,7 @@
   font-weight: 600;
   color: #005a36;
   flex-shrink: 0;
+  transition: color 0.3s ease;
 }
 
 .form-group-dia input {
@@ -641,19 +678,23 @@
   font-size: 14px;
   color: #1e293b;
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .tabla-contenedor-perfil {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
   background: #ffffff;
+  width: 100%;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tabla-nutricional-perfil {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  min-width: 480px;
 }
 
 .tabla-nutricional-perfil th {
@@ -662,17 +703,20 @@
   border-bottom: 1px solid #e2e8f0;
   color: #475569;
   font-weight: 600;
+  transition: background-color 0.3s ease, border-bottom-color 0.3s ease, color 0.3s ease;
 }
 
 .tabla-nutricional-perfil td {
   padding: 10px 12px;
   border-bottom: 1px solid #f1f5f9;
   color: #334155;
+  transition: border-bottom-color 0.3s ease, color 0.3s ease;
 }
 
 .tabla-nutricional-perfil tr:last-child td {
   border-bottom: none;
 }
+
 .cell-input {
   width: 100%;
   border: 1px solid #e2e8f0;
@@ -681,9 +725,306 @@
   font-size: 12px;
   box-sizing: border-box;
   outline: none;
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .cell-input:focus {
   border-color: #005a36;
   background-color: #f8fafc;
+}
+
+/* ==========================================================================
+   9. RESPONSIVE DESIGN (TABLETS Y MÓVILES - PRO ADAPTATION)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pacientes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .gestion-tratamientos-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-wrapper {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    max-height: 280px;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .main-content-wrapper {
+    padding: 1rem;
+    overflow: visible;
+  }
+
+  .content-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .content-header .btn-perfil,
+  #btn-regresar {
+    width: auto;
+    flex-grow: 0;
+    padding: 6px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .search-bar-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .pacientes-grid {
+    grid-template-columns: 1fr;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .paciente-card {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .mini-perfil-modal-view,
+  .perfil-vista-ampliada {
+    width: 95%;
+    max-width: none;
+    margin: 10px auto;
+    padding: 16px;
+  }
+
+  .mini-perfil-card-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .mp-meta-data {
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .mp-tratamiento-content-box {
+    padding: 16px 12px;
+  }
+
+  .form-row-inputs,
+  .grid-dias-inputs {
+    flex-direction: column;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form-group-dia {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .form-group-dia label {
+    width: 100%;
+  }
+
+  .search-input-wrapper input,
+  .form-perfil-modular textarea,
+  .form-perfil-modular input[type="text"],
+  .cell-input {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .mp-tabs-container {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   10. CONTROL DE MODO OSCURO (DARK MODE BLOC)
+   ========================================================================== */
+.dark-mode .gestion-tratamientos-container {
+  background-color: #0f172a;
+}
+
+.dark-mode .header-text h1,
+.dark-mode .tratamientos-section h2,
+.dark-mode .paciente-info h3,
+.dark-mode .row-objetivo strong,
+.dark-mode .mp-user-info h2,
+.dark-mode .mini-perfil-tratamientos-section h3,
+.dark-mode .mp-row-info strong,
+.dark-mode .sub-form-title,
+.dark-mode .table-section-title {
+  color: #f8fafc;
+}
+
+.dark-mode .header-text p,
+.dark-mode .paciente-id,
+.dark-mode .row-objetivo,
+.dark-mode .card-body p,
+.dark-mode .meta-label,
+.dark-mode .mp-row-info p,
+.dark-mode .form-group label,
+.dark-mode .no-results,
+.dark-mode .status-message {
+  color: #94a3b8;
+}
+
+.dark-mode .divider {
+  background: #334155;
+}
+
+.dark-mode .search-input-wrapper input,
+.dark-mode .form-perfil-modular textarea,
+.dark-mode .form-perfil-modular input[type="text"],
+.dark-mode .cell-input {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.dark-mode .search-input-wrapper input:focus,
+.dark-mode .form-perfil-modular textarea:focus,
+.dark-mode .form-perfil-modular input[type="text"]:focus,
+.dark-mode .cell-input:focus {
+  border-color: #22c55e;
+}
+
+.dark-mode .search-suggest-dropdown,
+.dark-mode .paciente-card,
+.dark-mode .mini-perfil-modal-view,
+.dark-mode .tabla-contenedor-perfil {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark-mode .mp-tratamiento-content-box {
+  background-color: #1e293b !important;
+  border-color: #334155;
+}
+
+.dark-mode .search-suggest-dropdown {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .dropdown-item {
+  border-bottom-color: #334155;
+}
+
+.dark-mode .dropdown-item:hover {
+  background: #334155;
+}
+
+.dark-mode .dropdown-name {
+  color: #f8fafc;
+}
+
+.dark-mode .dropdown-item.empty {
+  background: #1e293b !important;
+  color: #94a3b8;
+}
+
+.dark-mode .btn-perfil,
+.dark-mode .btn-delete {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.dark-mode .btn-perfil:hover {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+.dark-mode .btn-delete:hover {
+  background-color: #7f1d1d;
+  border-color: #ef4444;
+}
+
+.dark-mode .avatar {
+  background-color: #334155;
+  color: #f8fafc;
+}
+
+.dark-mode .status-activo {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.dark-mode .status-pendiente {
+  background-color: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+}
+
+.dark-mode .mini-perfil-card-header,
+.dark-mode .tabla-nutricional-perfil th {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.dark-mode .meta-value,
+.dark-mode .tabla-nutricional-perfil td {
+  color: #e2e8f0;
+}
+
+.dark-mode .tab-btn:not(.active-tab) {
+  background: #0f172a;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+.dark-mode .tab-btn:not(.active-tab):hover {
+  background: #252f3f;
+  color: #ffffff;
+}
+
+.dark-mode .tabla-nutricional-perfil th {
+  color: #94a3b8;
+}
+
+.dark-mode .tabla-nutricional-perfil td {
+  border-bottom-color: #334155;
+}
+
+.dark-mode .form-group-dia label {
+  color: #4ade80;
+}
+
+.dark-mode .sub-form-title {
+  border-bottom-color: #334155;
+}
+
+.dark-mode .search-icon,
+.dark-mode .card-icon,
+.dark-mode .section-icon {
+  filter: brightness(0) invert(0.9);
 }

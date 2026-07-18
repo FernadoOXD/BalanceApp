@@ -358,3 +358,65 @@
     gap: 16px;
   }
 }
+body.dark-mode :host,
+body.dark-mode {
+  --bg-body: #0b0f19;
+  --bg-card: #1e293b;
+  --bg-section: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+}
+
+body.dark-mode .section-title,
+body.dark-mode .section-header h2,
+body.dark-mode .section-header h3 {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .section-title .icon {
+  color: #34d399 !important;
+}
+
+body.dark-mode .menu-table td {
+  color: #f8fafc !important;
+  border-bottom: 1px solid #334155 !important;
+  background-color: transparent !important;
+}
+
+body.dark-mode .menu-table th {
+  color: #38bdf8 !important;
+  border-bottom: 2px solid #475569 !important;
+}
+
+body.dark-mode .menu-table td.meal-type {
+  color: #34d399 !important;
+  font-weight: 700;
+}
+
+body.dark-mode .exercise-card {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .exercise-badge {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark-mode .exercise-metrics {
+  background-color: #334155 !important;
+  border: 1px solid #475569 !important;
+}
+
+body.dark-mode .metric-label {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .metric-value {
+  color: #34d399 !important;
+}
+
+body.dark-mode .btn-text {
+  color: #34d399 !important;
+}

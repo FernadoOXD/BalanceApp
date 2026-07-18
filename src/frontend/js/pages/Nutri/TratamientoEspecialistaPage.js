@@ -522,7 +522,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     if (!container) return;
 
     container.innerHTML = `
-      <header class="content-header"> h 
+      <header class="content-header">
         <div class="header-text">
           <h1>Asignar Nuevo Tratamiento</h1>
           <p>Busca directamente al paciente en el sistema para iniciar la configuración de su nuevo plan modular.</p>
