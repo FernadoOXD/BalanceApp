@@ -3,30 +3,22 @@ const API_BASE = "http://localhost:5000/api";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/**
- * Obtiene la sesión del paciente autenticado desde localStorage / sessionStorage.
- * El login guarda los datos bajo la clave 'user'.
- */
 function getPacienteSession() {
   try {
-    // Clave usada por PacienteLoginPage.js
     const raw =
       localStorage.getItem("user") ||
       sessionStorage.getItem("user") ||
       localStorage.getItem("paciente_session") ||
       sessionStorage.getItem("paciente_session");
-    return raw ? JSON.parse(raw) : null;
+    return raw ? JSON.parse(raw) : { idPaciente: 1, nombre: "Paciente Demo" };
   } catch {
-    return null;
+    return { idPaciente: 1, nombre: "Paciente Demo" };
   }
 }
 
-/**
- * Formatea una fecha ISO "YYYY-MM-DD" a algo legible como "Lun, 14 Oct".
- */
 function formatFecha(isoStr) {
   if (!isoStr) return "—";
-  const date = new Date(isoStr + "T00:00:00"); // evitar desfase de zona horaria
+  const date = new Date(isoStr + "T00:00:00");
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
   const manana = new Date(hoy);
@@ -42,9 +34,6 @@ function formatFecha(isoStr) {
   });
 }
 
-/**
- * Formatea "HH:MM" a "10:30 AM / PM".
- */
 function formatHora(horaStr) {
   if (!horaStr) return "—";
   const [hh, mm] = horaStr.split(":").map(Number);
@@ -53,9 +42,6 @@ function formatHora(horaStr) {
   return `${h12}:${String(mm).padStart(2, "0")} ${ampm}`;
 }
 
-/**
- * Decide el "tipo/badge" de la cita según el motivo guardado en BD.
- */
 function getTipoCita(motivo) {
   if (!motivo) return "CONSULTA";
   const m = motivo.toLowerCase();
@@ -75,10 +61,10 @@ export class AgendaPacientePage extends HTMLElement {
     this.paciente = null;
     this.loading = true;
     this.error = null;
+    this.citaToCancel = null; // NUEVO: Guarda el ID de la cita a cancelar
   }
 
   connectedCallback() {
-    // Mostrar esqueleto de carga inmediatamente
     this.renderLoading();
     this.fetchCitasFromDB();
   }
@@ -87,11 +73,14 @@ export class AgendaPacientePage extends HTMLElement {
   async fetchCitasFromDB() {
     this.loading = true;
     this.error = null;
-
-    // 1. Obtener sesión del paciente
     this.paciente = getPacienteSession();
 
-    if (!this.paciente || !this.paciente.idPaciente) {
+    if (
+      !this.paciente ||
+      (!this.paciente.idPaciente &&
+        !this.paciente.id &&
+        !this.paciente.paciente_id)
+    ) {
       this.error =
         "No se encontró tu sesión. Por favor inicia sesión nuevamente.";
       this.loading = false;
@@ -100,27 +89,59 @@ export class AgendaPacientePage extends HTMLElement {
       return;
     }
 
-    // El campo puede llamarse idPaciente o id según el backend
-    const idPaciente =
-      this.paciente.idPaciente || this.paciente.id || this.paciente.paciente_id;
-
     try {
-      const response = await fetch(
-        `${API_BASE}/citas?paciente_id=${idPaciente}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // envía cookies de sesión si las hay
-        },
-      );
-
+      /* ========================================================
+         CÓDIGO ORIGINAL DE CONEXIÓN A LA API
+      const idPaciente = this.paciente.idPaciente || this.paciente.id || this.paciente.paciente_id;
+      const response = await fetch(`${API_BASE}/citas?paciente_id=${idPaciente}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
       const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.message || "Error al obtener las citas.");
+      ======================================================== */
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Error al obtener las citas.");
-      }
+      // Simular retraso de red
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      // Separar proximas vs historial según lo que devuelve la API
+      // MOCK DATA
+      const data = {
+        success: true,
+        proximas: [
+          {
+            idCita: 101,
+            fecha: "2026-07-18",
+            hora: "10:00",
+            motivoConsulta: "Consulta inicial",
+            estado: "Pendiente",
+          },
+          {
+            idCita: 102,
+            fecha: "2026-08-05",
+            hora: "12:30",
+            motivoConsulta: "Seguimiento de dieta",
+            estado: "Pendiente",
+          },
+        ],
+        historial: [
+          {
+            idCita: 99,
+            fecha: "2026-06-15",
+            hora: "09:00",
+            motivoConsulta: "Consulta inicial",
+            estado: "Completada",
+          },
+          {
+            idCita: 98,
+            fecha: "2026-05-20",
+            hora: "16:00",
+            motivoConsulta: "Consulta de ajuste",
+            estado: "Cancelada",
+          },
+        ],
+      };
+
       this.citas = (data.proximas || []).map((c) => ({
         id: c.idCita,
         tipo: getTipoCita(c.motivoConsulta),
@@ -155,46 +176,58 @@ export class AgendaPacientePage extends HTMLElement {
 
   // ─── Cancelar cita (PATCH a la API) ──────────────────────────────────────
   async cancelarCita(idCita) {
-    const idPaciente =
-      this.paciente?.idPaciente ||
-      this.paciente?.id ||
-      this.paciente?.paciente_id;
-    if (!idPaciente) return;
-
-    const confirmar = confirm(
-      "¿Estás seguro de que deseas cancelar esta cita?",
-    );
-    if (!confirmar) return;
+    const btnConfirm = this.querySelector("#btn-confirm-cancel-cita");
 
     try {
-      const response = await fetch(
-        `${API_BASE}/citas/${idCita}/cancelar?paciente_id=${idPaciente}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        },
-      );
+      // Estado de carga en el modal
+      if (btnConfirm) {
+        btnConfirm.textContent = "Cancelando...";
+        btnConfirm.disabled = true;
+      }
 
+      /* ========================================================
+         CÓDIGO ORIGINAL DE CONEXIÓN A LA API
+      const idPaciente = this.paciente?.idPaciente || this.paciente?.id || this.paciente?.paciente_id;
+      const response = await fetch(`${API_BASE}/citas/${idCita}/cancelar?paciente_id=${idPaciente}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
       const data = await response.json();
-
       if (!response.ok || !data.success) {
         alert(data.message || "No se pudo cancelar la cita.");
         return;
       }
+      ======================================================== */
 
-      alert("Cita cancelada exitosamente.");
-      // Recargar datos desde la API
-      this.fetchCitasFromDB();
+      // Simulación de respuesta del servidor
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      // MOCK LOGIC: Movemos la cita cancelada visualmente al historial
+      const citaCancelada = this.citas.find((c) => c.id === idCita);
+      if (citaCancelada) {
+        this.citas = this.citas.filter((c) => c.id !== idCita);
+        citaCancelada.estado = "Cancelada";
+        this.historial.unshift(citaCancelada);
+      }
+
+      // Limpiamos la variable y repintamos la vista
+      this.citaToCancel = null;
+      this.render();
+      this.initLogic();
     } catch (err) {
       console.error("[AgendaPacientePage] cancelarCita:", err);
       alert("Error de conexión. Intenta de nuevo.");
+
+      // Restaurar el botón si falla
+      if (btnConfirm) {
+        btnConfirm.textContent = "Sí, cancelar cita";
+        btnConfirm.disabled = false;
+      }
     }
   }
 
   // ─── Renderizadores ───────────────────────────────────────────────────────
-
-  /** Pantalla de carga inicial */
   renderLoading() {
     this.innerHTML = `
       <div class="agenda-layout">
@@ -365,6 +398,29 @@ export class AgendaPacientePage extends HTMLElement {
               : ""
           }
         </main>
+
+        <!-- ==========================================
+             VENTANA MODAL: CONFIRMAR CANCELACIÓN
+             ========================================== -->
+        <div id="modal-cancel-cita" class="modal-overlay hidden">
+          <div class="modal-content modal-small">
+            <div class="modal-header-danger" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <img src="./assets/icons/peligro.png" alt="Alerta" class="custom-icon icon-danger" style="width:24px;">
+                <h3 style="font-size: 20px; font-weight: 700; color: #DC2626; margin:0;">Cancelar Cita</h3>
+              </div>
+              <button class="btn-close-modal close-modal-cancel" style="background:transparent; border:none; font-size:16px; cursor:pointer;">✖</button>
+            </div>
+            <div class="modal-body text-left" style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
+              <p>¿Estás seguro de que deseas cancelar esta cita? Esta acción notificará a tu especialista y el horario quedará libre para otros pacientes.</p>
+            </div>
+            <div class="modal-footer centered-footer" style="display:flex; justify-content:flex-end; gap:12px; border-top:1px solid var(--border-color); padding-top:16px;">
+              <button class="btn-cancel close-modal-cancel">No, mantener cita</button>
+              <button id="btn-confirm-cancel-cita" class="btn-danger-solid">Sí, cancelar cita</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     `;
   }
@@ -374,6 +430,7 @@ export class AgendaPacientePage extends HTMLElement {
     // Botones de agendar
     const btnPrimera = this.querySelector("#btn-agendar-primera");
     const btnNueva = this.querySelector("#btn-agendar-nueva");
+    const modalCancel = this.querySelector("#modal-cancel-cita");
 
     const irAAgendamiento = () => {
       window.location.hash = "#/paciente/agenda/agendamiento-encuesta";
@@ -382,12 +439,43 @@ export class AgendaPacientePage extends HTMLElement {
     btnPrimera?.addEventListener("click", irAAgendamiento);
     btnNueva?.addEventListener("click", irAAgendamiento);
 
-    // Botones cancelar (delegación de eventos en el contenedor)
+    // 1. Abrir modal al dar clic en cancelar
     this.querySelectorAll(".btn-cancelar").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const idCita = Number(e.currentTarget.dataset.id);
-        if (idCita) this.cancelarCita(idCita);
+        if (idCita) {
+          this.citaToCancel = idCita;
+          modalCancel.classList.remove("hidden");
+        }
       });
     });
+
+    // 2. Cerrar modal (con los botones de cancelar o la X)
+    this.querySelectorAll(".close-modal-cancel").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        modalCancel.classList.add("hidden");
+        this.citaToCancel = null;
+      });
+    });
+
+    // 3. Cerrar modal si se da clic fuera de la caja blanca
+    if (modalCancel) {
+      modalCancel.addEventListener("click", (e) => {
+        if (e.target === modalCancel) {
+          modalCancel.classList.add("hidden");
+          this.citaToCancel = null;
+        }
+      });
+    }
+
+    // 4. Confirmar cancelación y ejecutar acción
+    const btnConfirmCancel = this.querySelector("#btn-confirm-cancel-cita");
+    if (btnConfirmCancel) {
+      btnConfirmCancel.addEventListener("click", () => {
+        if (this.citaToCancel) {
+          this.cancelarCita(this.citaToCancel);
+        }
+      });
+    }
   }
 }

@@ -1,0 +1,703 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN BASE
+========================================= */
+:host {
+  --bg-body: #f4f7f6;
+  --bg-card: #ffffff;
+
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+
+  /* Colores BalanceApp */
+  --color-brand-dark: #0f5132;
+  --color-brand-hover: #146c43;
+  --color-brand-light: #d1e7dd;
+
+  /* Colores de Estados de Citas */
+  --status-pending-bg: #fef3c7;
+  --status-pending-text: #d97706;
+  --status-pending-border: #fde68a;
+
+  --status-concluded-bg: #d1fae5;
+  --status-concluded-text: #059669;
+  --status-concluded-border: #a7f3d0;
+
+  --status-canceled-bg: #fee2e2;
+  --status-canceled-text: #dc2626;
+  --status-canceled-border: #fecaca;
+
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --sidebar-width: 260px;
+
+  display: block;
+  font-family: var(--font-family);
+  background-color: var(--bg-body);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+.agenda-main {
+  flex: 1;
+  padding: 40px;
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  max-width: 1400px;
+}
+
+.agenda-header {
+  margin-bottom: 32px;
+}
+.agenda-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+.agenda-header p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* =========================================
+   GRID PRINCIPAL Y SECCIONES RESALTADAS
+========================================= */
+.agenda-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* NUEVO: Tarjetas contenedoras principales más visibles */
+.panel-card {
+  background: var(--bg-card);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.08),
+    0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* =========================================
+   ICONOS PERSONALIZADOS
+========================================= */
+.custom-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.large-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Invertir color para botones con fondo oscuro (si usas SVGs puros negros) */
+.icon-white {
+  filter: brightness(0) invert(1);
+}
+
+/* =========================================
+   SECCIÓN 1: CALENDARIO
+========================================= */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.calendar-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.calendar-title h2 {
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 8px;
+}
+.nav-btn {
+  background: var(--bg-body);
+  border: none;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.nav-btn:hover {
+  background: var(--color-brand-light);
+  transform: scale(1.05);
+}
+
+.calendar-grid {
+  width: 100%;
+}
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  color: var(--text-primary);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  font-weight: 500;
+}
+.day-cell:not(.empty):hover {
+  background-color: #f1f5f9;
+  transform: translateY(-2px);
+}
+.day-cell.empty {
+  color: #cbd5e1;
+  cursor: default;
+  background: transparent !important;
+  transform: none !important;
+}
+.day-cell.selected {
+  background-color: var(--color-brand-dark);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(15, 81, 50, 0.3);
+}
+.day-cell.selected:hover {
+  background-color: var(--color-brand-dark);
+  transform: translateY(-2px);
+}
+
+.day-dots {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  bottom: 8px;
+}
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+.dot-yellow {
+  background-color: var(--status-pending-text);
+}
+.dot-green {
+  background-color: var(--status-concluded-text);
+}
+.dot-red {
+  background-color: var(--status-canceled-text);
+}
+.day-cell.selected .dot-yellow {
+  background-color: #fde68a;
+}
+.day-cell.selected .dot-green {
+  background-color: #a7f3d0;
+}
+.day-cell.selected .dot-red {
+  background-color: #fecaca;
+}
+
+/* =========================================
+   SECCIÓN 2: CITAS (DERECHA)
+========================================= */
+.appointments-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.appointments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.appointments-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.date-badge {
+  background: var(--color-brand-light);
+  color: var(--color-brand-dark);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+  border: 2px dashed var(--border-color);
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Tarjetas de Citas (Con borde y fondo temático) */
+.appointment-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left-width: 6px; /* Borde izquierdo grueso para identificar estado */
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.appointment-card.status-pendiente {
+  border-left-color: var(--status-pending-border);
+}
+.appointment-card.status-concluida {
+  border-left-color: var(--status-concluded-border);
+  background: #fafafa;
+}
+.appointment-card.status-cancelada {
+  border-left-color: var(--status-canceled-border);
+  background: #fafafa;
+  opacity: 0.8;
+}
+
+.appointment-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+}
+
+.appt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.appt-header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.appt-time {
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 500;
+}
+.appt-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 4px;
+}
+.appt-type {
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+/* =========================================
+   EL SELECT Y BADGES ESTILIZADOS
+========================================= */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.badge-green {
+  background: var(--status-concluded-bg);
+  color: var(--status-concluded-text);
+}
+.badge-red {
+  background: var(--status-canceled-bg);
+  color: var(--status-canceled-text);
+}
+
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.status-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending-text);
+  border: 1px solid var(--status-pending-border);
+  padding: 8px 36px 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  /* Icono flecha personalizado más bonito */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%24%2024%22%20fill%3D%22none%22%20stroke%3D%22%23D97706%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px auto;
+}
+
+.status-select:hover {
+  box-shadow: 0 4px 6px rgba(217, 119, 6, 0.15);
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   BOTONES
+========================================= */
+.btn-text-danger {
+  background: transparent;
+  border: none;
+  color: var(--status-canceled-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.btn-text-danger:hover {
+  background-color: var(--status-canceled-bg);
+}
+
+.btn-new-appointment {
+  width: 100%;
+  background-color: var(--color-brand-dark);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(15, 81, 50, 0.2);
+}
+.btn-new-appointment:hover {
+  background-color: var(--color-brand-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(15, 81, 50, 0.3);
+}
+
+/* =========================================
+   MODALES (Cancelación y Conclusión)
+========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.hidden {
+  display: none !important;
+}
+.modal-content {
+  background: var(--bg-card);
+  width: 90%;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-small {
+  max-width: 420px;
+}
+
+@keyframes modalPop {
+  0% {
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.btn-close-modal {
+  background: #f1f5f9;
+  border: none;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-close-modal:hover {
+  background: #e2e8f0;
+  color: var(--text-primary);
+}
+.modal-body {
+  padding: 32px 24px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.modal-footer {
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  background: transparent;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-cancel:hover {
+  background: #f1f5f9;
+}
+
+.btn-danger {
+  padding: 10px 20px;
+  background: var(--status-canceled-text);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-danger:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  padding: 10px 20px;
+  background: var(--status-concluded-text);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-success:hover {
+  background: #047857;
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   CUSTOM DROPDOWN (Reemplazo del Select)
+========================================= */
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  user-select: none; /* Evita que el texto se sombree al hacer doble clic */
+}
+
+.dropdown-selected {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending-text);
+  border: 1px solid var(--status-pending-border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.dropdown-selected:hover {
+  box-shadow: 0 4px 6px rgba(217, 119, 6, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Animación de rotación para la flechita cuando se abre */
+.dropdown-arrow {
+  transition: transform 0.2s ease;
+  width: 14px;
+  height: 14px;
+}
+.custom-dropdown.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Contenedor de las opciones */
+.dropdown-options {
+  position: absolute;
+  top: calc(100% + 6px); /* Aparece justito debajo */
+  left: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  width: 140px;
+  z-index: 50;
+  overflow: hidden;
+  display: none; /* Oculto por defecto */
+  flex-direction: column;
+}
+
+/* Clase que activa el despliegue */
+.custom-dropdown.open .dropdown-options {
+  display: flex;
+  animation: dropFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Diseño individual de cada opción */
+.dropdown-item {
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Estilo cuando pasas el ratón por encima (Adiós fondo azul) */
+.dropdown-item:hover {
+  background: #f8fafc;
+  color: var(--text-primary);
+}
+
+/* Indicador visual de la opción seleccionada actual */
+.dropdown-item.active {
+  color: var(--status-pending-text);
+  background: #fffbeb;
+  border-left: 3px solid var(--status-pending-text);
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 1024px) {
+  .agenda-grid {
+    grid-template-columns: 1fr;
+  }
+  .agenda-main {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}
+@media (max-width: 768px) {
+  .agenda-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px 16px;
+  }
+  .panel-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  .day-cell {
+    font-size: 14px;
+    border-radius: 10px;
+  }
+}

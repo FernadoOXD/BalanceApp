@@ -1,142 +1,469 @@
 export class AgendaEspecialistaPage extends HTMLElement {
   constructor() {
     super();
-    this.currentMonth = 9; // Octubre
-    this.currentYear = 2024;
-
-    this.eventos = [
-      {
-        dia: 1,
-        mes: 9,
-        anio: 2024,
-        titulo: "9:00 J. Doe",
-        clase: "bg-dark-green",
-      },
-      {
-        dia: 3,
-        mes: 9,
-        anio: 2024,
-        titulo: "14:00 M. Smith",
-        clase: "bg-dark-green",
-      },
-      {
-        dia: 3,
-        mes: 9,
-        anio: 2024,
-        titulo: "16:00 L. Gomez",
-        clase: "bg-gray",
-      },
-      {
-        dia: 8,
-        mes: 9,
-        anio: 2024,
-        titulo: "10:00 A. Perez",
-        clase: "text-red",
-      },
-    ];
+    this.currentDate = new Date();
+    this.selectedDate = new Date();
+    this.appointments = [];
+    this.appointmentToCancel = null;
+    this.appointmentToConclude = null; // NUEVO: Para guardar la cita a concluir
   }
 
   connectedCallback() {
     this.render();
-    this.renderCalendar();
+    this.initLogic();
+    this.loadData();
   }
 
   render() {
     this.innerHTML = `
-    <div class="sidebar-layout">
-    <app-sidebar-especialista></app-sidebar-especialista>
-        <main class="sidebar-content">
-          <header class="agenda-topbar">
+      <div class="layout-wrapper">
+        <app-sidebar-especialista></app-sidebar-especialista>
+        
+        <main class="agenda-main">
+          <!-- Encabezado Principal -->
+          <header class="agenda-header">
             <h1>Mi Agenda</h1>
             <p>Gestiona tus citas</p>
           </header>
-          <div class="agenda-workspace">
-            <section class="calendar-container">
-              <div class="calendar-header">
-                <button id="prev-month">◀</button>
-                <h2 id="calendar-title"></h2>
-                <button id="next-month">▶</button>
+
+          <div class="agenda-grid">
+            <!-- 1. CALENDARIO DINÁMICO -->
+            <section class="calendar-section">
+              <div class="calendar-card panel-card">
+                
+                <div class="calendar-header">
+                  <div class="calendar-title">
+                    <!-- ICONO LOCAL: Calendario -->
+                    <img src="./assets/icons/calendario.png" alt="Calendario" class="custom-icon large-icon">
+                    <h2 id="month-year-display">Cargando...</h2>
+                  </div>
+                  <div class="calendar-nav">
+                    <button id="btn-prev-month" class="nav-btn">
+                      <!-- ICONO LOCAL: Flecha Izquierda -->
+                      <img src="./assets/icons/flecha-izquierda.png" alt="Atrás" class="custom-icon">
+                    </button>
+                    <button id="btn-next-month" class="nav-btn">
+                      <!-- ICONO LOCAL: Flecha Derecha -->
+                      <img src="./assets/icons/flecha-derecha.png" alt="Adelante" class="custom-icon">
+                    </button>
+                  </div>
+                </div>
+
+                <div class="calendar-grid">
+                  <div class="weekdays">
+                    <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+                  </div>
+                  <div class="days" id="calendar-days">
+                    <!-- Los días se inyectan vía JS -->
+                  </div>
+                </div>
+
               </div>
-              <div class="calendar-grid" id="calendar-grid"></div>
             </section>
-            <aside class="appointments-sidebar">
-              <h2>Citas para hoy</h2>
-              <div id="appointments-list">
-                <div class="appointment-card">
-                  <strong>Ana Perez</strong><span class="status-badge status-pending">Pendiente ▾</span>
-                  <p>10:00 AM - Consulta inicial</p>
-                </div>
-                <div class="appointment-card">
-                  <strong>Carlos Ruiz</strong><span class="status-badge status-confirmed">Confirmada ▾</span>
-                  <p>12:30 PM - Seguimiento</p>
-                </div>
-                <div class="appointment-card">
-                  <strong>Maria Silva</strong><span class="status-badge status-canceled">Cancelada ▾</span>
-                  <p>03:00 PM - Plan Dieta</p>
-                </div>
+
+            <!-- 2. LISTA DE CITAS DEL DÍA -->
+            <section class="appointments-section panel-card">
+              <div class="appointments-header">
+                <h2>Citas</h2>
+                <span class="date-badge" id="selected-date-display">...</span>
               </div>
-            </aside>
+              
+              <div class="appointments-list" id="appointments-list">
+                <!-- Las tarjetas de citas se inyectan vía JS -->
+              </div>
+
+
+            </section>
           </div>
         </main>
+
+        <!-- ==========================================
+             VENTANA MODAL PARA CANCELAR CITA
+             ========================================== -->
+        <div id="modal-cancel" class="modal-overlay hidden">
+          <div class="modal-content modal-small">
+            <div class="modal-header">
+              <h3>Cancelar Cita</h3>
+              <button class="btn-close-modal close-cancel">✖</button>
+            </div>
+            <div class="modal-body">
+              <p>¿Estás seguro de que deseas cancelar esta cita? El paciente será notificado y el espacio quedará libre en tu agenda.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-cancel close-cancel">No, mantener</button>
+              <button id="btn-confirm-cancel" class="btn-danger">Sí, cancelar cita</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             VENTANA MODAL PARA CONCLUIR CITA (NUEVO)
+             ========================================== -->
+        <div id="modal-conclude" class="modal-overlay hidden">
+          <div class="modal-content modal-small">
+            <div class="modal-header">
+              <h3>Concluir Cita</h3>
+              <button class="btn-close-modal close-conclude">✖</button>
+            </div>
+            <div class="modal-body">
+              <p>¿Confirmas que esta cita se ha llevado a cabo de manera exitosa? Esta acción marcará la sesión como finalizada.</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-cancel close-conclude">Revisar de nuevo</button>
+              <button id="btn-confirm-conclude" class="btn-success">Confirmar Conclusión</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     `;
-    this.querySelector("#prev-month").addEventListener("click", () => {
-      this.currentMonth--;
-      this.renderCalendar();
+  }
+
+  initLogic() {
+    const btnPrev = this.querySelector("#btn-prev-month");
+    const btnNext = this.querySelector("#btn-next-month");
+
+    if (btnPrev)
+      btnPrev.addEventListener("click", () => {
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        this.renderCalendar();
+      });
+    if (btnNext)
+      btnNext.addEventListener("click", () => {
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+        this.renderCalendar();
+      });
+
+    this.addEventListener("click", (e) => {
+      // Clic en un día
+      const dayCell = e.target.closest(".day-cell");
+      if (dayCell && !dayCell.classList.contains("empty")) {
+        const [year, month, day] = dayCell.getAttribute("data-date").split("-");
+        this.selectedDate = new Date(year, month - 1, day);
+        this.renderCalendar();
+        this.renderAppointments();
+      }
+
+      // Abrir Modal Cancelar
+      const btnCancelAppt = e.target.closest(".trigger-cancel");
+      if (btnCancelAppt) {
+        this.appointmentToCancel = btnCancelAppt.getAttribute("data-id");
+        this.querySelector("#modal-cancel").classList.remove("hidden");
+      }
+
+      // Cerrar Modales
+      if (e.target.closest(".close-cancel")) this.closeModal("cancel");
+      if (e.target.closest(".close-conclude")) this.closeModal("conclude");
+      if (e.target.classList.contains("modal-overlay")) {
+        this.closeModal("cancel");
+        this.closeModal("conclude");
+      }
     });
-    this.querySelector("#next-month").addEventListener("click", () => {
-      this.currentMonth++;
-      this.renderCalendar();
+
+    // Confirmar Cancelación
+    const btnConfirmCancel = this.querySelector("#btn-confirm-cancel");
+    if (btnConfirmCancel)
+      btnConfirmCancel.addEventListener("click", () =>
+        this.executeStatusChange("Cancelada"),
+      );
+
+    // Confirmar Conclusión
+    const btnConfirmConclude = this.querySelector("#btn-confirm-conclude");
+    if (btnConfirmConclude)
+      btnConfirmConclude.addEventListener("click", () =>
+        this.executeStatusChange("Concluida"),
+      );
+
+    // Delegación del <select>
+    this.addEventListener("click", (e) => {
+      // ==========================================
+      // LÓGICA DEL CUSTOM DROPDOWN
+      // ==========================================
+      const isDropdownClick = e.target.closest(".custom-dropdown");
+      const allDropdowns = this.querySelectorAll(".custom-dropdown");
+
+      if (isDropdownClick) {
+        const dropdown = e.target.closest(".custom-dropdown");
+        const clickedItem = e.target.closest(".dropdown-item");
+        const clickedSelected = e.target.closest(".dropdown-selected");
+
+        // 1. Cerrar cualquier otro dropdown que esté abierto
+        allDropdowns.forEach((d) => {
+          if (d !== dropdown) d.classList.remove("open");
+        });
+
+        // 2. Si da clic en la cajita principal, abre/cierra el menú
+        if (clickedSelected) {
+          dropdown.classList.toggle("open");
+        }
+
+        // 3. Si da clic en una opción ("Concluida")
+        if (clickedItem) {
+          const newValue = clickedItem.getAttribute("data-value");
+          const appointmentId = dropdown.getAttribute("data-id");
+          dropdown.classList.remove("open"); // Cerrar el menú
+
+          if (newValue === "Concluida") {
+            this.appointmentToConclude = appointmentId;
+            this.querySelector("#modal-conclude").classList.remove("hidden");
+          }
+        }
+      } else {
+        // 4. Si da clic en cualquier otra parte de la pantalla, cerrar todos los dropdowns
+        allDropdowns.forEach((d) => d.classList.remove("open"));
+      }
     });
   }
 
+  async loadData() {
+    try {
+      // MOCK DATA
+      this.appointments = [
+        {
+          id: 1,
+          paciente: "Juan Pérez",
+          fecha: this.formatDateStr(new Date()),
+          hora: "10:00 AM",
+          estado: "Pendiente",
+          tipo: "Seguimiento Nutricional",
+        },
+        {
+          id: 2,
+          paciente: "María García",
+          fecha: this.formatDateStr(new Date()),
+          hora: "11:30 AM",
+          estado: "Concluida",
+          tipo: "Análisis de Laboratorio",
+        },
+        {
+          id: 3,
+          paciente: "Carlos López",
+          fecha: this.formatDateStr(new Date()),
+          hora: "02:00 PM",
+          estado: "Cancelada",
+          tipo: "Consulta Inicial",
+        },
+      ];
+      this.renderCalendar();
+      this.renderAppointments();
+    } catch (error) {
+      console.error("Error al cargar las citas:", error);
+    }
+  }
+
   renderCalendar() {
-    const grid = this.querySelector("#calendar-grid");
-    const title = this.querySelector("#calendar-title");
+    const monthYearDisplay = this.querySelector("#month-year-display");
+    const daysContainer = this.querySelector("#calendar-days");
+    if (!monthYearDisplay || !daysContainer) return;
+
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
     const meses = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
     ];
-    title.textContent = `${meses[this.currentMonth]} ${this.currentYear}`;
+    monthYearDisplay.textContent = `${meses[month]} ${year}`;
 
-    // Generar encabezados (LUN a DOM) asegurando los 7 elementos
-    let html = `
-      <div class="day-name">LUN</div><div class="day-name">MAR</div><div class="day-name">MIE</div>
-      <div class="day-name">JUE</div><div class="day-name">VIE</div><div class="day-name">SAB</div><div class="day-name">DOM</div>
-    `;
+    const firstDay = new Date(year, month, 1).getDay();
+    const startDay = firstDay === 0 ? 6 : firstDay - 1;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-    // Calcular espacios vacíos (Oct 2024 empieza en Martes -> 1 espacio)
-    const primerDia = new Date(this.currentYear, this.currentMonth, 1).getDay();
-    let espacios = primerDia === 0 ? 6 : primerDia - 1;
+    let calendarHTML = "";
 
-    for (let i = 0; i < espacios; i++) {
-      html += `<div class="calendar-cell" style="background:transparent; border:none;"></div>`;
+    for (let i = 0; i < startDay; i++) {
+      calendarHTML += `<div class="day-cell empty">${daysInPrevMonth - startDay + i + 1}</div>`;
     }
 
-    const diasEnMes = new Date(
-      this.currentYear,
-      this.currentMonth + 1,
-      0,
-    ).getDate();
-    for (let dia = 1; dia <= diasEnMes; dia++) {
-      const eventosDia = this.eventos.filter(
-        (e) => e.dia === dia && e.mes === this.currentMonth,
+    for (let i = 1; i <= daysInMonth; i++) {
+      const cellDateStr = this.formatDateStr(new Date(year, month, i));
+      const selectedDateStr = this.formatDateStr(this.selectedDate);
+      const isSelected = cellDateStr === selectedDateStr ? "selected" : "";
+
+      const dayAppointments = this.appointments.filter(
+        (app) => app.fecha === cellDateStr,
       );
-      let evs = eventosDia
-        .map((e) => `<div class="event ${e.clase}">${e.titulo}</div>`)
-        .join("");
-      html += `<div class="calendar-cell"><span class="date-number">${dia}</span>${evs}</div>`;
+      let dotsHTML = "";
+      if (dayAppointments.length > 0) {
+        dotsHTML = '<div class="day-dots">';
+        dayAppointments.slice(0, 3).forEach((app) => {
+          const colorClass =
+            app.estado === "Pendiente"
+              ? "dot-yellow"
+              : app.estado === "Concluida"
+                ? "dot-green"
+                : "dot-red";
+          dotsHTML += `<span class="dot ${colorClass}"></span>`;
+        });
+        dotsHTML += "</div>";
+      }
+
+      calendarHTML += `
+        <div class="day-cell ${isSelected}" data-date="${cellDateStr}">
+          <span class="day-num">${i}</span>
+          ${dotsHTML}
+        </div>
+      `;
     }
-    grid.innerHTML = html;
+
+    const remainingCells = 42 - (startDay + daysInMonth);
+    for (let i = 1; i <= remainingCells; i++) {
+      calendarHTML += `<div class="day-cell empty">${i}</div>`;
+    }
+
+    daysContainer.innerHTML = calendarHTML;
+  }
+
+  renderAppointments() {
+    const listContainer = this.querySelector("#appointments-list");
+    const dateDisplay = this.querySelector("#selected-date-display");
+    if (!listContainer || !dateDisplay) return;
+
+    const meses = [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+    ];
+    dateDisplay.textContent = `${this.selectedDate.getDate()} de ${meses[this.selectedDate.getMonth()]}`;
+
+    const dailyAppointments = this.appointments.filter(
+      (app) => app.fecha === this.formatDateStr(this.selectedDate),
+    );
+
+    if (dailyAppointments.length === 0) {
+      listContainer.innerHTML = `<div class="empty-state"><p>No tienes citas programadas para este día.</p></div>`;
+      return;
+    }
+
+    listContainer.innerHTML = dailyAppointments
+      .map((app) => {
+        let statusControlHTML = "";
+        let cancelBtnHTML = "";
+
+        // El Select Estilizado
+        if (app.estado === "Pendiente") {
+          // SUSTITUIMOS EL <select> POR NUESTRO CUSTOM DROPDOWN
+          statusControlHTML = `
+          <div class="custom-dropdown" data-id="${app.id}">
+            <div class="dropdown-selected">
+              <span>Pendiente</span>
+              <!-- ICONO LOCAL: Flecha abajo -->
+              <img src="./assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
+            </div>
+            <div class="dropdown-options">
+              <div class="dropdown-item active" data-value="Pendiente">Pendiente</div>
+              <div class="dropdown-item" data-value="Concluida">Concluida</div>
+            </div>
+          </div>
+        `;
+          cancelBtnHTML = `<button class="btn-text-danger trigger-cancel" data-id="${app.id}">Cancelar cita</button>`;
+        } else if (app.estado === "Concluida") {
+          statusControlHTML = `<span class="badge badge-green">Concluida</span>`;
+        } else if (app.estado === "Cancelada") {
+          statusControlHTML = `<span class="badge badge-red">Cancelada</span>`;
+        }
+
+        return `
+        <div class="appointment-card status-${app.estado.toLowerCase()}">
+          <div class="appt-header">
+            <h3>${app.paciente}</h3>
+            ${statusControlHTML}
+          </div>
+          <div class="appt-time">
+            <!-- ICONO LOCAL: Reloj -->
+            <img src="./assets/icons/relog-tiempo.png" alt="Hora" class="custom-icon"> 
+            ${app.hora}
+          </div>
+          <div class="appt-footer">
+            <div class="appt-type">
+              <!-- ICONO LOCAL: Tipo/Médico -->
+              <img src="./assets/icons/tratamiento_menu.png" alt="Tipo" class="custom-icon"> 
+              ${app.tipo}
+            </div>
+            ${cancelBtnHTML}
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+  }
+
+  // MÉTODO UNIFICADO PARA CONCLUIR O CANCELAR
+  async executeStatusChange(newStatus) {
+    const isCanceling = newStatus === "Cancelada";
+    const targetId = isCanceling
+      ? this.appointmentToCancel
+      : this.appointmentToConclude;
+    const btnId = isCanceling ? "#btn-confirm-cancel" : "#btn-confirm-conclude";
+    const originalText = isCanceling
+      ? "Sí, cancelar cita"
+      : "Confirmar Conclusión";
+
+    if (!targetId) return;
+
+    try {
+      const btnConfirm = this.querySelector(btnId);
+      btnConfirm.textContent = "Procesando...";
+      btnConfirm.disabled = true;
+
+      /* ========================================================
+         AQUÍ HARÁS LA PETICIÓN A TU API. Ejemplo:
+         await fetch(`https://tu-api.com/citas/${targetId}`, {
+           method: 'PUT',
+           body: JSON.stringify({ estado: newStatus })
+         });
+      ======================================================== */
+      await new Promise((resolve) => setTimeout(resolve, 800)); // Simulación
+
+      // Actualizamos arreglo local
+      const appt = this.appointments.find((a) => a.id == targetId);
+      if (appt) appt.estado = newStatus;
+
+      // Restaurar y repintar
+      btnConfirm.textContent = originalText;
+      btnConfirm.disabled = false;
+      this.closeModal(isCanceling ? "cancel" : "conclude");
+      this.renderAppointments();
+      this.renderCalendar();
+    } catch (error) {
+      console.error("Error al procesar:", error);
+      alert("Error al intentar cambiar el estado de la cita.");
+    }
+  }
+
+  closeModal(type) {
+    if (type === "cancel") {
+      this.querySelector("#modal-cancel").classList.add("hidden");
+      this.appointmentToCancel = null;
+    } else if (type === "conclude") {
+      this.querySelector("#modal-conclude").classList.add("hidden");
+      this.appointmentToConclude = null;
+    }
+  }
+
+  formatDateStr(dateObj) {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const d = String(dateObj.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
   }
 }

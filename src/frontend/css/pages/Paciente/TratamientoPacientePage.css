@@ -1,0 +1,360 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN BASE
+========================================= */
+:host {
+  --bg-body: #f7f9fb;
+  --bg-card: #ffffff;
+  --bg-section: #fafafa;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --sidebar-width: 280px;
+
+  /* Colores de acento */
+  --color-green-dark: #059669;
+  --color-green: #10b981;
+  --bg-green-light: #ecfdf5;
+  --bg-green-pale: #f0fdf4; /* Para métricas de ejercicio */
+
+  --color-blue: #3b82f6;
+  --bg-blue-light: #eff6ff;
+
+  --color-orange: #f97316;
+  --bg-orange-light: #fff7ed;
+
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+
+  display: block;
+  font-family: var(--font-family);
+  background-color: var(--bg-body);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL Y HEADER
+========================================= */
+.tratamiento-main {
+  flex: 1;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  overflow-x: hidden;
+  margin-left: 300px;
+}
+
+.tratamiento-header {
+  margin-bottom: 32px;
+}
+
+.tratamiento-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.tratamiento-header p {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* =========================================
+   TARJETAS DE RESUMEN
+========================================= */
+.summary-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* Clases dinámicas inyectadas vía JS */
+.icon-blue {
+  background: var(--bg-blue-light);
+  color: var(--color-blue);
+}
+.icon-green {
+  background: var(--bg-green-light);
+  color: var(--color-green);
+}
+.icon-orange {
+  background: var(--bg-orange-light);
+  color: var(--color-orange);
+}
+
+.summary-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.loading-text {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* =========================================
+   SECCIONES GENERALES (MENÚ Y EJERCICIOS)
+========================================= */
+.menu-section,
+.exercise-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+/* Botón PDF */
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--color-green-dark);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-text:hover {
+  color: #047857; /* Verde más oscuro */
+}
+
+/* =========================================
+   TABLA DE MENÚ SEMANAL
+========================================= */
+.table-responsive-wrapper {
+  overflow-x: auto;
+  padding: 0 24px 24px 24px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px; /* Evita que la tabla se colapse demasiado en PDF o pantallas */
+  margin-top: 16px;
+}
+
+.menu-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+}
+
+.menu-table td {
+  padding: 16px;
+  font-size: 13.5px;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.menu-table td.meal-type {
+  font-weight: 600;
+  color: var(--color-green-dark);
+}
+
+/* =========================================
+   GRID DE EJERCICIOS
+========================================= */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badge-green {
+  background: var(--bg-green-light);
+  color: var(--color-green-dark);
+}
+
+.exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  background: var(--bg-section);
+}
+
+.exercise-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.exercise-header h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.exercise-badge {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.exercise-instruction {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.exercise-metrics {
+  background: var(--bg-green-pale);
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.metric-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.metric-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-green-dark);
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (MÓVILES Y TABLETS)
+========================================= */
+@media (max-width: 768px) {
+  .tratamiento-main {
+    padding: 20px 16px;
+    margin-left: 0px;
+  }
+
+  .summary-cards-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .btn-text {
+    align-self: flex-start;
+  }
+
+  .table-responsive-wrapper {
+    padding: 0 16px 16px 16px;
+  }
+
+  .exercise-grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 16px;
+  }
+}
