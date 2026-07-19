@@ -149,35 +149,35 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       .map(
         (paciente) => `
       <div class="paciente-card" data-id="${paciente.id}">
-        <div class="card-header">
-          <div class="avatar">${paciente.iniciales || "P"}</div>
+        <div class="card-header" style="border-bottom: 1px solid var(--border-color);">
+          <div class="avatar" style="background: var(--bg-avatar-large); color: var(--text-primary);">${paciente.iniciales || "P"}</div>
           <div class="paciente-info">
-            <h3>${paciente.nombre}</h3>
-            <span class="paciente-id">ID: ${paciente.id}</span>
+            <h3 style="color: var(--text-primary);">${paciente.nombre}</h3>
+            <span class="paciente-id" style="color: var(--text-muted);">ID: ${paciente.id}</span>
           </div>
           <span class="badge ${paciente.alimentacion ? "status-activo" : "status-pendiente"}">
             ${paciente.alimentacion ? "Activo" : "Pendiente"}
           </span>
         </div>
         <div class="card-body">
-          <div class="row-objetivo">
-            <strong>Objetivo:</strong> 
+          <div class="row-objetivo" style="color: var(--text-secondary);">
+            <strong style="color: var(--text-primary);">Objetivo:</strong> 
             <span>${paciente.tratamiento || "Sin definir"}</span>
           </div>
-          <p>
+          <p style="color: var(--text-secondary);">
             <img src="assets/icons/manzanaVerde.png" alt="Alimentación" class="card-icon">
-            <strong>Plan:</strong> ${paciente.alimentacion || "No asignada"}
+            <strong style="color: var(--text-primary);">Plan:</strong> ${paciente.alimentacion || "No asignada"}
           </p>
-          <p>
+          <p style="color: var(--text-secondary);">
             <img src="assets/icons/pesasVerde.png" alt="Ejercicio" class="card-icon">
-            <strong>Rutina:</strong> ${paciente.ejercicio ? "Asignada (Ver detalle)" : "No asignado"}
+            <strong style="color: var(--text-primary);">Rutina:</strong> ${paciente.ejercicio ? "Asignada (Ver detalle)" : "No asignado"}
           </p>
         </div>
-        <div class="card-footer">
-          <button class="btn-perfil" data-id="${paciente.id}">
+        <div class="card-footer" style="border-top: 1px solid var(--border-color);">
+          <button class="btn-perfil" data-id="${paciente.id}" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">
             <img src="assets/icons/perfilVerde.png" alt="Perfil" class="btn-icon"> Ver Perfil / Editar
           </button>
-          <button class="btn-delete" data-id="${paciente.id}">
+          <button class="btn-delete" data-id="${paciente.id}" style="background: var(--btn-bg); border: 1px solid var(--border-color);">
             <img src="assets/icons/eliminarRojo.png" alt="Eliminar" class="btn-icon">
           </button>
         </div>
@@ -194,7 +194,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     if (!dropdown) return;
 
     if (filtrados.length === 0) {
-      dropdown.innerHTML = `<div class="dropdown-item empty">No se encontraron pacientes</div>`;
+      dropdown.innerHTML = `<div class="dropdown-item empty" style="color: var(--text-muted);">No se encontraron pacientes</div>`;
       dropdown.style.display = "block";
       return;
     }
@@ -202,9 +202,9 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     dropdown.innerHTML = filtrados
       .map(
         (p) => `
-      <div class="dropdown-item" data-id="${p.id}">
-        <span class="dropdown-name">${p.nombre}</span>
-        <span class="dropdown-id">ID: ${p.id}</span>
+      <div class="dropdown-item" data-id="${p.id}" style="border-bottom: 1px solid var(--border-dropdown); background: var(--bg-card);">
+        <span class="dropdown-name" style="color: var(--text-primary);">${p.nombre}</span>
+        <span class="dropdown-id" style="color: var(--text-muted);">ID: ${p.id}</span>
       </div>
     `,
       )
@@ -244,28 +244,28 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     ];
 
     container.innerHTML = `
-      <div class="mini-perfil-modal-view perfil-vista-ampliada" style="text-align: left;">
+      <div class="mini-perfil-modal-view perfil-vista-ampliada" style="text-align: left; background: var(--bg-card); color: var(--text-primary);">
         <div class="mini-perfil-close-row">
-          <button id="btn-cerrar-perfil" class="close-x-btn">×</button>
+          <button id="btn-cerrar-perfil" class="close-x-btn" style="color: var(--text-primary);">×</button>
         </div>
 
         <!-- ENCABEZADO -->
-        <div class="mini-perfil-card-header">
+        <div class="mini-perfil-card-header" style="border-bottom: 1px solid var(--border-color);">
           <div class="mp-avatar-container">
-            <div class="avatar large-avatar">${p.iniciales || "P"}</div>
+            <div class="avatar large-avatar" style="background: var(--bg-avatar-large); color: var(--text-primary);">${p.iniciales || "P"}</div>
           </div>
           <div class="mp-user-info">
-            <h2>${p.nombre}</h2>
-            <span class="paciente-id">ID: ${p.id}</span>
+            <h2 style="color: var(--text-primary);">${p.nombre}</h2>
+            <span class="paciente-id" style="color: var(--text-muted);">ID: ${p.id}</span>
           </div>
           <div class="mp-meta-data">
             <div>
-              <span class="meta-label">EDAD</span>
-              <p class="meta-value">${p.edad || "N/A"}</p>
+              <span class="meta-label" style="color: var(--text-muted);">EDAD</span>
+              <p class="meta-value" style="color: var(--text-secondary);">${p.edad || "N/A"}</p>
             </div>
             <div>
-              <span class="meta-label">TELÉFONO</span>
-              <p class="meta-value">${p.telefono || "N/A"}</p>
+              <span class="meta-label" style="color: var(--text-muted);">TELÉFONO</span>
+              <p class="meta-value" style="color: var(--text-secondary);">${p.telefono || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -275,38 +275,38 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           
           <!-- FILA DE BOTONES DE ACCIÓN -->
           <div class="section-title-row modification-buttons-bar" style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button id="btn-add-treatment" class="btn-primary-sm">Añadir tratamiento</button>
-            <button id="btn-add-exercise-modular" class="btn-primary-sm">Añadir ejercicios</button>
+            <button id="btn-add-treatment" class="btn-primary-sm" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Añadir tratamiento</button>
+            <button id="btn-add-exercise-modular" class="btn-primary-sm" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Añadir ejercicios</button>
           </div>
           
-          <h3 style="margin-bottom: 15px;">Tratamiento asignado</h3>
+          <h3 style="margin-bottom: 15px; color: var(--text-primary);">Tratamiento asignado</h3>
 
-          <div class="mp-tratamiento-content-box" style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+          <div class="mp-tratamiento-content-box" style="background: var(--bg-body); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);">
             ${
               this.editandoTratamiento
                 ? `
               <!-- FORMULARIO MODULAR PARA TRATAMIENTO BASE -->
               <form id="form-asignar-tratamiento" class="form-perfil-modular" style="display: flex; flex-direction: column; gap: 15px;">
                 <div class="form-group">
-                  <label style="font-weight: bold; display: block; margin-bottom: 5px;">Objetivo del Paciente</label>
-                  <input type="text" id="input-objetivo" value="${p.tratamiento || ""}" style="width: 100%; padding: 8px;" required>
+                  <label style="font-weight: bold; display: block; margin-bottom: 5px; color: var(--text-primary);">Objetivo del Paciente</label>
+                  <input type="text" id="input-objetivo" value="${p.tratamiento || ""}" style="width: 100%; padding: 8px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" required>
                 </div>
                 <div class="form-group">
-                  <label style="font-weight: bold; display: block; margin-bottom: 5px;">Plan Alimenticio Base</label>
-                  <input type="text" id="input-plan" value="${p.alimentacion || ""}" style="width: 100%; padding: 8px;" required>
+                  <label style="font-weight: bold; display: block; margin-bottom: 5px; color: var(--text-primary);">Plan Alimenticio Base</label>
+                  <input type="text" id="input-plan" value="${p.alimentacion || ""}" style="width: 100%; padding: 8px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" required>
                 </div>
                 <div class="form-group">
-                  <label style="font-weight: bold; display: block; margin-bottom: 5px;">Descripción del Ejercicio (Vistazo Rápido)</label>
-                  <textarea id="input-ejercicio-desc" style="width: 100%; padding: 8px; height: 60px;" placeholder="Ej. Cardio moderado y enfoque en fuerza...">${p.ejercicioDescripcion || ""}</textarea>
+                  <label style="font-weight: bold; display: block; margin-bottom: 5px; color: var(--text-primary);">Descripción del Ejercicio (Vistazo Rápido)</label>
+                  <textarea id="input-ejercicio-desc" style="width: 100%; padding: 8px; height: 60px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" placeholder="Ej. Cardio moderado y enfoque en fuerza...">${p.ejercicioDescripcion || ""}</textarea>
                 </div>
 
                 <div style="margin-top: 5px;">
-                  <button type="button" id="btn-abrir-excel" class="btn-primary-sm">Añadir menú</button>
+                  <button type="button" id="btn-abrir-excel" class="btn-primary-sm" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Añadir menú</button>
                 </div>
 
                 <div class="form-actions-row" style="margin-top: 10px;">
-                  <button type="submit" class="btn-primary-sm">Guardar Tratamiento</button>
-                  <button type="button" id="btn-cancelar-tratamiento" class="btn-perfil" style="margin-left: 10px;">Cancelar</button>
+                  <button type="submit" class="btn-primary-sm" style="background: var(--color-brand); color: var(--text-primary); border: none;">Guardar Tratamiento</button>
+                  <button type="button" id="btn-cancelar-tratamiento" class="btn-perfil" style="margin-left: 10px; background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Cancelar</button>
                 </div>
               </form>
             `
@@ -314,24 +314,24 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               <!-- TARJETA INFERIOR: CONTENIDO CARGADO A LA IZQUIERDA -->
               <div class="tratamiento-activo-detalle" style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
                 
-                <div class="datos-plan-izquierda" style="flex-grow: 1; line-height: 1.6;">
+                <div class="datos-plan-izquierda" style="flex-grow: 1; line-height: 1.6; color: var(--text-secondary);">
                   <div class="mp-row-info">
-                    <strong>Objetivo del paciente:</strong>
+                    <strong style="color: var(--text-primary);">Objetivo del paciente:</strong>
                     <p style="margin: 4px 0 12px 0;">${p.tratamiento || "No se ha definido un objetivo."}</p>
                   </div>
                   <div class="mp-row-info">
-                    <strong>Plan alimenticio:</strong>
+                    <strong style="color: var(--text-primary);">Plan alimenticio:</strong>
                     <p style="margin: 4px 0 12px 0;">${p.alimentacion || "Ningún plan asignado a este perfil."}</p>
                   </div>
                   <div class="mp-row-info">
-                    <strong>Descripción de ejercicios (Tipo):</strong>
+                    <strong style="color: var(--text-primary);">Descripción de ejercicios (Tipo):</strong>
                     <p style="margin: 4px 0 12px 0;">${p.ejercicioDescripcion || "Sin descripción corta."}</p>
                   </div>
                 </div>
 
                 <div class="botones-accion-derecha" style="display: flex; gap: 10px; flex-shrink: 0; margin-left: 20px;">
-                  <button id="btn-ver-ejercicios" class="btn-primary-sm">Ver ejercicios</button>
-                  <button id="btn-ver-menu" class="btn-primary-sm">Ver menú completo</button>
+                  <button id="btn-ver-ejercicios" class="btn-primary-sm" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Ver ejercicios</button>
+                  <button id="btn-ver-menu" class="btn-primary-sm" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Ver menú completo</button>
                 </div>
 
               </div>
@@ -345,21 +345,21 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       ${
         this.viendoModalExcel
           ? `
-        <div class="excel-fullscreen-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 9999;">
-          <div class="excel-modal-content" style="background: white; width: 95%; max-width: 1500px; height: 90vh; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="excel-fullscreen-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-modal-overlay); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+          <div class="excel-modal-content" style="background: var(--bg-card); width: 95%; max-width: 1500px; height: 90vh; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-              <h3 style="margin: 0; color: #333;">
+              <h3 style="margin: 0; color: var(--text-primary);">
                 Planificación del Menú Semanal — ${p.nombre} ${this.modoModalSoloLectura ? "(Vista de consulta)" : ""}
               </h3>
-              <button id="btn-close-excel-modal" style="background: none; border: none; font-size: 28px; cursor: pointer; color:#666;">&times;</button>
+              <button id="btn-close-excel-modal" style="background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-muted);">&times;</button>
             </div>
             
-            <div style="overflow: auto; flex-grow: 1; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px; background: #fafafa;">
+            <div style="overflow: auto; flex-grow: 1; border: 1px solid var(--table-border); border-radius: 4px; margin-bottom: 15px; background: var(--bg-body);">
               <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 1100px;">
                 <thead>
-                  <tr style="background: #f2f2f2; position: sticky; top: 0; z-index: 10;">
-                    <th style="border: 1px solid #ccc; padding: 12px; width: 200px;">Comida / Horario</th>
-                    ${diasSemana.map((d) => `<th style="border: 1px solid #ccc; padding: 12px;">${d}</th>`).join("")}
+                  <tr style="background: var(--table-header-bg); position: sticky; top: 0; z-index: 10;">
+                    <th style="border: 1px solid var(--table-border); padding: 12px; width: 200px; color: var(--text-primary);">Comida / Horario</th>
+                    ${diasSemana.map((d) => `<th style="border: 1px solid var(--table-border); padding: 12px; color: var(--text-primary);">${d}</th>`).join("")}
                   </tr>
                 </thead>
                 <tbody id="tbody-excel-rows">
@@ -375,8 +375,8 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                   )
                     .map(
                       (fila, index) => `
-                    <tr style="background: ${index % 2 === 0 ? "#ffffff" : "#f9f9f9"}">
-                      <td style="border: 1px solid #ccc; padding: 6px; background: #fafafa; vertical-align: middle;">
+                    <tr style="background: ${index % 2 === 0 ? "var(--bg-card)" : "var(--table-first-col-bg)"}">
+                      <td style="border: 1px solid var(--table-border); padding: 6px; background: var(--table-first-col-bg); vertical-align: middle;">
                         <div style="display: flex; align-items: center; gap: 6px;">
                           ${
                             !this.modoModalSoloLectura
@@ -389,16 +389,16 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                           }
                           <input type="text" class="excel-cell-input row-meal-name" value="${fila.comida || ""}" 
                             ${this.modoModalSoloLectura ? "disabled" : ""} 
-                            style="width: 100%; border: none; font-weight: bold; background: transparent; outline: none;">
+                            style="width: 100%; border: none; font-weight: bold; background: transparent; outline: none; color: var(--text-primary);">
                         </div>
                       </td>
                       ${diasSemana
                         .map(
                           (d) => `
-                        <td style="border: 1px solid #ccc; padding: 6px; vertical-align: top;">
+                        <td style="border: 1px solid var(--table-border); padding: 6px; vertical-align: top;">
                           <textarea class="excel-cell-input row-day-value" data-dia="${d}"
                             ${this.modoModalSoloLectura ? "disabled" : ""} 
-                            style="width: 100%; border: none; background: transparent; outline: none; font-family: inherit; font-size: 13px; resize: none; overflow: hidden; display: block; box-sizing: border-box;"
+                            style="width: 100%; border: none; background: transparent; outline: none; font-family: inherit; font-size: 13px; resize: none; overflow: hidden; display: block; box-sizing: border-box; color: var(--text-secondary);"
                             rows="2"
                             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
                           >${fila[d] || ""}</textarea>
@@ -419,16 +419,16 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                 ${
                   !this.modoModalSoloLectura
                     ? `
-                  <button type="button" id="btn-excel-add-row" class="btn-perfil" style="background: #e1e1e1; padding: 8px 15px; border-radius: 5px;">+ Añadir Fila Personalizada</button>
+                  <button type="button" id="btn-excel-add-row" class="btn-perfil" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color); padding: 8px 15px; border-radius: 5px;">+ Añadir Fila Personalizada</button>
                 `
-                    : '<span style="color: #777; font-size: 13px; font-style: italic;">Modo de solo lectura activado. Para modificar, entra en "Añadir tratamiento".</span>'
+                    : '<span style="color: var(--text-muted); font-size: 13px; font-style: italic;">Modo de solo lectura activado. Para modificar, entra en "Añadir tratamiento".</span>'
                 }
               </div>
               <div style="display: flex; gap: 10px;">
                 ${
                   !this.modoModalSoloLectura
                     ? `
-                  <button type="button" id="btn-excel-save" class="btn-primary-sm" style="padding: 10px 20px;">Guardar Tabla de Menú</button>
+                  <button type="button" id="btn-excel-save" class="btn-primary-sm" style="padding: 10px 20px; background: var(--color-brand); color: var(--text-primary); border: none;">Guardar Tabla de Menú</button>
                 `
                     : ""
                 }
@@ -444,30 +444,30 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       ${
         this.viendoModalEjercicios
           ? `
-        <div class="exercise-fullscreen-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 9999;">
-          <div class="exercise-modal-content" style="background: white; width: 90%; max-width: 700px; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="exercise-fullscreen-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-modal-overlay); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+          <div class="exercise-modal-content" style="background: var(--bg-card); width: 90%; max-width: 700px; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-              <h3 style="margin: 0; color: #333;">
+              <h3 style="margin: 0; color: var(--text-primary);">
                 ${this.modoModalSoloLectura ? "Rutina de Ejercicios" : "Asignar Notas de Ejercicios"} — ${p.nombre}
               </h3>
-              <button id="btn-close-exercise-modal" style="background: none; border: none; font-size: 28px; cursor: pointer; color:#666;">&times;</button>
+              <button id="btn-close-exercise-modal" style="background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-muted);">&times;</button>
             </div>
 
             <div style="margin-bottom: 20px; flex-grow: 1;">
               ${
                 this.modoModalSoloLectura
                   ? `
-                <div style="background: #fdfdfd; border: 1px solid #ddd; border-radius: 6px; padding: 15px; min-height: 200px; max-height: 450px; overflow-y: auto; white-space: pre-line; line-height: 1.6; font-size: 14px; color: #444;">
-                  ${p.ejercicio ? p.ejercicio : `<span style="color: #999; font-style: italic;">No se han asignado ejercicios todavía.</span>`}
+                <div style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; min-height: 200px; max-height: 450px; overflow-y: auto; white-space: pre-line; line-height: 1.6; font-size: 14px; color: var(--text-secondary);">
+                  ${p.ejercicio ? p.ejercicio : `<span style="color: var(--text-muted); font-style: italic;">No se han asignado ejercicios todavía.</span>`}
                 </div>
               `
                   : `
-                <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 14px; color: #555;">Escribe los ejercicios, series y repeticiones:</label>
-                <textarea id="textarea-notas-ejercicio" 
+                <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 14px; color: var(--text-primary);">Escribe los ejercicios, series y repeticiones:</label>
+                <textarea id="textarea-notes-ejercicio" 
                   placeholder="Escribe un ejercicio y presiona Enter para crear otra viñeta..." 
-                  style="width: 100%; height: 250px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 14px; line-height: 1.6; resize: vertical; outline: none; box-sizing: border-box;"
+                  style="width: 100%; height: 250px; padding: 12px; border: 1px solid var(--form-border); background: var(--bg-body); color: var(--text-secondary); border-radius: 6px; font-family: inherit; font-size: 14px; line-height: 1.6; resize: vertical; outline: none; box-sizing: border-box;"
                 >${p.ejercicio || "• "}</textarea>
-                <span style="font-size: 12px; color: #777; display: block; margin-top: 4px;">Cada salto de línea agregará un punto (•) de forma automática para mantener el orden.</span>
+                <span style="font-size: 12px; color: var(--text-muted); display: block; margin-top: 4px;">Cada salto de línea agregará un punto (•) de forma automática para mantener el orden.</span>
               `
               }
             </div>
@@ -476,7 +476,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               ${
                 !this.modoModalSoloLectura
                   ? `
-                <button type="button" id="btn-save-exercise" class="btn-primary-sm" style="padding: 10px 20px;">Guardar Ejercicios</button>
+                <button type="button" id="btn-save-exercise" class="btn-primary-sm" style="padding: 10px 20px; background: var(--color-brand); color: var(--text-primary); border: none;">Guardar Ejercicios</button>
               `
                   : ""
               }
@@ -498,7 +498,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     }
 
     if (this.viendoModalEjercicios && !this.modoModalSoloLectura) {
-      const tx = this.querySelector("#textarea-notas-ejercicio");
+      const tx = this.querySelector("#textarea-notes-ejercicio");
       if (tx) {
         tx.addEventListener("keydown", (e) => {
           if (e.key === "Enter") {
@@ -524,22 +524,22 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     container.innerHTML = `
       <header class="content-header">
         <div class="header-text">
-          <h1>Asignar Nuevo Tratamiento</h1>
-          <p>Busca directamente al paciente en el sistema para iniciar la configuración de su nuevo plan modular.</p>
+          <h1 style="color: var(--text-primary);">Asignar Nuevo Tratamiento</h1>
+          <p style="color: var(--text-secondary);">Busca directamente al paciente en el sistema para iniciar la configuración de su nuevo plan modular.</p>
         </div>
-        <button id="btn-regresar" class="btn-perfil">Volver al listado</button>
+        <button id="btn-regresar" class="btn-perfil" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Volver al listado</button>
       </header>
 
       <section class="search-bar-section">
         <div class="search-input-wrapper" style="position: relative;">
           <img src="assets/icons/Busqueda.png" alt="Buscar" class="search-icon">
-          <input type="text" id="search-asignar-input" placeholder="Escribe el nombre del paciente para asignación directa...">
+          <input type="text" id="search-asignar-input" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" placeholder="Escribe el nombre del paciente para asignación directa...">
         </div>
       </section>
 
       <section class="tratamientos-section">
         <div id="resultado-busqueda-asignar" class="pacientes-grid">
-          <div class="status-message"><p>Escribe en el buscador para localizar al paciente.</p></div>
+          <div class="status-message" style="color: var(--text-muted);"><p>Escribe en el buscador para localizar al paciente.</p></div>
         </div>
       </section>
     `;
@@ -549,14 +549,14 @@ export class TratamientoEspecialistaPage extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <div class="gestion-tratamientos-container">
+      <div class="gestion-tratamientos-container" style="background: var(--bg-body);">
         <app-sidebar-especialista class="sidebar-wrapper"></app-sidebar-especialista>
         
         <div class="main-content-wrapper" id="main-workspace">
           <header class="content-header">
             <div class="header-text">
-              <h1>Gestión de Tratamientos</h1>
-              <p>Busca un paciente, abre su mini-perfil y edita su menú alimenticio o ejercicio opcional de forma modular.</p>
+              <h1 style="color: var(--text-primary);">Gestión de Tratamientos</h1>
+              <p style="color: var(--text-secondary);">Busca un paciente, abre su mini-perfil y edita su menú alimenticio o ejercicio opcional de forma modular.</p>
             </div>
           </header>
 
@@ -564,18 +564,18 @@ export class TratamientoEspecialistaPage extends HTMLElement {
             <div class="search-container-relative" style="position: relative; flex-grow: 1;">
               <div class="search-input-wrapper">
                 <img src="assets/icons/Busqueda.png" alt="Buscar" class="search-icon">
-                <input type="text" id="search-input" placeholder="Buscar paciente por nombre..." autocomplete="off">
+                <input type="text" id="search-input" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" placeholder="Buscar paciente por nombre..." autocomplete="off">
               </div>
-              <div id="search-dropdown" class="search-suggest-dropdown" style="display: none;"></div>
+              <div id="search-dropdown" class="search-suggest-dropdown" style="display: none; background: var(--bg-card); border: 1px solid var(--border-dropdown);"></div>
             </div>
             
-            <button id="btn-asignar-nuevo" class="btn-primary">
+            <button id="btn-asignar-nuevo" class="btn-primary" style="background: var(--color-brand); color: var(--text-primary); border: none;">
               <img src="assets/icons/añadir.png" alt="Nuevo" class="btn-icon-white"> Nuevo Tratamiento
             </button>
           </section>
 
           <section class="tratamientos-section">
-            <h2>
+            <h2 style="color: var(--text-primary);">
               <img src="assets/icons/reciente.png" alt="Historial" class="section-icon"> 
               Tratamientos Recientes y Activos
             </h2>
@@ -645,7 +645,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         const query = e.target.value.toLowerCase().trim();
 
         if (query === "") {
-          resultadosContainer.innerHTML = `<div class="status-message"><p>Escribe en el buscador para localizar al paciente.</p></div>`;
+          resultadosContainer.innerHTML = `<div class="status-message" style="color: var(--text-muted);"><p>Escribe en el buscador para localizar al paciente.</p></div>`;
           return;
         }
 
@@ -654,7 +654,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         );
 
         if (filtrados.length === 0) {
-          resultadosContainer.innerHTML = `<div class="status-message no-results"><p>No se encontraron pacientes.</p></div>`;
+          resultadosContainer.innerHTML = `<div class="status-message no-results" style="color: var(--text-muted);"><p>No se encontraron pacientes.</p></div>`;
           return;
         }
 
@@ -662,15 +662,15 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           .map(
             (paciente) => `
           <div class="paciente-card" data-id="${paciente.id}">
-            <div class="card-header">
-              <div class="avatar">${paciente.iniciales || "P"}</div>
+            <div class="card-header" style="border-bottom: 1px solid var(--border-color);">
+              <div class="avatar" style="background: var(--bg-avatar-large); color: var(--text-primary);">${paciente.iniciales || "P"}</div>
               <div class="paciente-info">
-                <h3>${paciente.nombre}</h3>
-                <span class="paciente-id">ID: ${paciente.id}</span>
+                <h3 style="color: var(--text-primary);">${paciente.nombre}</h3>
+                <span class="paciente-id" style="color: var(--text-muted);">ID: ${paciente.id}</span>
               </div>
             </div>
-            <div class="card-footer">
-              <button class="btn-primary btn-seleccionar-directo" data-id="${paciente.id}" style="width: 100%; justify-content: center;">
+            <div class="card-footer" style="border-top: 1px solid var(--border-color);">
+              <button class="btn-primary btn-seleccionar-directo" data-id="${paciente.id}" style="width: 100%; justify-content: center; background: var(--color-brand); color: var(--text-primary); border: none;">
                 Seleccionar Paciente
               </button>
             </div>
@@ -880,19 +880,16 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       btn.addEventListener("click", async (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
 
-        // Mensaje explícito de confirmación (Aceptar / Cancelar)
         const confirmar = confirm(
           `¿Estás seguro? ¿Quieres eliminar este paciente del sistema por completo?`,
         );
 
         if (confirmar) {
-          // 1. Borrado completo de la memoria local (Ambas listas)
           this.pacientesRecientes = this.pacientesRecientes.filter(
             (p) => p.id !== pacienteId,
           );
           this.pacientes = this.pacientes.filter((p) => p.id !== pacienteId);
 
-          // 2. Petición HTTP DELETE real a tu API para evitar el "respawn"
           try {
             await fetch(`${this.apiUrl}/${pacienteId}`, {
               method: "DELETE",
@@ -904,7 +901,6 @@ export class TratamientoEspecialistaPage extends HTMLElement {
             );
           }
 
-          // 3. Re-renderizado de la lista actual
           this.renderListaRecientes();
         }
       });

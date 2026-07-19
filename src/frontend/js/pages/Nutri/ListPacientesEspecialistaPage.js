@@ -40,7 +40,7 @@ const crearExpedienteVacio = () => {
     { id: "lunes", nombre: "Lunes" },
     { id: "martes", nombre: "Martes" },
     { id: "miercoles", nombre: "Miércoles" },
-    { id: "jueves", nombre: "Jueves" },
+    { id: "jueves", navigation: "Jueves" },
     { id: "viernes", nombre: "Viernes" },
     { id: "sabado", nombre: "Sábado" },
     { id: "domingo", nombre: "Domingo" },
@@ -583,10 +583,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
         <app-sidebar-especialista class="sidebar-wrapper"></app-sidebar-especialista>
         <div class="workspace-wrapper">
           <header class="topbar-green">
+            
             <h1 class="topbar-title">Pacientes</h1>
             <div class="search-context-container">
               <div class="search-bar-inner">
-                <img src="assets/icons/Busqueda.png" alt="Buscar" class="search-icon-img">
+              <img src="assets/icons/Busqueda.png" alt="Buscar" class="search-icon-img">
                 <input type="text" id="global-search-input" placeholder="Buscar pacientes..." autocomplete="off">
               </div>
               <div id="dropdown-clientes-nuevos" class="dropdown-floating hidden-dropdown">
@@ -683,7 +684,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             <div>
               <div class="perfil-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
                 <div class="header-left-info">
-                  <div class="avatar-large">
+                  <div class="avatar-large" style="background: var(--bg-avatar-large);">
                     <img src="${p.avatar}" alt="${p.nombre}" class="avatar-img">
                   </div>
                   <div>
@@ -694,15 +695,15 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                 </div>
                 
                 <div class="header-actions-container" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end; justify-content: center;">
-                  <button class="btn-header-action" id="btn-anadir-nuevo-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid #0f5132; border-radius: 6px; background: #ffffff; color: #000000; font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                  <button class="btn-header-action" id="btn-anadir-nuevo-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
                     <img src="assets/icons/añadir.png" alt="Añadir" style="width:16px; height:16px; object-fit: contain;">
                     <span>Añadir Nueva Evaluación</span>
                   </button>
-                  <button class="btn-header-action" id="btn-ver-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid #0f5132; border-radius: 6px; background: #ffffff; color: #000000; font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                  <button class="btn-header-action" id="btn-ver-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
                     <img src="assets/icons/reciente.png" alt="Expediente" style="width:16px; height:16px; object-fit: contain;">
                     <span>Ver Expediente Completo</span>
                   </button>
-                  <button class="btn-header-action" id="btn-ver-diagnostico" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid #0f5132; border-radius: 6px; background: #ffffff; color: #000000; font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                  <button class="btn-header-action" id="btn-ver-diagnostico" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
                     <img src="assets/icons/notas.png" alt="Diagnóstico" style="width:16px; height:16px; object-fit: contain;">
                     <span>Ver Diagnósticos</span>
                   </button>
@@ -755,7 +756,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   <span class="next-appointment-title">Siguiente Cita:</span>
                   <p class="next-appointment-date">25 May, 10:00 AM</p>
                 </div>
-                <!-- ID agregado al botón para vincular el nuevo Modal de Cita Programada -->
                 <button class="btn-table-details full-width-btn" id="btn-abrir-cita-programada">Ver Detalles de la Cita</button>
               </div>
 
@@ -784,97 +784,90 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
   }
 
   // =========================================================
-  // NUEVO MODAL: CITA PROGRAMADA / PROSPECTIVA (MODIFICADO)
+  // NUEVO MODAL: CITA PROGRAMADA / PROSPECTIVA
   // =========================================================
   getTemplateModalCitaProgramada() {
-    const p = this.pacienteSeleccionado || this.pacientes[1]; // Laura Sánchez por defecto
+    const p = this.pacienteSeleccionado || this.pacientes[1];
     const c = this.citaProgramadaActual;
 
-    // Colores dinámicos del botón único según el estatus de la base de datos
-    let bgEstatus = "#166534"; // Verde por defecto (Confirmada)
-    let colorEstatus = "#ffffff";
+    let bgEstatus = "#166534";
+    let colorEstatus = "var(--text-primary)";
     if (c.estatus === "Pendiente") {
       bgEstatus = "#f59e0b";
-      colorEstatus = "#000000";
+      colorEstatus = "var(--bg-body)";
     } else if (c.estatus === "Cancelada") {
       bgEstatus = "#dc2626";
-      colorEstatus = "#ffffff";
+      colorEstatus = "var(--text-primary)";
     }
 
     return `
-      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box;">
-        <div class="modal-resumen-card" style="background: #ffffff; width: 100%; max-width: 580px; border-radius: 14px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2); font-family: inherit; display: flex; flex-direction: column;">
+      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-modal-overlay); display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box;">
+        <div class="modal-resumen-card" style="background: var(--bg-card); width: 100%; max-width: 580px; border-radius: 14px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.4); font-family: inherit; display: flex; flex-direction: column;">
           
-          <!-- Encabezado con Botón Único de Estatus -->
-          <div style="background: #f8fafc; padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+          <div style="background: var(--table-header-bg); padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; flex-direction: column;">
-              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Detalles de Siguiente Cita — 25 May 2024</h3>
-              <span style="font-size: 13px; color: #64748b; margin-top: 4px;">10:00 AM</span>
+              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: var(--text-primary);">Detalles de Siguiente Cita — 25 May 2024</h3>
+              <span style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">10:00 AM</span>
             </div>
-            <!-- Botón Único de Estatus -->
-            <div style="background: ${bgEstatus}; color: ${colorEstatus}; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px; text-transform: capitalize; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-              [ ${c.estatus} ]
+            <div style="background: ${bgEstatus}; color: ${colorEstatus}; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 8px; text-transform: capitalize; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+              ${c.estatus} 
             </div>
           </div>
 
-          <!-- Cuerpo del Modal -->
           <div style="padding: 24px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 22px; box-sizing: border-box;">
             
-            <!-- Contenedor de Paciente (SIN TÍTULO "Pacientes Info Breve") -->
             <div>
-              <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <div style="width: 44px; height: 44px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; overflow: hidden; position: relative;">
+              <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; background: var(--bg-card); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--btn-bg); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; overflow: hidden; position: relative; color: var(--text-primary);">
                   <img src="${p.avatar}" alt="${p.nombre}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
                   <span style="position: absolute;">${p.iniciales}</span>
                 </div>
                 <div>
-                  <h5 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">${p.nombre}</h5>
-                  <span style="font-size: 13px; color: #64748b;">ID: ${p.id}</span>
+                  <h5 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">${p.nombre}</h5>
+                  <span style="font-size: 13px; color: var(--text-muted);">ID: ${p.id}</span>
                 </div>
               </div>
             </div>
 
-            <!-- Información de la Cita (Prospectiva) - 3 Cuadros Repartidos y Centrados -->
             <div>
-              <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Información de la Cita (Prospectiva)</h4>
+              <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Información de la Cita (Prospectiva)</h4>
               <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
                 
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; background: #f8fafc;">
-                  <span style="font-size: 12px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Fecha</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${c.fecha}</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 10px; padding: 14px 10px; text-align: center; background: var(--bg-card);">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Fecha</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${c.fecha}</strong>
                 </div>
 
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; background: #f8fafc;">
-                  <span style="font-size: 12px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Hora</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${c.hora}</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 10px; padding: 14px 10px; text-align: center; background: var(--bg-card);">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Hora</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${c.hora}</strong>
                 </div>
 
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; background: #f8fafc;">
-                  <span style="font-size: 12px; font-weight: 600; color: #64748b; display: block; margin-bottom: 6px;">Duración Estimada</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${c.duracion}</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 10px; padding: 14px 10px; text-align: center; background: var(--bg-card);">
+                  <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Duración Estimada</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${c.duracion}</strong>
                 </div>
 
               </div>
             </div>
 
-            <!-- Preparación para la Sesión (Citas Futuras) - Lógica BD -->
             <div>
-              <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Preparación para la Sesión (Citas Futuras)</h4>
-              <div style="border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px; background: #ffffff; font-size: 14px; line-height: 1.5; color: #334155; display: flex; flex-direction: column; gap: 14px;">
+              <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Preparación para la Sesión (Citas Futuras)</h4>
+              <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; background: var(--bg-card); font-size: 14px; line-height: 1.5; color: var(--text-muted); display: flex; flex-direction: column; gap: 14px;">
                 
                 <div>
-                  <strong style="color: #0f172a; display: block; margin-bottom: 2px;">Motivo de Consulta:</strong> 
-                  <span style="color: #475569;">${c.motivo}</span>
+                  <strong style="color: var(--text-primary); display: block; margin-bottom: 2px;">Motivo de Consulta:</strong> 
+                  <span style="color: var(--text-muted);">${c.motivo}</span>
                 </div>
 
                 <div>
-                  <strong style="color: #0f172a; display: block; margin-bottom: 2px;">Cuestionario Previo de Salud:</strong> 
-                  <span style="color: #16a34a; font-weight: 600;">[ ✓ ${c.cuestionario} ]</span>
+                  <strong style="color: var(--text-primary); display: block; margin-bottom: 2px;">Cuestionario Previo de Salud:</strong> 
+                  <span style="color: var(--color-brand); font-weight: 600;">[ ✓ ${c.cuestionario} ]</span>
                 </div>
 
                 <div>
-                  <strong style="color: #0f172a; display: block; margin-bottom: 2px;">Notas Preparatorias (Nutriólogo):</strong> 
-                  <span style="color: #475569; white-space: pre-wrap;">${c.notasPreparatorias}</span>
+                  <strong style="color: var(--text-primary); display: block; margin-bottom: 2px;">Notas Preparatorias (Nutriólogo):</strong> 
+                  <span style="color: var(--text-secondary); white-space: pre-wrap;">${c.notesPreparatorias || c.notasPreparatorias}</span>
                 </div>
 
               </div>
@@ -882,29 +875,18 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
           </div>
 
-          <!-- Footer Optimizado: Botón Cerrar a la Izquierda | Select Box & Ver Detalles a la Derecha -->
-          <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-sizing: border-box;">
+          <div style="padding: 16px 24px; background: var(--bg-card); border-top: 1px solid var(--table-border); display: flex; justify-content: space-between; align-items: center; gap: 12px; box-sizing: border-box;">
             
-            <!-- Botón Cerrar a la Izquierda -->
-            <button type="button" id="btn-cerrar-cita-programada" style="padding: 10px 24px; font-size: 13px; font-weight: 600; color: #475569; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-              [ Cerrar ]
+            <button type="button" id="btn-cerrar-cita-programada" style="padding: 10px 24px; font-size: 13px; font-weight: 600; color: var(--text-primary); background: #ff00003a; border: 1.5px solid #ff000098; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+              Cerrar
             </button>
 
-            <!-- Acciones a la Derecha: Select Box (Reagendar/Cancelar) + Botón Detalles -->
             <div style="display: flex; align-items: center; gap: 10px;">
-              
-              <!-- Select Box para evitar ruido visual de 2 botones -->
-              <select id="select-accion-cita" style="padding: 10px 14px; font-size: 13px; font-weight: 600; color: #b91c1c; background: #ffffff; border: 1.5px solid #ef4444; border-radius: 8px; cursor: pointer; outline: none; transition: all 0.2s;">
+              <select id="select-accion-cita" style="padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--text-primary); background: var(--btn-bg); border: 1.5px solid var(--border-color); border-radius: 8px; cursor: pointer; outline: none; transition: all 0.2s;">
                 <option value="" disabled selected>Acciones de cita...</option>
-                <option value="reagendar">🗓️ Reagendar Cita</option>
-                <option value="cancelar">🚫 Cancelar Cita</option>
+                <option value="reagendar">Reagendar Cita</option>
+                <option value="cancelar">Cancelar Cita</option>
               </select>
-
-              <!-- Botón Ver Detalles Completos -->
-              <button type="button" id="btn-ver-detalles-completos" style="padding: 10px 20px; font-size: 13px; font-weight: 600; color: #ffffff; background: #0f5132; border: 1.5px solid #0f5132; border-radius: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(15, 81, 50, 0.2);">
-                [ Ver Detalles Completos ]
-              </button>
-
             </div>
 
           </div>
@@ -924,14 +906,14 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     if (!data) return "";
 
     return `
-      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box;">
-        <div class="modal-resumen-card" style="background: #ffffff; width: 100%; max-width: 550px; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.15); font-family: inherit; display: flex; flex-direction: column;">
+      <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-modal-overlay); display: flex; align-items: center; justify-content: center; z-index: 5000; padding: 20px; box-sizing: border-box;">
+        <div class="modal-resumen-card" style="background: var(--bg-card); width: 100%; max-width: 550px; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.4); font-family: inherit; display: flex; flex-direction: column;">
           
-          <div style="background: #f1f5f9; padding: 20px 24px; border-bottom: 1px solid #cbd5e1; position: relative;">
+          <div style="background: var(--table-header-bg); padding: 20px 24px; border-bottom: 1px solid var(--border-color); position: relative;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Resumen de Cita Pasada — ${data.fecha}</h3>
+              <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: var(--text-primary);">Resumen de Cita Pasada — ${data.fecha}</h3>
             </div>
-            <div style="margin-top: 6px; display: flex; justify-content: space-between; font-size: 13px; color: #475569;">
+            <div style="margin-top: 6px; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary);">
               <span>Atendida por: ${data.doctor}</span>
               <span>10:00 AM</span>
             </div>
@@ -939,64 +921,64 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
           <div style="padding: 24px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box;">
             <div>
-              <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; overflow: hidden;">
+              <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--btn-bg); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; overflow: hidden; color: var(--text-primary);">
                   <img src="${p.avatar}" alt="${p.nombre}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
                   <span style="position: absolute;">${p.iniciales}</span>
                 </div>
                 <div>
-                  <h5 style="margin: 0; font-size: 15px; font-weight: 700; color: #0f172a;">${p.nombre}</h5>
-                  <span style="font-size: 12px; color: #64748b;">ID: ${p.id}</span>
+                  <h5 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-primary);">${p.nombre}</h5>
+                  <span style="font-size: 12px; color: var(--text-muted);">ID: ${p.id}</span>
                 </div>
               </div>
             </div>
             <div>
-              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Mediciones Registradas</h4>
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Mediciones Registradas</h4>
               <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
-                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">Peso</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.peso} kg</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 8px; padding: 12px 8px; text-align: center; background: var(--bg-body);">
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Peso</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${data.peso} kg</strong>
                 </div>
-                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
-                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">IMC</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.imc}</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 8px; padding: 12px 8px; text-align: center; background: var(--bg-body);">
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">IMC</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${data.imc}</strong>
                 </div>
-                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
-                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">% Grasa</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.grasa}</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 8px; padding: 12px 8px; text-align: center; background: var(--bg-body);">
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">% Grasa</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${data.grasa}</strong>
                 </div>
-                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 8px; text-align: center; background: #fafafa;">
-                  <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">Cintura</span>
-                  <strong style="font-size: 15px; color: #0f172a; display: block;">${data.cintura} cm</strong>
+                <div style="border: 1px solid var(--table-border); border-radius: 8px; padding: 12px 8px; text-align: center; background: var(--bg-body);">
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Cintura</span>
+                  <strong style="font-size: 15px; color: var(--text-primary); display: block;">${data.cintura} cm</strong>
                 </div>
               </div>
             </div>
             <div>
-              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Diagnóstico</h4>
-              <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; background: #ffffff; font-size: 14px; line-height: 1.5; color: #334155; display:flex; flex-direction:column; gap:8px;">
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Diagnóstico</h4>
+              <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background: var(--bg-card); font-size: 14px; line-height: 1.5; color: var(--text-secondary); display:flex; flex-direction:column; gap:8px;">
                 <div>
-                  <strong style="color:#0f172a;">Observaciones:</strong> 
+                  <strong style="color:var(--text-primary);">Observaciones:</strong> 
                   <span style="white-space: pre-wrap;">${data.observaciones}</span>
                 </div>
                 <div style="margin-top: 4px;">
-                  <strong style="color:#0f172a;">Diagnóstico:</strong> 
+                  <strong style="color:var(--text-primary);">Diagnóstico:</strong> 
                   <span style="white-space: pre-wrap;">${data.diagnostico}</span>
                 </div>
               </div>
             </div>
             <div> 
-              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Plan Alimenticio Entregado</h4>
-              <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 17px; background: #f8fafc; display: flex; justify-content: space-between; align-items: center;">
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Plan Alimenticio Entregado</h4>
+              <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 16px 17px; background: var(--bg-body); display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                  <strong style="font-size: 14px; color: #0f172a;">Dieta Desinflamatoria - Fase 2</strong>
+                  <strong style="font-size: 14px; color: var(--text-primary);">Dieta Desinflamatoria - Fase 2</strong>
                 </div>
-                <button type="button" style="background: none; border: none; color: #0f5132; font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: underline; padding: 0;">Ver Dieta</button>
+                <button type="button" style="background: none; border: none; color: var(--text-historico-title); font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: underline; padding: 0;">Ver Dieta</button>
               </div>
             </div>
           </div>
 
-          <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
-            <button type="button" id="btn-cerrar-resumen-cita" style="padding: 10px 40px; font-size: 14px; font-weight: 600; color: #475569; background: #ffffff; border: 1.5px solid #9c000559; border-radius: 6px; cursor: pointer; width: 100%; max-width: 200px; transition: all 0.2s;">
+          <div style="padding: 16px 24px; background: var(--bg-body); border-top: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
+            <button type="button" id="btn-cerrar-resumen-cita" style="padding: 10px 40px; font-size: 14px; font-weight: 600; color: var(--text-muted); background: var(--bg-modal-close); border: 1.5px solid var(--border-color); border-radius: 6px; cursor: pointer; width: 100%; max-width: 200px; transition: all 0.2s;">
               Cerrar 
             </button>
           </div>
@@ -1011,11 +993,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     const exp = this.expedientes[p.id];
 
     return `
-      <div class="modal-overlay">
-        <div class="modal-diagnostic-card">
-          <div class="modal-diagnostic-header">
+      <div class="modal-overlay" style="background: var(--bg-modal-overlay);">
+        <div class="modal-diagnostic-card" style="background: var(--bg-card); color: var(--text-primary);">
+          <div class="modal-diagnostic-header" style="border-bottom: 1px solid var(--border-color);">
             <h3>Diagnóstico Nutricional</h3>
-            <button type="button" id="btn-cerrar-modal-diagnostico" class="modal-close-btn">×</button>
+            <button type="button" id="btn-cerrar-modal-diagnostico" class="modal-close-btn" style="color: var(--text-primary);">×</button>
           </div>
           ${
             exp
@@ -1031,14 +1013,14 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <p><strong>IMC:</strong> ${exp.imc || "Sin registrar"}</p>
             </div>
             <div class="modal-diagnostic-body">
-              <p style="border:none; margin-top:10px;">
+              <p style="border:none; margin-top:10px; color: var(--text-secondary);">
                 <strong>Diagnóstico General:</strong><br>
                 ${exp.diagnosticoGeneral || "No se ha redactado un diagnóstico aún."}
               </p>
             </div>
           `
               : `
-            <p class="modal-empty-state">Este paciente aún no tiene un expediente clínico registrado para ver su diagnóstico.</p>
+            <p class="modal-empty-state" style="color: var(--text-muted);">Este paciente aún no tiene un expediente clínico registrado para ver su diagnóstico.</p>
           `
           }
         </div>
@@ -1062,12 +1044,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               </div>
             </header>
             
-            <main class="main-workspace centered-workspace" style="flex: 1; display: flex; align-items: center; justify-content: center; background-color: #f5f7f6; padding: 20px;">
-              <div class="card-container-white centered-card" style="max-width: 500px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
-                <p class="no-appointments-label standard-margin-bottom" style="margin-bottom: 24px; font-size: 15px; color: #64748b; font-weight: 500;">
+            <main class="main-workspace centered-workspace" style="flex: 1; display: flex; align-items: center; justify-content: center; background-color: var(--bg-body); padding: 20px;">
+              <div class="card-container-white centered-card" style="background: var(--bg-card); max-width: 500px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);">
+                <p class="no-appointments-label standard-margin-bottom" style="margin-bottom: 24px; font-size: 15px; color: var(--text-muted); font-weight: 500;">
                   No hay expedientes clínicos registrados para este paciente.
                 </p>
-                <button class="btn-nuevo-paciente no-float" id="btn-anadir-expediente" style="display: inline-flex; align-items: center; justify-content: center;">
+                <button class="btn-nuevo-paciente no-float" id="btn-anadir-expediente" style="display: inline-flex; align-items: center; justify-content: center; background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">
                   <img src="assets/icons/añadirBlanco.png" alt="Añadir" style="width:14px; height:14px; margin-right:6px;">
                   Añadir Expediente
                 </button>
@@ -1122,7 +1104,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
           <main class="main-workspace scrollable-content">
             <div class="card-container-white content-flex-stack">
-              <h2 class="section-title-bordered" style="font-size: 20px; font-weight:700; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">VALORACIÓN DEL ESTADO NUTRICIO</h2>
+              <h2 class="section-title-bordered" style="font-size: 20px; font-weight:700; margin-bottom: 20px; border-bottom: 2px solid var(--border-main); padding-bottom: 10px; color: var(--text-primary);">VALORACIÓN DEL ESTADO NUTRICIO</h2>
 
               <h3 class="card-title-sub">1. Datos Generales de la Paciente</h3>
               <table class="citas-table" style="margin-bottom: 25px;">
@@ -1152,7 +1134,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <h3 class="card-title-sub">4. Mediciones Corporales Específicas</h3>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
                 <div>
-                  <h4 style="font-size: 14px; font-weight:700; margin-bottom: 10px;">Pliegues Cutáneos</h4>
+                  <h4 style="font-size: 14px; font-weight:700; margin-bottom: 10px; color: var(--text-primary);">Pliegues Cutáneos</h4>
                   <table class="citas-table">
                     <tr><td>Bíceps: ${exp.antropometria?.biceps || 0} mm</td><td>Tríceps: ${exp.antropometria?.triceps || 0} mm</td></tr>
                     <tr><td>Suprailiaco: ${exp.antropometria?.suprailiaco || 0} mm</td><td>Muslo: ${exp.antropometria?.musloPliegue || 0} mm</td></tr>
@@ -1160,7 +1142,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   </table>
                 </div>
                 <div>
-                  <h4 style="font-size: 14px; font-weight:700; margin-bottom: 10px;">Circunferencias y Diámetros</h4>
+                  <h4 style="font-size: 14px; font-weight:700; margin-bottom: 10px; color: var(--text-primary);">Circunferencias y Diámetros</h4>
                   <table class="citas-table">
                     <tr><td>B. Contraído: ${exp.antropometria?.brazoContraido || 0} cm</td><td>B. Relajado: ${exp.antropometria?.brazoRelajado || 0} cm</td></tr>
                     <tr><td>Antebrazo: ${exp.antropometria?.antebrazo || 0} cm</td><td>Muñeca: ${exp.antropometria?.muneca || 0} cm</td></tr>
@@ -1175,11 +1157,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <div class="table-data-container scrollable-table-x" style="margin-bottom: 25px; overflow-x: auto; width: 100%; display: block;">
                 <table class="citas-table" style="min-width: 100%;">
                   <thead>
-                    <tr style="background:#f8fafc;">
+                    <tr style="background: var(--table-header-bg);">
                       ${colsFrecuencia
                         .map(
                           (col) => `
-                        <th style="padding: 10px; font-weight: 600; min-width: 150px;">${col.nombre}</th>
+                        <th style="padding: 10px; font-weight: 600; min-width: 150px; color: var(--text-primary); border-bottom: 1px solid var(--table-border);">${col.nombre}</th>
                       `,
                         )
                         .join("")}
@@ -1193,7 +1175,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                         ${colsFrecuencia
                           .map(
                             (col, idx) => `
-                          <td style="${idx === 0 ? "font-weight:700;" : ""} padding: 10px; min-width: 150px; vertical-align: top; word-break: break-word; white-space: pre-wrap;">${row[col.id] || "---"}</td>
+                          <td style="${idx === 0 ? "font-weight:700; background: var(--table-first-col-bg);" : ""} padding: 10px; min-width: 150px; vertical-align: top; word-break: break-word; white-space: pre-wrap; color: var(--text-secondary); border-bottom: 1px solid var(--table-border);">${row[col.id] || "---"}</td>
                         `,
                           )
                           .join("")}
@@ -1209,11 +1191,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <div class="table-data-container scrollable-table-x" style="margin-bottom: 25px; overflow-x: auto; width: 100%; display: block;">
                 <table class="patients-data-table" style="min-width: 100%;">
                   <thead>
-                    <tr style="background:#f8fafc;">
+                    <tr style="background: var(--table-header-bg);">
                       ${colsRegistro
                         .map(
                           (col) => `
-                        <th style="padding: 10px; font-weight: 600; min-width: 150px;">${col.nombre}</th>
+                        <th style="padding: 10px; font-weight: 600; min-width: 150px; color: var(--text-primary); border-bottom: 1px solid var(--table-border);">${col.nombre}</th>
                       `,
                         )
                         .join("")}
@@ -1227,7 +1209,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                         ${colsRegistro
                           .map(
                             (col, idx) => `
-                          <td style="${idx === 0 ? "background: #f8fafc; font-weight:600;" : ""} padding: 12px 10px; min-width: 150px; vertical-align: top; word-break: break-word; white-space: pre-wrap;">${row[col.id] || ""}</td>
+                          <td style="${idx === 0 ? "background: var(--table-first-col-bg); font-weight:600;" : ""} padding: 12px 10px; min-width: 150px; vertical-align: top; word-break: break-word; white-space: pre-wrap; color: var(--text-secondary); border-bottom: 1px solid var(--table-border);">${row[col.id] || ""}</td>
                         `,
                           )
                           .join("")}
@@ -1240,12 +1222,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               </div>
 
               <h3 class="card-title-sub">7. Diagnóstico General</h3>
-              <div class="satisfaccion-bordered-box" style="margin-bottom: 25px; padding: 15px;">
+              <div class="satisfaccion-bordered-box" style="margin-bottom: 25px; padding: 15px; color: var(--text-secondary); border-color: var(--border-color);">
                 ${exp.diagnosticoGeneral || "No se redactó diagnóstico general en esta consulta."}
               </div>
 
               <h3 class="card-title-sub">8. Observaciones</h3>
-              <div class="satisfaccion-bordered-box" style="padding: 15px;">
+              <div class="satisfaccion-bordered-box" style="padding: 15px; color: var(--text-secondary); border-color: var(--border-color);">
                 ${exp.observaciones || "Sin observaciones adicionales."}
               </div>
             </div>
@@ -1258,24 +1240,24 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
   renderListaTarjetasHistorial(lista, termino = "") {
     if (lista.length === 0) {
       return `
-        <div class="card-container-white history-empty-state">
-          <p>${termino ? `No se encontraron evaluations que coincidan con "${termino}".` : "No se han encontrado registros previos en el historial de este paciente."}</p>
+        <div class="card-container-white history-empty-state" style="background: var(--bg-card);">
+          <p style="color: var(--text-muted);">${termino ? `No se encontraron evaluaciones que coincidan con "${termino}".` : "No se han encontrado registros previos en el historial de este paciente."}</p>
         </div>
       `;
     }
     return lista
       .map(
         (entry, index) => `
-      <div class="card-container-white tarjeta-historial-click" data-fecha="${entry.datos.fecha}" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition: all 0.2s;">
+      <div class="card-container-white tarjeta-historial-click" data-fecha="${entry.datos.fecha}" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition: all 0.2s; background: var(--bg-card); border: 1px solid var(--border-color);">
         <div>
-          <span style="font-weight:700; color:#0f172a; display:block;">
-            Evaluación del ${this.formatearFechaEs(entry.datos.fecha)} ${index === 0 && !termino ? '<span style="background:#e2f0d9; color:#0f5132; padding:2px 8px; border-radius:10px; font-size:11px; margin-left:8px;">Más Reciente</span>' : ""}
+          <span style="font-weight:700; color: var(--text-primary); display:block;">
+            Evaluación del ${this.formatearFechaEs(entry.datos.fecha)} ${index === 0 && !termino ? `<span style="background: var(--color-sidebar-active-bg); color: var(--color-sidebar-active-text); padding:2px 8px; border-radius:10px; font-size:11px; margin-left:8px;">Más Reciente</span>` : ""}
           </span>
-          <span style="font-size:13px; color:#475569; display:block; margin-top:4px;"><strong>Paciente:</strong> ${entry.datos.nombrePaciente}</span>
+          <span style="font-size:13px; color: var(--text-secondary); display:block; margin-top:4px;"><strong>Paciente:</strong> ${entry.datos.nombrePaciente}</span>
         </div>
         <div style="text-align:right;">
-          <span style="font-size:11px; color:#64748b; display:block;">Peso / IMC</span>
-          <strong style="color:#0f172a;">${entry.datos.peso} kg / ${entry.datos.imc}</strong>
+          <span style="font-size:11px; color: var(--text-muted); display:block;">Peso / IMC</span>
+          <strong style="color: var(--text-primary);">${entry.datos.peso} kg / ${entry.datos.imc}</strong>
         </div>
       </div>
     `,
@@ -1303,20 +1285,20 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
           </header>
 
           <main class="main-workspace scrollable-content">
-            <div class="card-container-white search-card-panel" style="margin-bottom: 20px;">
-              <h3 class="search-panel-title" style="margin:0 0 10px 0; font-size:16px;">Buscar evaluación en el historial</h3>
+            <div class="card-container-white search-card-panel" style="margin-bottom: 20px; background: var(--bg-historico); border: 1px solid var(--border-historico);">
+              <h3 class="search-panel-title" style="margin:0 0 10px 0; font-size:16px; color: var(--text-historico-title);">Buscar evaluación en el historial</h3>
               <div class="search-control-inline" style="display:flex; gap:10px;">
-                <input type="text" id="buscar-expedientes-input" placeholder="Escribe día, mes o año (Ej: 23 de Octubre, 2020)..." style="flex:1; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; outline:none;" autocomplete="off">
-                <button type="button" id="btn-buscar-expediente-historico" class="btn-header-action" style="color:#1e293b; border-color:#cbd5e1; background:#fff;">
+                <input type="text" id="buscar-expedientes-input" placeholder="Escribe día, mes o año (Ej: 23 de Octubre, 2020)..." style="flex:1; padding:8px 12px; border:1px solid var(--border-historico-input); border-radius:6px; background: var(--bg-body); color: var(--text-primary); outline:none;" autocomplete="off">
+                <button type="button" id="btn-buscar-expediente-historico" class="btn-header-action" style="color: var(--btn-text); border-color: var(--border-color); background: var(--btn-bg);">
                   <img src="assets/icons/Busqueda.png" alt="Buscar" style="width:14px;height:14px;margin-right:6px;">
                   Buscar
                 </button>
               </div>
             </div>
 
-            <div class="card-container-white" style="margin-bottom: 20px;">
-              <h2 style="font-size:18px; font-weight:700; margin:0 0 5px 0;">Línea de Tiempo Clínico</h2>
-              <p style="margin:0; color:#475569; font-size:14px;">Escribe arriba para filtrar en tiempo real. Haz clic en la tarjeta deseada para ver su evaluación médica.</p>
+            <div class="card-container-white" style="margin-bottom: 20px; background: var(--bg-card);">
+              <h2 style="font-size:18px; font-weight:700; margin:0 0 5px 0; color: var(--text-primary);">Línea de Tiempo Clínico</h2>
+              <p style="margin:0; color: var(--text-secondary); font-size:14px;">Escribe arriba para filtrar en tiempo real. Haz clic en la tarjeta deseada para ver su evaluación médica.</p>
             </div>
 
             <div id="historial-list-container" class="history-cards-stack" style="display:flex; flex-direction:column; gap:15px;">
@@ -1477,7 +1459,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <div class="card-container-white">
                 <h3 class="card-title-sub">4. Mediciones Corporales Específicas</h3>
-                <h4 style="font-size:14px;font-weight:700;margin-bottom:10px;">Pliegues Cutáneos (mm)</h4>
+                <h4 style="font-size:14px;font-weight:700;margin-bottom:10px; color: var(--text-primary);">Pliegues Cutáneos (mm)</h4>
                 <div class="form-grid-3-col">
                   <label>Bíceps: <input type="number" id="form-biceps" value="${exp.antropometria?.biceps || ""}"></label>
                   <label>Tríceps: <input type="number" id="form-triceps" value="${exp.antropometria?.triceps || ""}"></label>
@@ -1488,7 +1470,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   <label>Pierna: <input type="number" id="form-piernaPliegue" value="${exp.antropometria?.piernaPliegue || ""}"></label>
                 </div>
 
-                <h4 style="font-size:14px;font-weight:700;margin:20px 0 10px 0;">Circunferencias (cm) y Diámetros (cm)</h4>
+                <h4 style="font-size:14px;font-weight:700;margin:20px 0 10px 0; color: var(--text-primary);">Circunferencias (cm) y Diámetros (cm)</h4>
                 <div class="form-grid-3-col">
                   <label>Brazo Contraído: <input type="number" step="0.1" id="form-brazoContraido" value="${exp.antropometria?.brazoContraido || ""}"></label>
                   <label>Brazo Relajado: <input type="number" step="0.1" id="form-brazoRelajado" value="${exp.antropometria?.brazoRelajado || ""}"></label>
@@ -1511,7 +1493,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <div class="card-container-white">
                 <h3 class="card-title-sub" style="margin-bottom: 2px;">5. Frecuencia de Consumo de Alimentos</h3>
-                <p style="font-size: 11px; color:#64748b; margin-bottom: 12px; font-weight:600;">💡 Tip: Da click derecho sobre cualquier celda para Añadir/Eliminar filas o columnas de forma rápida, y edita el nombre de los cabezales si lo necesitas.</p>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; font-weight:600;">💡 Tip: Da click derecho sobre cualquier celda para Añadir/Eliminar filas o columnas de forma rápida, y edita el nombre de los cabezales si lo necesitas.</p>
                 <div class="table-data-container scrollable-table-x" style="overflow-x: auto; width: 100%; display: block;">
                   <table class="patients-data-table" id="tabla-dinamica-frecuencias" style="min-width: 100%;">
                     <thead id="thead-tabla-frecuencias"></thead>
@@ -1522,7 +1504,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <div class="card-container-white">
                 <h3 class="card-title-sub" style="margin-bottom: 2px;">6. Registro de 24 Horas</h3>
-                <p style="font-size: 11px; color:#64748b; margin-bottom: 12px; font-weight:600;">💡 Tip: Da click derecho sobre cualquier celda para Añadir/Eliminar filas o columnas de forma rápida, y edita el nombre de los cabezales si lo necesitas.</p>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; font-weight:600;">💡 Tip: Da click derecho sobre cualquier celda para Añadir/Eliminar filas o columnas de forma rápida, y edita el nombre de los cabezales si lo necesitas.</p>
                 <div class="table-data-container scrollable-table-x" style="overflow-x: auto; width: 100%; display: block;">
                   <table class="patients-data-table" id="tabla-dinamica-registro24h" style="min-width: 100%;">
                     <thead id="thead-tabla-registro24h"></thead>
@@ -1543,7 +1525,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               </div>
 
               <div style="margin-top: 25px; display:flex; justify-content: flex-end;">
-                <button type="submit" class="btn-nuevo-paciente" style="padding: 12px 30px;">
+                <button type="submit" class="btn-nuevo-paciente" style="padding: 12px 30px; background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">
                   <img src="assets/icons/añadirBlanco.png" alt="Guardar" style="width:14px;height:14px;margin-right:8px;">
                   Guardar Expediente
                 </button>
@@ -1571,12 +1553,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       theadFrecuencias.innerHTML =
         styleReset +
         `
-        <tr style="background:#f1f5f9;">
+        <tr style="background: var(--table-header-bg);">
           ${this.columnasFrecuenciaTemporal
             .map(
               (col, colIdx) => `
-            <th class="context-cell-frecuencia" data-col-index="${colIdx}" style="padding: 10px; min-width: 150px; vertical-align: top; border-bottom: 2px solid #cbd5e1;">
-              <textarea spellcheck="false" class="input-header-frecuencia" rows="1" style="font-weight:700; width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color:#0f172a; padding:0; margin:0;" data-col-index="${colIdx}">${col.nombre}</textarea>
+            <th class="context-cell-frecuencia" data-col-index="${colIdx}" style="padding: 10px; min-width: 150px; vertical-align: top; border-bottom: 2px solid var(--form-border);">
+              <textarea spellcheck="false" class="input-header-frecuencia" rows="1" style="font-weight:700; width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color: var(--text-primary); padding:0; margin:0;" data-col-index="${colIdx}">${col.nombre}</textarea>
             </th>
           `,
             )
@@ -1590,8 +1572,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
           ${this.columnasFrecuenciaTemporal
             .map(
               (col, colIdx) => `
-            <td class="context-cell-frecuencia" data-row-index="${rowIdx}" data-col-index="${colIdx}" style="padding: 8px 10px; min-width: 150px; vertical-align: top; border-bottom: 1px solid #e2e8f0;">
-              <textarea spellcheck="false" class="input-celda-frecuencia" rows="1" style="${colIdx === 0 ? "font-weight:700;" : ""} width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color:#1e293b; padding:0; margin:0;" data-row-index="${rowIdx}" data-field="${col.id}" placeholder="${colIdx === 1 ? "Ej: 2 veces/día" : colIdx === 2 ? "Detalles..." : ""}">${row[col.id] || ""}</textarea>
+            <td class="context-cell-frecuencia" data-row-index="${rowIdx}" data-col-index="${colIdx}" style="padding: 8px 10px; min-width: 150px; vertical-align: top; border-bottom: 1px solid var(--table-border);">
+              <textarea spellcheck="false" class="input-celda-frecuencia" rows="1" style="${colIdx === 0 ? "font-weight:700;" : ""} width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color: var(--text-secondary); padding:0; margin:0;" data-row-index="${rowIdx}" data-field="${col.id}" placeholder="${colIdx === 1 ? "Ej: 2 veces/día" : colIdx === 2 ? "Detalles..." : ""}">${row[col.id] || ""}</textarea>
             </td>
           `,
             )
@@ -1608,12 +1590,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       theadRegistro.innerHTML =
         styleReset +
         `
-        <tr style="background:#f1f5f9;">
+        <tr style="background: var(--table-header-bg);">
           ${this.columnasRegistro24hTemporal
             .map(
               (col, colIdx) => `
-            <th class="context-cell-registro" data-col-index="${colIdx}" style="padding: 10px; min-width: 150px; vertical-align: top; border-bottom: 2px solid #cbd5e1;">
-              <textarea spellcheck="false" class="input-header-registro24h" rows="1" style="font-weight:700; width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color:#0f172a; padding:0; margin:0;" data-col-index="${colIdx}">${col.nombre}</textarea>
+            <th class="context-cell-registro" data-col-index="${colIdx}" style="padding: 10px; min-width: 150px; vertical-align: top; border-bottom: 2px solid var(--form-border);">
+              <textarea spellcheck="false" class="input-header-registro24h" rows="1" style="font-weight:700; width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color: var(--text-primary); padding:0; margin:0;" data-col-index="${colIdx}">${col.nombre}</textarea>
             </th>
           `,
             )
@@ -1627,8 +1609,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
           ${this.columnasRegistro24hTemporal
             .map(
               (col, colIdx) => `
-            <td class="context-cell-registro" data-row-index="${rowIdx}" data-col-index="${colIdx}" style="${colIdx === 0 ? "background:#f8fafc; font-weight:700;" : ""} padding: 8px 10px; min-width: 150px; vertical-align: top; border-bottom: 1px solid #e2e8f0;">
-              <textarea spellcheck="false" class="input-celda-registro24h" rows="1" style="${colIdx === 0 ? "font-weight:700;" : ""} width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color:#1e293b; padding:0; margin:0;" data-row-index="${rowIdx}" data-field="${col.id}">${row[col.id] || ""}</textarea>
+            <td class="context-cell-registro" data-row-index="${rowIdx}" data-col-index="${colIdx}" style="${colIdx === 0 ? "background: var(--table-first-col-bg); font-weight:700;" : ""} padding: 8px 10px; min-width: 150px; vertical-align: top; border-bottom: 1px solid var(--table-border);">
+              <textarea spellcheck="false" class="input-celda-registro24h" rows="1" style="${colIdx === 0 ? "font-weight:700;" : ""} width:100%; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; resize:none; overflow:hidden; font-family:inherit; font-size:inherit; word-break:break-word; color: var(--text-secondary); padding:0; margin:0;" data-row-index="${rowIdx}" data-field="${col.id}">${row[col.id] || ""}</textarea>
             </td>
           `,
             )
@@ -1700,11 +1682,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     menu.style.position = "fixed";
     menu.style.left = `${x}px`;
     menu.style.top = `${y}px`;
-    menu.style.background = "#ffffff";
-    menu.style.border = "1px solid #cbd5e1";
+    menu.style.background = "var(--bg-card)";
+    menu.style.border = "1px solid var(--border-dropdown)";
     menu.style.borderRadius = "8px";
     menu.style.boxShadow =
-      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)";
+      "0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)";
     menu.style.padding = "6px 0";
     menu.style.zIndex = "10000";
     menu.style.minWidth = "180px";
@@ -1754,7 +1736,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
     const divisor = document.createElement("div");
     divisor.style.height = "1px";
-    divisor.style.background = "#e2e8f0";
+    divisor.style.background = "var(--border-color)";
     divisor.style.margin = "4px 0";
     menu.appendChild(divisor);
 
@@ -1817,10 +1799,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     item.style.fontSize = "13px";
     item.style.fontWeight = "500";
     item.style.cursor = "pointer";
+    item.style.color = "var(--text-primary)";
     item.style.transition = "background 0.1s ease";
 
     item.addEventListener("mouseenter", () => {
-      item.style.background = "#f1f5f9";
+      item.style.background = "var(--bg-dropdown-hover)";
     });
     item.addEventListener("mouseleave", () => {
       item.style.background = "transparent";
@@ -1968,7 +1951,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     }
 
     // ===================================================================
-    // EVENTOS Y LOGICA: MODAL DE CITA PROGRAMADA / PROSPECTIVA (NUEVO)
+    // EVENTOS Y LOGICA: MODAL DE CITA PROGRAMADA / PROSPECTIVA
     // ===================================================================
     const btnAbrirCitaProg = this.querySelector("#btn-abrir-cita-programada");
     if (btnAbrirCitaProg) {
@@ -2001,10 +1984,10 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             alert("⚠️ La cita ha sido marcada como Cancelada.");
             this.render();
           } else {
-            e.target.value = ""; // Reset del select
+            e.target.value = ""; 
           }
         } else if (accion === "reagendar") {
-          alert("🗓️ Abriendo módulo/calendario para Reagendar la cita...");
+          alert("Abriendo módulo/calendario para Reagendar la cita...");
           this.citaProgramadaActual.estatus = "Pendiente";
           this.render();
         }
@@ -2017,7 +2000,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     if (btnVerDetallesComp) {
       btnVerDetallesComp.addEventListener("click", () => {
         this.mostrarModalCitaProgramada = false;
-        this.cambiarVista("ver-expediente"); // Te lleva directo a su expediente completo
+        this.cambiarVista("ver-expediente"); 
       });
     }
 

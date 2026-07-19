@@ -11,6 +11,8 @@
   --bg-card: #ffffff;
   --bg-workspace: #ffffff;
   --bg-sidebar: #ffffff;
+  --btn-bg: #ffffff;
+  --btn-text: #000000;
   
   --text-primary: #1e293b;
   --text-secondary: #475569;
@@ -70,6 +72,8 @@ body.dark-mode {
   --bg-card: #1e293b;
   --bg-workspace: #1e293b;
   --bg-sidebar: #1e293b;
+  --btn-bg: #334155;
+  --btn-text: #cbd5e1;
   
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
