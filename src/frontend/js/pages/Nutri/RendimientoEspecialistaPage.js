@@ -21,7 +21,7 @@ export class RendimientoEspecialistaPage extends HTMLElement {
           <header class="dashboard-header">
             <h1>Panel de Monitoreo Diario</h1>
             <div class="search-container">
-              <span class="search-icon">🔍</span>
+              <span class="search-icon"><img src="assets/icons/Busqueda.png" alt="busquedaPaciente"></span>
               <input type="text" id="search-input" placeholder="Buscar pacientes...">
             </div>
           </header>
@@ -41,7 +41,7 @@ export class RendimientoEspecialistaPage extends HTMLElement {
                 <div class="stat-card">
                   <div class="stat-header">
                     <span>REPORTES HOY</span>
-                    <span class="icon-check">☑️</span>
+                    <span class="icon-check"></span>
                   </div>
                   <div class="stat-body">
                     <h2 id="val-reportes">0</h2>
