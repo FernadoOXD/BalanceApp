@@ -13,6 +13,13 @@
   --footer-text: #9ca3af;          /* Light Grey Footer Text */
   --white: #ffffff;
   
+  /* Variables base para modo oscuro */
+  --bg-body: #f7f9fb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --color-brand-dark: #064e3b;
+  --color-brand-hover: #047857;
+  
   /* Fonts */
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
   
@@ -32,4 +39,15 @@
   /* Transitions */
   --transition-fast: all 0.2s ease;
   --transition-normal: all 0.3s ease;
+}
+
+/* MODO OSCURO - Variables globales */
+body.dark-mode {
+  --bg-body: #111827;
+  --bg-card: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --color-brand-dark: #10b981;
+  --color-brand-hover: #059669;
 }

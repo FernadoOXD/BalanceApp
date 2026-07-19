@@ -1,9 +1,4 @@
 :host {
-  --bg-body: #f4f7f6;
-  --bg-card: #ffffff;
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --border-color: #cbd5e1;
   --color-brand-dark: #0f5132;
   --color-brand-hover: #146c43;
   --color-brand-light: #d1e7dd;
@@ -175,17 +170,18 @@
 }
 
 .day-cell:not(.empty):hover {
-  background-color: #f1f5f9;
-  border-color: #e2e8f0;
+  background-color: var(--bg-light);
+  border-color: var(--border-color);
   transform: translateY(-2px);
 }
 
 .day-cell.empty {
-  color: #94a3b8;
+  color: var(--text-secondary);
   cursor: default;
-  background: #f8fafc !important;
+  background: transparent !important;
   border-radius: 14px;
   transform: none !important;
+  opacity: 0.5;
 }
 
 .day-cell.selected {
@@ -695,4 +691,171 @@
     font-size: 14px;
     border-radius: 10px;
   }
+}
+
+/* =========================================
+   MODO OSCURO
+========================================= */
+body.dark-mode :host {
+  background-color: var(--bg-body);
+}
+
+body.dark-mode .layout-wrapper {
+  background-color: var(--bg-body);
+}
+
+body.dark-mode .agenda-header h1,
+body.dark-mode .calendar-title h2,
+body.dark-mode .appointments-header h2,
+body.dark-mode .modal-header h3 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .agenda-header p,
+body.dark-mode .weekdays {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .panel-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .nav-btn {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .nav-btn:hover {
+  background: var(--color-brand-light);
+}
+
+body.dark-mode .day-cell {
+  color: var(--text-primary);
+}
+
+body.dark-mode .day-cell:not(.empty):hover {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .day-cell.empty {
+  color: var(--text-secondary);
+  opacity: 0.4;
+}
+
+body.dark-mode .day-cell.selected {
+  background-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+body.dark-mode .appointment-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .appointment-card.status-concluida,
+body.dark-mode .appointment-card.status-cancelada {
+  background: var(--bg-card);
+}
+
+body.dark-mode .appt-header h3 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .appt-time,
+body.dark-mode .appt-type {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .appt-time,
+body.dark-mode .appt-footer {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .date-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+body.dark-mode .empty-state {
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .modal-content {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .modal-body {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .modal-footer {
+  background: var(--bg-card);
+  border-top-color: var(--border-color);
+}
+
+body.dark-mode .btn-close-modal {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+body.dark-mode .btn-close-modal:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .btn-cancel {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .btn-cancel:hover {
+  background: var(--bg-card);
+}
+
+body.dark-mode .custom-icon {
+  filter: brightness(0) invert(1);
+}
+
+body.dark-mode .icon-white {
+  filter: none;
+}
+
+body.dark-mode .status-select {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending-text);
+  border-color: var(--status-pending-border);
+}
+
+body.dark-mode .dropdown-selected {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending-text);
+  border-color: var(--status-pending-border);
+}
+
+body.dark-mode .dropdown-options {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+body.dark-mode .dropdown-item.active {
+  background: rgba(217, 119, 6, 0.15);
+  color: var(--status-pending-text);
+  border-left-color: var(--status-pending-text);
 }

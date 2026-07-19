@@ -140,9 +140,8 @@ export class SettingEspecialista extends HTMLElement {
     // ==========================================
     const toggleDarkMode = this.querySelector("#toggle-dark-mode");
 
-    // Revisar si el usuario ya tenía el modo oscuro guardado
+    // Sincronizar el toggle con el estado guardado (main.js ya aplica la clase)
     if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark-mode");
       if (toggleDarkMode) toggleDarkMode.checked = true;
     }
 

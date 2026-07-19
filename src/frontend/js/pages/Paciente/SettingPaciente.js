@@ -100,9 +100,8 @@ export class SettingPaciente extends HTMLElement {
     // ==========================================
     const toggleDarkMode = this.querySelector("#toggle-dark-mode");
 
-    // Revisar preferencia guardada en localStorage
+    // Sincronizar el toggle con el estado guardado (main.js ya aplica la clase)
     if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark-mode");
       if (toggleDarkMode) toggleDarkMode.checked = true;
     }
 

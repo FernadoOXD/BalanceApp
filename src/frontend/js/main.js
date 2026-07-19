@@ -3,6 +3,17 @@ import { HomePage } from "./pages/HomePage.js";
 import { AuthPage } from "./pages/AuthPage.js";
 import { AppFooter } from "./components/Footer.js";
 
+// Inicialización global del modo oscuro
+function initDarkMode() {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+}
+
+// Ejecutar inicialización antes de cargar cualquier componente
+initDarkMode();
+
 //Pages de Especialista
 import { EspecialistaLoginPage } from "./pages/Nutri/EspecialistaLoginPage.js";
 import { DashboardEspecialistaPage } from "./pages/Nutri/DashboardEspecialistaPage.js";

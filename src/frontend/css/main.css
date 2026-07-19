@@ -20,6 +20,32 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =========================================
+   MODO OSCURO
+========================================= */
+body.dark-mode {
+  background-color: #0b0f19;
+  color: #f8fafc;
+}
+
+body.dark-mode .btn-primary {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+body.dark-mode .btn-primary:hover {
+  background-color: #059669;
+}
+
+body.dark-mode .btn-text {
+  color: #94a3b8;
+}
+
+body.dark-mode .btn-text:hover {
+  color: #10b981;
 }
 
 #app {

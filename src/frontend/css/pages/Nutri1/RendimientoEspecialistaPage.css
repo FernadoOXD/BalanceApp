@@ -1,18 +1,10 @@
 :host {
-  --bg-body: #f7f9fb;
-  --bg-card: #ffffff;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --border-color: #e5e7eb;
   --color-blue: #3b82f6;
   --color-blue-hover: #2563eb;
   --color-green: #10b981;
   --color-red: #ef4444;
   --row-hover: #f9fafb;
   --row-selected: #eff6ff;
-  --font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
 
   display: block;
   font-family: var(--font-family);
@@ -164,7 +156,7 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: linear-gradient(180deg, transparent 0%, #ebf3ff 100%);
+  background: linear-gradient(180deg, transparent 0%, var(--row-selected) 100%);
   border-radius: 0 0 12px 12px;
   z-index: 1;
 }
@@ -204,7 +196,7 @@
 
 .clinical-table td {
   padding: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   font-size: 14px;
 }
@@ -292,12 +284,12 @@
   display: inline-block;
 }
 .badge-green {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-green);
+  color: #ffffff;
 }
 .badge-red {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--color-red);
+  color: #ffffff;
 }
 
 .history-header {
@@ -328,11 +320,11 @@
   transition: background 0.2s;
 }
 .btn-add-note:hover {
-  background: #eff6ff;
+  background: var(--row-selected);
 }
 
 .timeline {
-  border-left: 2px solid #e5e7eb;
+  border-left: 2px solid var(--border-color);
   margin-left: 8px;
   padding-left: 24px;
   display: flex;
@@ -349,18 +341,18 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid var(--bg-card);
 }
 .node-green {
   background: var(--color-green);
 }
 .node-gray {
-  background: #d1d5db;
+  background: var(--text-secondary);
 }
 
 .timeline-content {
-  background: #f9fafb;
-  border: 1px solid #f3f4f6;
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
   padding: 16px;
   border-radius: 8px;
 }
@@ -478,7 +470,7 @@
 
 .modal-footer {
   padding: 16px 24px;
-  background: #f9fafb;
+  background: var(--bg-body);
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
@@ -496,25 +488,27 @@
   cursor: pointer;
 }
 .btn-cancel:hover {
-  background: #f3f4f6;
+  background: var(--border-color);
 }
 
 .btn-save {
   padding: 8px 16px;
   background: transparent;
-  border: 1px solid green;
+  border: 1px solid var(--color-green);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
-  color: green;
+  color: var(--color-green);
   cursor: pointer;
   transition: background 0.2s;
 }
 .btn-save:hover {
-  background: var(--color-blue-hover);
+  background: var(--color-green);
+  color: #ffffff;
 }
 .btn-save:disabled {
-  background: #93c5fd;
+  background: var(--border-color);
+  color: var(--text-secondary);
   cursor: not-allowed;
 }
 
@@ -539,7 +533,7 @@
 
 .btn-delete-note:hover {
   color: var(--color-red);
-  background: #fee2e2;
+  background: rgba(239, 68, 68, 0.1);
 }
 
 @media (max-width: 1024px) {
@@ -763,4 +757,184 @@
     align-items: flex-start;
     gap: 4px;
   }
+}
+
+/* =========================================
+   MODO OSCURO
+========================================= */
+body.dark-mode :host {
+  background-color: var(--bg-body);
+}
+
+body.dark-mode .layout-wrapper {
+  background-color: var(--bg-body);
+}
+
+body.dark-mode .dashboard-header h1,
+body.dark-mode .table-container h2,
+body.dark-mode .profile-names h2,
+body.dark-mode .timeline-title-row h4,
+body.dark-mode .modal-header h3 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .dashboard-subheader p,
+body.dark-mode .stat-header,
+body.dark-mode .stat-sub,
+body.dark-mode .clinical-table th,
+body.dark-mode .patient-details span,
+body.dark-mode .text-apego,
+body.dark-mode .section-title,
+body.dark-mode .timeline-date,
+body.dark-mode .timeline-content p,
+body.dark-mode .btn-icon {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .search-icon {
+  color: var(--text-secondary);
+}
+
+body.dark-mode #search-input {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode #search-input:focus {
+  border-color: var(--color-blue);
+}
+
+body.dark-mode .col-right,
+body.dark-mode .stat-card,
+body.dark-mode .table-container {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .bg-waves {
+  background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.1) 100%);
+}
+
+body.dark-mode .clinical-table td {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .clinical-table tr:hover {
+  background-color: var(--bg-card);
+}
+
+body.dark-mode .clinical-table tr.row-selected {
+  background-color: rgba(59, 130, 246, 0.15);
+  border-left-color: var(--color-blue);
+}
+
+body.dark-mode .patient-details strong {
+  color: var(--text-primary);
+}
+
+body.dark-mode .profile-header {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .badge-green {
+  background: var(--color-green);
+  color: #ffffff;
+}
+
+body.dark-mode .badge-red {
+  background: var(--color-red);
+  color: #ffffff;
+}
+
+body.dark-mode .btn-add-note {
+  color: var(--color-blue);
+}
+
+body.dark-mode .btn-add-note:hover {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+body.dark-mode .timeline {
+  border-left-color: var(--border-color);
+}
+
+body.dark-mode .timeline-node {
+  border-color: var(--bg-card);
+}
+
+body.dark-mode .node-gray {
+  background: var(--text-secondary);
+}
+
+body.dark-mode .timeline-content {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .modal-content {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .modal-body label {
+  color: var(--text-primary);
+}
+
+body.dark-mode .modal-body input,
+body.dark-mode .modal-body textarea {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .modal-body input:focus,
+body.dark-mode .modal-body textarea:focus {
+  border-color: var(--color-blue);
+}
+
+body.dark-mode .modal-footer {
+  background: var(--bg-card);
+  border-top-color: var(--border-color);
+}
+
+body.dark-mode .btn-cancel {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .btn-cancel:hover {
+  background: var(--border-color);
+}
+
+body.dark-mode .btn-save {
+  color: var(--color-green);
+  border-color: var(--color-green);
+}
+
+body.dark-mode .btn-save:hover {
+  background: var(--color-green);
+  color: #ffffff;
+}
+
+body.dark-mode .btn-save:disabled {
+  background: var(--border-color);
+  color: var(--text-secondary);
+}
+
+body.dark-mode .btn-delete-note {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .btn-delete-note:hover {
+  color: var(--color-red);
+  background: rgba(239, 68, 68, 0.15);
 }

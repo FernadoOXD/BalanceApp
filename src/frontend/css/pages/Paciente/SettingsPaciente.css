@@ -1,29 +1,14 @@
 /* =========================================
-   VARIABLES GLOBALES (LIGHT & DARK MODE)
+   VARIABLES ESPECÍFICAS DE SETTINGS PACIENTE
 ========================================= */
 :root {
-  /* TEMA CLARO */
-  --bg-body: #f8fafc;
-  --bg-card: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-
-  --color-brand-dark: #005a36;
+  /* Variables específicas para esta página */
   --color-danger: #dc2626;
   --color-danger-hover: #b91c1c;
 }
 
-/* TEMA OSCURO APLICADO AL BODY 
-   (Fondo más oscuro atrás, tarjetas más claras adelante para dar profundidad) */
+/* TEMA OSCURO - Variables específicas */
 body.dark-mode {
-  --bg-body: #0b0f19;      /* Fondo general ultra oscuro */
-  --bg-card: #1e293b;      /* Tarjetas al frente (gris pizarra elegante y contrastante) */
-  --text-primary: #f8fafc; /* Blanco brillante para máxima lectura */
-  --text-secondary: #94a3b8; /* Gris suave para subtítulos */
-  --border-color: #334155; /* Bordes sutiles que separan elementos */
-
-  --color-brand-dark: #10b981;
   --color-danger: #ef4444;
   --color-danger-hover: #f87171;
 }
@@ -50,7 +35,7 @@ body.dark-mode {
 .layout-wrapper {
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg-body); /* Asegura que no queden huecos blancos en el contenedor */
+  background-color: var(--bg-body);
   transition: background-color 0.3s ease;
 }
 
@@ -197,7 +182,7 @@ body.dark-mode .custom-icon {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #cbd5e1;
+  background-color: var(--border-color);
   transition: 0.3s;
   border-radius: 34px;
 }
@@ -242,7 +227,7 @@ body.dark-mode .slider {
 }
 
 .btn-outline-danger:hover {
-  background: #fef2f2;
+  background: rgba(220, 38, 38, 0.1);
 }
 
 body.dark-mode .btn-outline-danger:hover {
@@ -342,12 +327,12 @@ body.dark-mode .btn-outline-danger:hover {
 }
 
 .btn-cancel:hover {
-  background: #f1f5f9;
+  background: var(--bg-light);
 }
 
 .btn-danger-solid {
   padding: 10px 24px;
-  background: #dc2626;
+  background: var(--color-danger);
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -358,7 +343,7 @@ body.dark-mode .btn-outline-danger:hover {
 }
 
 .btn-danger-solid:hover {
-  background: #b91c1c;
+  background: var(--color-danger-hover);
 }
 
 .btn-danger-solid:disabled {

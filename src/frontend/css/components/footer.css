@@ -83,3 +83,34 @@
     gap: 40px;
   }
 }
+
+/* =========================================
+   MODO OSCURO
+========================================= */
+body.dark-mode .footer {
+  background-color: #0f172a;
+}
+
+body.dark-mode .footer-desc {
+  color: #94a3b8;
+}
+
+body.dark-mode .footer-title {
+  color: #f8fafc;
+}
+
+body.dark-mode .footer-link {
+  color: #94a3b8;
+}
+
+body.dark-mode .footer-link:hover {
+  color: #10b981;
+}
+
+body.dark-mode .footer-divider {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .copyright {
+  color: #94a3b8;
+}
