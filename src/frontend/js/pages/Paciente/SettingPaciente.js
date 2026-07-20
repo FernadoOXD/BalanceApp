@@ -11,9 +11,9 @@ export class SettingPaciente extends HTMLElement {
   render() {
     this.innerHTML = `
       <div class="layout-wrapper">
-        <app-sidebar-paciente style="position: fixed;"></app-sidebar-paciente>
+        <app-sidebar-paciente style="position: fixed; z-index: 1000;"></app-sidebar-paciente>
         
-        <main class="settings-main">
+        <main class="settings-main" style="position: relative; z-index: 1;">
           <!-- Icono de notificaciones superior -->
           <div class="top-nav-bar">
              <button class="btn-icon-only">
