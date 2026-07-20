@@ -213,7 +213,7 @@ export class RegistroPacientePage extends HTMLElement {
       const apellidoMaterno =
         nameParts.length > 2 ? nameParts.slice(2).join(" ") : "";
 
-      fetch("http://localhost:5000/api/auth/register", {
+      fetch("http://localhost:5000/api/paciente", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

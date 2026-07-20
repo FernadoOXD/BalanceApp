@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../../../config.js';
 export class PacienteLoginPage extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -97,7 +98,8 @@ export class PacienteLoginPage extends HTMLElement {
       window.location.hash = "/auth/paciente-register";
     });
 
-    loginForm.addEventListener("submit", (e) => {
+    // Se añadió 'async' para poder usar 'await' en la petición al servidor
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       this._clearAllErrors();
@@ -146,24 +148,68 @@ export class PacienteLoginPage extends HTMLElement {
 
       if (hasErrors) return;
 
-      console.log("Login exitoso en frontend:", { email, rememberMe });
+      // ==========================================
+      // 4. CONEXIÓN AL BACKEND (JAVA / JAVALIN)
+      // ==========================================
+      const btnSubmit = this.querySelector(".btn-submit");
+      const originalText = btnSubmit.textContent;
+      
+      try {
+        btnSubmit.textContent = "Conectando...";
+        btnSubmit.disabled = true;
 
-      // 4. Salto directo al Dashboard usando la navegación por Hash correcta
-      window.location.hash = "/paciente/agenda";
+        // 1. Inyectamos la URL global (API_BASE_URL)
+        const response = await fetch(`${API_BASE_URL}/api/paciente/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: email,       
+            contrasena: password 
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error("Credenciales incorrectas o error en el servidor");
+        }
+
+        // Obtener el JSON que devuelve el backend
+        const data = await response.json();
+
+        // 5. GUARDAR EL ID EN LOCALSTORAGE
+        // Asume que el backend devuelve un objeto con la propiedad 'id'
+        localStorage.setItem("userId", data.idPaciente); 
+
+        console.log("Login validado por el backend:", data);
+
+        // Opcional: Manejo de 'Recordarme'
+        if (rememberMe) {
+            localStorage.setItem("rememberMe", "true");
+        }
+
+        // 6. Salto directo al Dashboard
+        window.location.hash = "/paciente/agenda";
+
+      } catch (error) {
+        console.error("Error en login:", error);
+        generalAlertMsg.textContent = "Correo o contraseña incorrectos.";
+        generalAlert.style.display = "flex";
+      } finally {
+        // Restaurar el botón en caso de error para que el usuario pueda reintentar
+        btnSubmit.textContent = originalText;
+        btnSubmit.disabled = false;
+      }
     });
   }
 
   _setError(input, errorEl, message) {
     if (input && errorEl) {
-      // Forzar al input a ser transparente y sin bordes molestos
       input.classList.add("form-group__input--error");
-
-      // Aplicar el color de fondo y borde rojo al contenedor padre (.form-group) para evitar cortes estéticos
       const groupContainer = input.closest(".form-group");
       if (groupContainer) {
         groupContainer.classList.add("form-group--error");
       }
-
       errorEl.textContent = message;
       errorEl.classList.add("form-error--visible");
     }

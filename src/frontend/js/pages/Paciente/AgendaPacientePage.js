@@ -1,7 +1,4 @@
-// ─── Configuración base de la API ────────────────────────────────────────────
-const API_BASE = "http://localhost:5000/api";
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+import { API_BASE_URL } from '../../../../config.js';
 
 function getPacienteSession() {
   try {
@@ -90,58 +87,22 @@ export class AgendaPacientePage extends HTMLElement {
     }
 
     try {
-      /* ========================================================
-         CÓDIGO ORIGINAL DE CONEXIÓN A LA API
       const idPaciente = this.paciente.idPaciente || this.paciente.id || this.paciente.paciente_id;
-      const response = await fetch(`${API_BASE}/citas?paciente_id=${idPaciente}`, {
+      
+      // Aquí inyectamos el API_BASE_URL dinámico
+      const response = await fetch(`${API_BASE_URL}/api/citas?paciente_id=${idPaciente}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
+      
       const data = await response.json();
-      if (!response.ok || !data.success) throw new Error(data.message || "Error al obtener las citas.");
-      ======================================================== */
+      
+      if (!response.ok || !data.success) {
+         throw new Error(data.message || "Error al obtener las citas.");
+      }
 
-      // Simular retraso de red
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      // MOCK DATA
-      const data = {
-        success: true,
-        proximas: [
-          {
-            idCita: 101,
-            fecha: "2026-07-18",
-            hora: "10:00",
-            motivoConsulta: "Consulta inicial",
-            estado: "Pendiente",
-          },
-          {
-            idCita: 102,
-            fecha: "2026-08-05",
-            hora: "12:30",
-            motivoConsulta: "Seguimiento de dieta",
-            estado: "Pendiente",
-          },
-        ],
-        historial: [
-          {
-            idCita: 99,
-            fecha: "2026-06-15",
-            hora: "09:00",
-            motivoConsulta: "Consulta inicial",
-            estado: "Completada",
-          },
-          {
-            idCita: 98,
-            fecha: "2026-05-20",
-            hora: "16:00",
-            motivoConsulta: "Consulta de ajuste",
-            estado: "Cancelada",
-          },
-        ],
-      };
-
+      // Procesamos la data real del backend
       this.citas = (data.proximas || []).map((c) => ({
         id: c.idCita,
         tipo: getTipoCita(c.motivoConsulta),
@@ -164,6 +125,7 @@ export class AgendaPacientePage extends HTMLElement {
         motivo: c.motivoConsulta || "—",
         estado: c.estado || "—",
       }));
+
     } catch (err) {
       console.error("[AgendaPacientePage] fetchCitasFromDB:", err);
       this.error = err.message || "Ocurrió un error inesperado.";
@@ -179,47 +141,39 @@ export class AgendaPacientePage extends HTMLElement {
     const btnConfirm = this.querySelector("#btn-confirm-cancel-cita");
 
     try {
-      // Estado de carga en el modal
       if (btnConfirm) {
         btnConfirm.textContent = "Cancelando...";
         btnConfirm.disabled = true;
       }
 
-      /* ========================================================
-         CÓDIGO ORIGINAL DE CONEXIÓN A LA API
       const idPaciente = this.paciente?.idPaciente || this.paciente?.id || this.paciente?.paciente_id;
-      const response = await fetch(`${API_BASE}/citas/${idCita}/cancelar?paciente_id=${idPaciente}`, {
+      
+      // Inyectamos el API_BASE_URL dinámico
+      const response = await fetch(`${API_BASE_URL}/api/citas/${idCita}/cancelar?paciente_id=${idPaciente}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
+      
       const data = await response.json();
+      
       if (!response.ok || !data.success) {
         alert(data.message || "No se pudo cancelar la cita.");
         return;
       }
-      ======================================================== */
 
-      // Simulación de respuesta del servidor
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      // MOCK LOGIC: Movemos la cita cancelada visualmente al historial
-      const citaCancelada = this.citas.find((c) => c.id === idCita);
-      if (citaCancelada) {
-        this.citas = this.citas.filter((c) => c.id !== idCita);
-        citaCancelada.estado = "Cancelada";
-        this.historial.unshift(citaCancelada);
-      }
-
-      // Limpiamos la variable y repintamos la vista
+      // Volvemos a pedir las citas a la base de datos para que la vista se actualice
+      await this.fetchCitasFromDB();
+      
       this.citaToCancel = null;
-      this.render();
-      this.initLogic();
+      // Cerrar modal
+      const modalCancel = this.querySelector("#modal-cancel-cita");
+      if (modalCancel) modalCancel.classList.add("hidden");
+
     } catch (err) {
       console.error("[AgendaPacientePage] cancelarCita:", err);
       alert("Error de conexión. Intenta de nuevo.");
 
-      // Restaurar el botón si falla
       if (btnConfirm) {
         btnConfirm.textContent = "Sí, cancelar cita";
         btnConfirm.disabled = false;

@@ -5,7 +5,7 @@ export class SettingPaciente extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    this.initLogic();
+    this.initLogic();            
   }
 
   render() {
@@ -156,28 +156,41 @@ export class SettingPaciente extends HTMLElement {
       btnConfirmDelete.textContent = "Eliminando...";
       btnConfirmDelete.disabled = true;
 
-      /* ========================================================
-         AQUÍ SE CONECTARÁ CON LA API PARA BORRAR EL REGISTRO
-         const pacienteId = localStorage.getItem('userId'); // O de donde saques el ID
-         await fetch(`https://api.com/pacientes/${pacienteId}`, {
-           method: 'DELETE',
-           headers: { 'Authorization': 'Bearer ' + tuToken }
-         });
-      ======================================================== */
+      // 1. Obtener el ID del paciente desde la sesión
+      // Asegúrate de que 'userId' sea la clave exacta que usas al iniciar sesión
+      const pacienteId = localStorage.getItem('userId'); 
 
-      // Simulación de respuesta de red
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (!pacienteId) {
+        throw new Error("No se encontró el ID del usuario en el localStorage.");
+      }
 
-      console.log("Cuenta eliminada exitosamente en la DB.");
-      localStorage.clear(); // Limpiamos la sesión
+      // 2. Realizar la petición DELETE al backend (Java/Javalin)
+      const response = await fetch(`http://localhost:5000/api/paciente/${pacienteId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Descomenta esta línea si tu API usa tokens JWT de seguridad
+        }
+      });
 
-      // Redirigir al inicio o login
-      alert("Tu cuenta ha sido eliminada. Serás redirigido al inicio.");
-      window.location.hash = "#/";
+      // 3. Validar si el backend procesó correctamente la eliminación
+      if (!response.ok) {
+        throw new Error(`Error en el servidor: Código ${response.status}`);
+      }
+
+      // 4. Éxito: Limpiar datos y redirigir
+      console.log("Cuenta eliminada exitosamente en la base de datos.");
+      localStorage.clear(); // Limpiamos la sesión entera
+
+      alert("Tu cuenta ha sido eliminada permanentemente. Serás redirigido al inicio.");
+      window.location.hash = "#/"; 
+      // Si el enrutador no reacciona al hash, puedes forzar la recarga con: window.location.reload();
+
     } catch (error) {
       console.error("Error al eliminar la cuenta:", error);
-      alert("Hubo un problema de conexión. Intenta de nuevo más tarde.");
+      alert("Hubo un problema de conexión con el servidor. Intenta de nuevo más tarde.");
 
+      // 5. Restaurar la interfaz en caso de error
       btnConfirmDelete.textContent = "Confirmar Eliminación";
       btnConfirmDelete.disabled = false;
       modalDelete.classList.add("hidden");
