@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../../../../config.js';
+
 export class AgendamientoEncuestaPage extends HTMLElement {
   connectedCallback() {
     //  AbortController lo estamos usando para limpiar eventos cuando el componente se desmonta
@@ -1572,6 +1574,14 @@ export class AgendamientoEncuestaPage extends HTMLElement {
   async _handleSubmit(e) {
     e.preventDefault();
 
+    const pacienteId = localStorage.getItem("userId");
+
+    if (!pacienteId) {
+      alert("Error: No se encontró tu sesión. Por favor, inicia sesión nuevamente.");
+      window.location.hash = "/auth"; 
+      return;
+    }
+
     if (!this.surveyForm.checkValidity()) {
       this.surveyForm.reportValidity();
       return;
@@ -1619,9 +1629,15 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       return dateStr; // fallback
     };
 
+    const monthNames = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+    const mesDinamico = `${monthNames[this.currentMonth]} ${this.currentYear}`;
+
     const finalPayload = {
       appointment: {
-        month: "October 2026", // hacerlo dinamico con el DOM
+        month: mesDinamico, // <-- Adiós "October 2026", hola mes dinámico
         day: formatDateToMySQL(this.state.selectedDate),
         time: this.state.selectedTime,
       },
@@ -1636,9 +1652,9 @@ export class AgendamientoEncuestaPage extends HTMLElement {
     submitBtn.disabled = true;
 
     try {
-      // Llamada real al API del Backend
+      // 2. Inyectamos la URL global (API_BASE_URL)
       const response = await fetch(
-        "http://127.0.0.1:5000/api/encuestas/agendar-con-encuesta?paciente_id=1",
+        `${API_BASE_URL}/api/encuestas/agendar-con-encuesta?paciente_id=${pacienteId}`,
         {
           method: "POST",
           headers: {

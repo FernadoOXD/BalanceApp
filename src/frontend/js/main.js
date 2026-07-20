@@ -3,6 +3,17 @@ import { HomePage } from "./pages/HomePage.js";
 import { AuthPage } from "./pages/AuthPage.js";
 import { AppFooter } from "./components/Footer.js";
 
+// Inicialización global del modo oscuro
+function initDarkMode() {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+}
+
+// Ejecutar inicialización antes de cargar cualquier componente
+initDarkMode();
+
 //Pages de Especialista
 import { EspecialistaLoginPage } from "./pages/Nutri/EspecialistaLoginPage.js";
 import { DashboardEspecialistaPage } from "./pages/Nutri/DashboardEspecialistaPage.js";
@@ -18,7 +29,6 @@ import { PacienteLoginPage } from "./pages/Paciente/PacienteLoginPage.js";
 import { RegistroPacientePage } from "./pages/Paciente/PacienteRegistroPage.js";
 import { SidebarPaciente } from "./pages/Paciente/SidebarPaciente.js";
 import { AgendamientoEncuestaPage } from "./pages/Paciente/AgendamientoEncuestaPage.js";
-import { DashboardPaciente } from "./pages/Paciente/DashboardPaciente.js";
 import { AgendaPacientePage } from "./pages/Paciente/AgendaPacientePage.js";
 import { RendimientoPacientePage } from "./pages/Paciente/RendimientoPacientePage.js";
 import { TratamientoPacientePage } from "./pages/Paciente/TratamientoPacientePage.js";
@@ -61,7 +71,6 @@ customElements.define("page-paciente-login", PacienteLoginPage);
 customElements.define("registro-paciente-page", RegistroPacientePage);
 customElements.define("app-sidebar-paciente", SidebarPaciente);
 customElements.define("agendamiento-encuesta-page", AgendamientoEncuestaPage);
-customElements.define("dashboard-paciente", DashboardPaciente);
 customElements.define("agenda-paciente-page", AgendaPacientePage);
 customElements.define("rendimiento-paciente-page", RendimientoPacientePage);
 customElements.define("tratamiento-paciente-page", TratamientoPacientePage);

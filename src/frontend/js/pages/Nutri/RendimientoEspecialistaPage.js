@@ -3,6 +3,7 @@ export class RendimientoEspecialistaPage extends HTMLElement {
     super();
     this.data = null;
     this.selectedPatientId = null;
+    this.searchTimeout = null;
   }
 
   connectedCallback() {
@@ -21,8 +22,11 @@ export class RendimientoEspecialistaPage extends HTMLElement {
           <header class="dashboard-header">
             <h1>Panel de Monitoreo Diario</h1>
             <div class="search-container">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="search-input" placeholder="Buscar pacientes...">
+              <span class="search-icon"><img src="assets/icons/Busqueda.png" alt="busquedaPaciente"></span>
+              <input type="text" id="search-input" placeholder="Buscar pacientes..." autocomplete="off">
+              <div id="search-dropdown" class="search-dropdown hidden">
+                <!-- Search results will appear here -->
+              </div>
             </div>
           </header>
 
@@ -41,7 +45,7 @@ export class RendimientoEspecialistaPage extends HTMLElement {
                 <div class="stat-card">
                   <div class="stat-header">
                     <span>REPORTES HOY</span>
-                    <span class="icon-check">☑️</span>
+                    <span class="icon-check"></span>
                   </div>
                   <div class="stat-body">
                     <h2 id="val-reportes">0</h2>
@@ -153,6 +157,9 @@ export class RendimientoEspecialistaPage extends HTMLElement {
     if (btnSave) {
       btnSave.addEventListener("click", () => this.saveNoteToDB());
     }
+
+    // 4. Buscador de pacientes
+    this.initSearch();
   }
 
   async loadData() {
@@ -438,5 +445,140 @@ export class RendimientoEspecialistaPage extends HTMLElement {
       console.error("Error al eliminar la nota:", error);
       alert("Hubo un problema al intentar eliminar la nota.");
     }
+  }
+
+  // ===============================================
+  // BUSCADOR DE PACIENTES
+  // ===============================================
+  initSearch() {
+    const searchInput = this.querySelector("#search-input");
+    const searchDropdown = this.querySelector("#search-dropdown");
+
+    if (!searchInput || !searchDropdown) return;
+
+    // Evento: input - mientras el usuario escribe
+    searchInput.addEventListener("input", (e) => {
+      const query = e.target.value.trim();
+
+      // Limpiar timeout anterior para evitar múltiples llamadas
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+
+      if (query.length === 0) {
+        searchDropdown.classList.add("hidden");
+        return;
+      }
+
+      // Debounce: esperar 300ms después de que el usuario deje de escribir
+      this.searchTimeout = setTimeout(() => {
+        this.searchPatients(query);
+      }, 300);
+    });
+
+    // Evento: focus - mostrar dropdown si hay contenido
+    searchInput.addEventListener("focus", () => {
+      const query = searchInput.value.trim();
+      if (query.length > 0) {
+        this.searchPatients(query);
+      }
+    });
+
+    // Evento: blur - cerrar dropdown (con pequeño delay para permitir clic en opciones)
+    searchInput.addEventListener("blur", () => {
+      setTimeout(() => {
+        searchDropdown.classList.add("hidden");
+      }, 200);
+    });
+
+    // Evento: keydown - manejar Enter y Escape
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        searchDropdown.classList.add("hidden");
+        searchInput.blur();
+      }
+    });
+
+    // Evento: click en el dropdown - seleccionar paciente
+    searchDropdown.addEventListener("click", (e) => {
+      const option = e.target.closest(".search-option");
+      if (option) {
+        const patientId = option.getAttribute("data-patient-id");
+        const patientName = option.getAttribute("data-patient-name");
+        
+        // Actualizar input con el nombre seleccionado
+        searchInput.value = patientName;
+        searchDropdown.classList.add("hidden");
+        
+        // Seleccionar el paciente
+        if (patientId != this.selectedPatientId) {
+          this.selectedPatientId = patientId;
+          this.renderDynamicContent();
+        }
+      }
+    });
+  }
+
+  async searchPatients(query) {
+    const searchDropdown = this.querySelector("#search-dropdown");
+    if (!searchDropdown) return;
+
+    try {
+      /* ========================================================
+         AQUÍ HARÁS LA LLAMADA A TU API PARA BUSCAR PACIENTES
+         Ejemplo de implementación futura:
+         
+         const response = await fetch(
+           `https://tu-api.com/pacientes/buscar?q=${encodeURIComponent(query)}`
+         );
+         const results = await response.json();
+         
+         // La API debería retornar un array con:
+         // [{ id: 1, nombre: "Fernando Reyes" }, ...]
+      ======================================================== */
+
+      // MOCK: Filtrar pacientes locales (reemplazar con llamada a API)
+      const results = this.data.pacientes.filter((p) =>
+        p.nombre.toLowerCase().includes(query.toLowerCase())
+      );
+
+      this.renderSearchResults(results);
+    } catch (error) {
+      console.error("Error al buscar pacientes:", error);
+      searchDropdown.classList.add("hidden");
+    }
+  }
+
+  renderSearchResults(results) {
+    const searchDropdown = this.querySelector("#search-dropdown");
+    if (!searchDropdown) return;
+
+    if (results.length === 0) {
+      searchDropdown.innerHTML = `
+        <div class="search-no-results">
+          <span>No se encontraron pacientes</span>
+        </div>
+      `;
+      searchDropdown.classList.remove("hidden");
+      return;
+    }
+
+    searchDropdown.innerHTML = results
+      .map(
+        (p) => `
+        <div class="search-option" data-patient-id="${p.id}" data-patient-name="${p.nombre}">
+          <div class="search-option-avatar" style="background-color: ${p.colorAvatar}; color: ${p.fontColor};">
+            ${p.iniciales}
+          </div>
+          <div class="search-option-info">
+            <span class="search-option-name">${p.nombre}</span>
+            <span class="search-option-id">ID: ${p.id}</span>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+
+    searchDropdown.classList.remove("hidden");
   }
 }

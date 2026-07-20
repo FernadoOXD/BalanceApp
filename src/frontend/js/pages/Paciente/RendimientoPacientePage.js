@@ -266,7 +266,7 @@
         }
       });
     }
-  };
+    }
 
     loadUserProfile() {
       const nameDisplay = this.querySelector("#user-name-display");

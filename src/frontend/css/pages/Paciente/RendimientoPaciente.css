@@ -5,8 +5,8 @@
   min-height: 100vh;
   background-color: #f8f9fa;
   box-sizing: border-box;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 .rendimiento-main {
@@ -18,7 +18,6 @@
   margin-left: 280px;
 }
 
-/* --- CABECERA --- */
 .rendimiento-header {
   margin-bottom: 25px;
 }
@@ -36,7 +35,6 @@
   text-transform: capitalize;
 }
 
-/* --- TARJETAS CONTENEDORAS --- */
 .card-section {
   background: #ffffff;
   border: 1px solid #e9ecef;
@@ -45,9 +43,9 @@
   margin-bottom: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
   position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* --- CONFIGURACIÓN DE TÍTULOS E ICONOS --- */
 .card-title {
   font-size: 20px;
   font-weight: 700;
@@ -58,7 +56,6 @@
   gap: 12px;
 }
 
-/* Control maestro del tamaño de TODOS los iconos de los títulos */
 .card-title .menuIcon,
 .card-title .PesasIcon,
 .card-title .notasIcon {
@@ -76,7 +73,6 @@
   margin: 0 0 20px 0;
 }
 
-/* --- OPCIONES DE BOTONES (DIETA) --- */
 .dieta-grid-options {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -108,7 +104,6 @@
   background-color: #f4faf8;
 }
 
-/* Control maestro del tamaño de los iconos de estado (Caritas) */
 .dieta-btn-card .mood-icon {
   width: 32px !important;
   height: 32px !important;
@@ -125,7 +120,6 @@
   text-align: center;
 }
 
-/* --- CAMPOS DE FORMULARIO COMPLETO --- */
 .input-field-group {
   margin-bottom: 20px;
 }
@@ -179,7 +173,6 @@
   border-color: #0d624b;
 }
 
-/* --- CUSTOM SELECT WRAPPER (FLECHITA) --- */
 .select-wrapper-custom {
   position: relative;
 }
@@ -195,7 +188,6 @@
   pointer-events: none;
 }
 
-/* --- CHECKBOX PERSONALIZADO --- */
 .checkbox-alignment {
   padding-top: 10px;
 }
@@ -257,7 +249,6 @@
   display: block;
 }
 
-/* --- VALIDACIONES Y ALERTAS --- */
 .validation-error {
   background-color: #fff5f5;
   border: 1px solid #ffc9c9;
@@ -292,7 +283,6 @@
   display: none !important;
 }
 
-/* --- BOTÓN DE ENVÍO --- */
 .form-submit-wrapper {
   display: flex;
   justify-content: center;
@@ -324,94 +314,217 @@
   font-size: 14px !important;
 }
 
+/* ==========================================================================
+   BLINDAJE MODO OSCURO (TRIPLE ESCUDO ANTI-FALLOS)
+   ========================================================================== */
+body.dark-mode .paciente-layout,
+:host-context(body.dark-mode) .paciente-layout {
+  background-color: #0b0f19 !important;
+}
+
+body.dark-mode .rendimiento-header h1,
+:host-context(body.dark-mode) .rendimiento-header h1 {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .rendimiento-date,
+:host-context(body.dark-mode) .rendimiento-date {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .card-section,
+:host-context(body.dark-mode) .card-section {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .card-title,
+:host-context(body.dark-mode) .card-title {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .card-instruction,
+:host-context(body.dark-mode) .card-instruction,
+body.dark-mode .input-field-group label,
+:host-context(body.dark-mode) .input-field-group label {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .dieta-btn-card,
+:host-context(body.dark-mode) .dieta-btn-card {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .dieta-btn-card:hover,
+:host-context(body.dark-mode) .dieta-btn-card:hover {
+  background-color: #334155 !important;
+  border-color: #64748b !important;
+}
+
+body.dark-mode .dieta-btn-card.active,
+:host-context(body.dark-mode) .dieta-btn-card.active {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  border-color: #10b981 !important;
+}
+
+body.dark-mode .btn-text-main,
+:host-context(body.dark-mode) .btn-text-main {
+  color: #f8fafc !important;
+}
+
+body.dark-mode #water-count,
+:host-context(body.dark-mode) #water-count {
+  color: #34d399 !important;
+}
+
+body.dark-mode .water-unit-text,
+:host-context(body.dark-mode) .water-unit-text {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode #btn-water-minus,
+:host-context(body.dark-mode) #btn-water-minus {
+  background-color: #0f172a !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode #btn-water-plus,
+:host-context(body.dark-mode) #btn-water-plus {
+  background-color: #10b981 !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .custom-form-input,
+body.dark-mode .custom-form-textarea,
+:host-context(body.dark-mode) .custom-form-input,
+:host-context(body.dark-mode) .custom-form-textarea {
+  background-color: #0f172a !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .custom-form-input:focus,
+body.dark-mode .custom-form-textarea:focus,
+:host-context(body.dark-mode) .custom-form-input:focus,
+:host-context(body.dark-mode) .custom-form-textarea:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
+}
+
+body.dark-mode .custom-checkbox-container,
+:host-context(body.dark-mode) .custom-checkbox-container {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .checkmark-box,
+:host-context(body.dark-mode) .checkmark-box {
+  background-color: #0f172a !important;
+  border-color: #475569 !important;
+}
+
+body.dark-mode .custom-checkbox-container:hover input ~ .checkmark-box,
+:host-context(body.dark-mode) .custom-checkbox-container:hover input ~ .checkmark-box {
+  background-color: #1e293b !important;
+}
+
+body.dark-mode .custom-checkbox-container input:checked ~ .checkmark-box,
+:host-context(body.dark-mode) .custom-checkbox-container input:checked ~ .checkmark-box {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+}
+
+body.dark-mode .checkmark-box::after,
+:host-context(body.dark-mode) .checkmark-box::after {
+  border-color: #ffffff !important;
+}
+
+body.dark-mode .validation-error,
+:host-context(body.dark-mode) .validation-error {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  border-color: #ef4444 !important;
+}
+
+body.dark-mode .validation-error p,
+body.dark-mode .field-error-msg,
+:host-context(body.dark-mode) .validation-error p,
+:host-context(body.dark-mode) .field-error-msg {
+  color: #fca5a5 !important;
+}
+
+body.dark-mode .select-wrapper-custom::after,
+:host-context(body.dark-mode) .select-wrapper-custom::after {
+  color: #cbd5e1 !important;
+}
+
 @media (max-width: 768px) {
   .paciente-layout {
     flex-direction: column !important;
   }
-
   .rendimiento-main {
     padding: 20px 16px !important;
     width: 100% !important;
     max-width: 100% !important;
     margin-left: 0 !important;
   }
-
   .rendimiento-header h1 {
     font-size: 24px !important;
   }
-
   .rendimiento-date {
     font-size: 13px !important;
   }
-
   .card-section {
     padding: 20px 16px !important;
     margin-bottom: 16px !important;
     border-radius: 10px !important;
   }
-
   .card-title {
     font-size: 18px !important;
     gap: 10px !important;
   }
-
   .dieta-grid-options {
     grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
-
   .dieta-btn-card {
     flex-direction: row !important;
     justify-content: flex-start !important;
     align-items: center !important;
-    padding: 16px 20px !important;
-    gap: 16px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .dieta-btn-card {
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    padding: 16px 24px !important; /* Más espacio interno a los lados */
-    gap: 24px !important; /* Aumentamos la separación entre icono y texto */
+    padding: 16px 24px !important;
+    gap: 24px !important;
     width: 100% !important;
     height: auto !important;
     box-sizing: border-box !important;
   }
-
   .dieta-btn-card .mood-icon {
     width: 32px !important;
     height: 32px !important;
-    min-width: 32px !important; /* Esto evita que el texto empuje o achique el icono */
+    min-width: 32px !important;
     max-width: 32px !important;
     object-fit: contain !important;
   }
-
   .btn-text-main {
     font-size: 15px !important;
     text-align: left !important;
     flex-grow: 1 !important;
-    padding-left: 4px !important; /* Margen extra de seguridad para el texto */
+    padding-left: 4px !important;
     white-space: normal !important;
     line-height: 1.4 !important;
   }
-
   .water-counter-container {
     gap: 15px !important;
   }
-
   #water-count {
     font-size: 28px !important;
   }
-
   .custom-form-input,
   .custom-form-textarea {
     padding: 12px !important;
-    font-size: 14px !important;
+    font-size: 16px !important;
   }
-
   .btn-send-report {
     width: 100% !important;
     border-radius: 8px !important;

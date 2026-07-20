@@ -1,204 +1,117 @@
-:host {
-  display: block;
-  width: 100%;
-  height: 100%;
-  font-family: "Inter", sans-serif;
-  background-color: #f9f9f9;
-}
-
+/* =========================================
+   ESTRUCTURA PRINCIPAL Y LAYOUT
+========================================= */
 .agenda-layout {
-  display: flex;
-  height: 100vh;
+  display: flex !important;
+  flex-direction: row !important;
   width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 .agenda-main {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
+  flex-grow: 1;
+  padding: 40px 60px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
+/* =========================================
+   ENCABEZADO Y SECCIONES
+========================================= */
 .header-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
+  align-items: center;
+  margin-bottom: 32px;
 }
 
 .header-title h1 {
-  font-size: 2.5rem;
-  color: #123524;
-  margin: 0;
+  font-size: 28px;
   font-weight: 700;
+  color: #212529;
+  margin-bottom: 4px;
 }
 
 .header-title p {
-  color: #666;
-  margin-top: 0.5rem;
-  font-size: 1rem;
+  font-size: 15px;
+  color: #6b7280;
 }
 
-.btn-agendar {
-  background-color: #1a4231;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background-color 0.2s;
-}
-
-.btn-agendar:hover {
-  background-color: #123524;
-}
-
-/* BANNER DE ERROR */
-.agenda-error-banner {
-  background-color: #fdeaea;
-  color: #d32f2f;
-  border: 1px solid #f5c6c6;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-}
-
-/* Texto cuando no hay próximas citas pero sí historial */
-.no-proximas {
-  color: #777;
-  font-size: 0.95rem;
-  padding: 1rem 0;
-}
-
-/* VISTA VACÍA */
-.empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #eaeaea;
-  padding: 3rem;
-  text-align: center;
-}
-
-.empty-icon {
-  width: 80px;
-  height: 80px;
-  background-color: #eaf5ef;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-}
-
-.empty-icon img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.empty-state h2 {
-  color: #222;
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.empty-state p {
-  color: #666;
-  max-width: 400px;
-  line-height: 1.5;
-  margin-bottom: 2rem;
-}
-
-/* VISTA CON CITAS */
 .section-title {
-  font-size: 1.25rem;
-  color: #333;
-  margin-bottom: 1rem;
+  font-size: 20px;
+  font-weight: 700;
+  color: #212529;
+  margin: 32px 0 20px 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
+  gap: 12px;
 }
 
 .section-title img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
+/* =========================================
+   TARJETAS DE CITA PRÓXIMA
+========================================= */
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
 .cita-card {
-  background: white;
-  border: 1px solid #eaeaea;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.5rem;
-  position: relative;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
   display: flex;
   flex-direction: column;
-}
-
-.cita-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background-color: #1a4231;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  gap: 16px;
+  position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .cita-badge {
   align-self: flex-start;
-  background: #c3ebd5;
-  color: #1a4231;
-  font-size: 0.75rem;
+  background: #ecfdf5;
+  color: #059669;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .cita-date {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #222;
-  margin-bottom: 0.25rem;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
 }
 
 .cita-time {
-  color: #666;
-  font-size: 0.9rem;
+  font-size: 14px;
+  color: #4b5563;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
 }
 
 .cita-doctor {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
 }
 
 .cita-doctor img {
@@ -209,41 +122,25 @@
 }
 
 .cita-doctor h4 {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #222;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .cita-doctor p {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #666;
+  font-size: 12px;
+  color: #6b7280;
 }
 
-.cita-actions {
-  margin-top: auto;
-  text-align: right;
-}
-
-.btn-cancelar {
-  background: transparent;
-  color: #666;
-  border: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-cancelar:hover {
-  color: #d32f2f;
-}
-
-/* HISTORIAL TABLE */
+/* =========================================
+   TABLA DE HISTORIAL
+========================================= */
 .historial-container {
-  background: white;
-  border: 1px solid #eaeaea;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
 }
 
 .historial-table {
@@ -253,132 +150,185 @@
 }
 
 .historial-table th {
-  background-color: #f5f4f0;
-  padding: 1rem 1.5rem;
+  background: #f9fafb;
+  padding: 14px 20px;
+  font-size: 13px;
   font-weight: 600;
-  color: #555;
-  font-size: 0.9rem;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .historial-table td {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #eaeaea;
-  color: #333;
-}
-
-.historial-table tr:last-child td {
-  border-bottom: none;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .historial-fecha {
   font-weight: 600;
-  color: #222;
+  color: #111827;
 }
+
 .historial-hora {
-  font-size: 0.8rem;
-  color: #777;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
 }
 
+/* Status Badges */
 .status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.75rem;
+  padding: 4px 10px;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 12px;
   font-weight: 600;
+  display: inline-block;
+}
+.status-badge.completada { background: #ecfdf5; color: #059669; }
+.status-badge.cancelada { background: #fef2f2; color: #dc2626; }
+.status-badge.no-asistio { background: #fff7ed; color: #ea580c; }
+
+/* =========================================
+   BOTONES
+========================================= */
+.btn-agendar {
+  background-color: #0d624b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.15s;
 }
 
-.status-badge.completada {
-  background-color: #eaf5ef;
-  color: #1a4231;
+.btn-agendar:hover {
+  background-color: #0a4d3b;
 }
 
-.status-badge.no-asistio {
-  background-color: #fdeaea;
-  color: #d32f2f;
+.btn-cancelar {
+  background: transparent;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
 }
 
-.status-badge.completada::before,
-.status-badge.no-asistio::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.btn-cancelar:hover {
+  background: #fef2f2;
 }
 
-.status-badge.completada::before {
-  background-color: #1a4231;
+/* ==========================================================================
+   MÓDULO DE ACCESO DIRECTO PARA MODO OSCURO (SIN COMENTARIOS INTERNOS)
+========================================================================== */
+body.dark-mode .agenda-layout {
+  background-color: #0b0f19 !important;
 }
 
-.status-badge.no-asistio::before {
-  background-color: #d32f2f;
+body.dark-mode .header-title h1,
+body.dark-mode .section-title {
+  color: #f8fafc !important;
 }
 
-.status-badge.cancelada {
-  background-color: #fff3cd;
-  color: #856404;
+body.dark-mode .header-title p {
+  color: #94a3b8 !important;
 }
 
-.status-badge.cancelada::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #856404;
+body.dark-mode .section-title img {
+  filter: brightness(0) invert(1) !important;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .agenda-layout {
-    flex-direction: column;
-  }
+body.dark-mode .cita-card {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+}
 
-  .agenda-main {
-    margin-left: 0;
-    padding: 1rem;
-  }
+body.dark-mode .cita-badge[style] {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
 
-  .header-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
+body.dark-mode .cita-badge:not([style]) {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+}
 
-  .btn-agendar {
-    width: 100%;
-    justify-content: center;
-  }
+body.dark-mode .cita-date,
+body.dark-mode .cita-doctor h4 {
+  color: #f8fafc !important;
+}
 
-  .historial-table,
-  .historial-table tbody,
-  .historial-table tr,
-  .historial-table td,
-  .historial-table th {
-    display: block;
-  }
+body.dark-mode .cita-time,
+body.dark-mode .cita-doctor p {
+  color: #94a3b8 !important;
+}
 
-  .historial-table thead {
-    display: none;
-  }
+body.dark-mode .cita-time img {
+  filter: brightness(0) invert(1) !important;
+}
 
-  .historial-table tr {
-    margin-bottom: 1rem;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    padding: 1rem;
-  }
+body.dark-mode .cita-doctor {
+  border-top-color: #334155 !important;
+}
 
-  .historial-table td {
-    border-bottom: none;
-    padding: 0.5rem 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+body.dark-mode .btn-cancelar {
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+}
 
-  .historial-table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #555;
-  }
+body.dark-mode .btn-cancelar:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+body.dark-mode .historial-container {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .historial-table th {
+  background-color: #0f172a !important;
+  color: #cbd5e1 !important;
+  border-bottom-color: #334155 !important;
+}
+
+body.dark-mode .historial-table td {
+  color: #e2e8f0 !important;
+  border-bottom-color: #334155 !important;
+}
+
+body.dark-mode .historial-fecha {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .historial-hora {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .status-badge.completada {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+}
+
+body.dark-mode .status-badge.cancelada {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+}
+
+body.dark-mode .status-badge.no-asistio {
+  background-color: rgba(249, 115, 22, 0.15) !important;
+  color: #fdba74 !important;
+}
+
+body.dark-mode .no-proximas {
+  color: #94a3b8 !important;
 }

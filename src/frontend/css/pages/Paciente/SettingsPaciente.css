@@ -1,28 +1,14 @@
 /* =========================================
-   VARIABLES GLOBALES (LIGHT & DARK MODE)
+   VARIABLES ESPECÍFICAS DE SETTINGS PACIENTE
 ========================================= */
 :root {
-  /* TEMA CLARO */
-  --bg-body: #f9fafb;
-  --bg-card: #ffffff;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --border-color: #e5e7eb;
-
-  --color-brand-dark: #064e3b;
-  --color-danger: #dc2626; /* Rojo para alertas y eliminar */
+  /* Variables específicas para esta página */
+  --color-danger: #dc2626;
   --color-danger-hover: #b91c1c;
 }
 
-/* TEMA OSCURO APLICADO AL BODY */
+/* TEMA OSCURO - Variables específicas */
 body.dark-mode {
-  --bg-body: #111827;
-  --bg-card: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
-
-  --color-brand-dark: #10b981;
   --color-danger: #ef4444;
   --color-danger-hover: #f87171;
 }
@@ -32,16 +18,12 @@ body.dark-mode {
 ========================================= */
 :host {
   display: block;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-body);
   min-height: 100vh;
   color: var(--text-primary);
   --sidebar-width: 260px;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 * {
@@ -49,9 +31,12 @@ body.dark-mode {
   margin: 0;
   padding: 0;
 }
+
 .layout-wrapper {
   display: flex;
   min-height: 100vh;
+  background-color: var(--bg-body);
+  transition: background-color 0.3s ease;
 }
 
 .settings-main {
@@ -60,6 +45,7 @@ body.dark-mode {
   margin-left: 260px;
   width: calc(100% - 260px);
   max-width: 100%;
+  background-color: var(--bg-body);
 }
 
 /* Barra superior (Campanita) */
@@ -78,6 +64,7 @@ body.dark-mode {
   border-radius: 50%;
   transition: background 0.2s;
 }
+
 .btn-icon-only:hover {
   background: var(--border-color);
 }
@@ -86,6 +73,7 @@ body.dark-mode {
 .settings-header {
   margin-bottom: 40px;
 }
+
 .settings-header h1 {
   font-size: 32px;
   font-weight: 800;
@@ -93,6 +81,7 @@ body.dark-mode {
   margin-bottom: 8px;
   color: var(--text-primary);
 }
+
 .settings-header p {
   font-size: 15px;
   color: var(--text-secondary);
@@ -106,17 +95,19 @@ body.dark-mode {
 }
 
 /* =========================================
-   TARJETAS
+   TARJETAS (CAPA FRONTAL / ELEVADA)
 ========================================= */
 .settings-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode .settings-card {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); /* Sombra más fuerte para resaltar la tarjeta del fondo oscuro */
 }
 
 .card-header-icon {
@@ -137,6 +128,7 @@ body.dark-mode {
   height: 24px;
   object-fit: contain;
 }
+
 body.dark-mode .custom-icon {
   filter: brightness(0) invert(1);
 } /* Invertir iconos oscuros */
@@ -160,9 +152,11 @@ body.dark-mode .custom-icon {
   color: var(--text-primary);
   margin-bottom: 6px;
 }
+
 .row-info p {
   font-size: 14px;
   color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 /* =========================================
@@ -174,11 +168,13 @@ body.dark-mode .custom-icon {
   width: 44px;
   height: 24px;
 }
+
 .toggle-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
+
 .slider {
   position: absolute;
   cursor: pointer;
@@ -186,13 +182,15 @@ body.dark-mode .custom-icon {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #cbd5e1;
+  background-color: var(--border-color);
   transition: 0.3s;
   border-radius: 34px;
 }
+
 body.dark-mode .slider {
-  background-color: #4b5563;
+  background-color: #475569;
 }
+
 .slider:before {
   position: absolute;
   content: "";
@@ -204,9 +202,11 @@ body.dark-mode .slider {
   transition: 0.3s;
   border-radius: 50%;
 }
+
 .toggle-switch input:checked + .slider {
   background-color: var(--color-brand-dark);
 }
+
 .toggle-switch input:checked + .slider:before {
   transform: translateX(20px);
 }
@@ -225,15 +225,18 @@ body.dark-mode .slider {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .btn-outline-danger:hover {
-  background: #fef2f2; /* Fondo rojo muy claro */
-}
-body.dark-mode .btn-outline-danger:hover {
   background: rgba(220, 38, 38, 0.1);
 }
 
+body.dark-mode .btn-outline-danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #f87171;
+}
+
 /* =========================================
-   MODAL DE CONFIRMACIÓN (Alerta)
+   MODAL DE CONFIRMACIÓN (Capa superior)
 ========================================= */
 .modal-overlay {
   position: fixed;
@@ -241,14 +244,15 @@ body.dark-mode .btn-outline-danger:hover {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(17, 24, 39, 0.4);
-  backdrop-filter: blur(2px);
+  background: rgba(11, 15, 25, 0.75); /* Fondo oscuro translúcido con desenfoque */
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   transition: opacity 0.3s ease;
 }
+
 .modal-overlay.hidden {
   display: none !important;
 }
@@ -256,15 +260,18 @@ body.dark-mode .btn-outline-danger:hover {
 .modal-content {
   background: var(--bg-card);
   width: 90%;
-  border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   padding: 32px;
   animation: modalPop 0.3s ease-out;
+  border: 1px solid var(--border-color);
 }
+
 .modal-small {
   max-width: 450px;
 }
+
 @keyframes modalPop {
   0% {
     transform: scale(0.95);
@@ -290,10 +297,8 @@ body.dark-mode .btn-outline-danger:hover {
 }
 
 .icon-danger {
-  filter: none !important; /* Evita que el modo oscuro invierta el rojo de este icono */
-  /* Si tu SVG original no es rojo, aplica este filtro para volverlo rojo fuego: */
-  filter: invert(30%) sepia(91%) saturate(2375%) hue-rotate(345deg)
-    brightness(98%) contrast(97%) !important;
+  filter: none !important;
+  filter: invert(30%) sepia(91%) saturate(2375%) hue-rotate(345deg) brightness(98%) contrast(97%) !important;
 }
 
 .modal-body.text-left {
@@ -313,37 +318,77 @@ body.dark-mode .btn-outline-danger:hover {
   padding: 10px 24px;
   background: transparent;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
+
 .btn-cancel:hover {
-  background: #f3f4f6;
-}
-body.dark-mode .btn-cancel:hover {
-  background: #374151;
+  background: var(--bg-light);
 }
 
 .btn-danger-solid {
   padding: 10px 24px;
-  background: #b91c1c;
+  background: var(--color-danger);
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   color: white;
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .btn-danger-solid:hover {
-  background: #991b1b;
+  background: var(--color-danger-hover);
 }
+
 .btn-danger-solid:disabled {
   background: #fca5a5;
   cursor: not-allowed;
+}
+
+/* =========================================
+   CORRECCIÓN DEL MODAL EN MODO OSCURO
+========================================= */
+
+/* 1. Fondo oscuro coherente y elevado para la ventana modal */
+body.dark-mode .modal-content {
+  background-color: #1e293b !important; /* Mismo color de las tarjetas frontales */
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 2. Fondo y división para el pie de la modal */
+body.dark-mode .modal-footer,
+body.dark-mode .centered-footer {
+  background-color: #1e293b !important;
+  border-top-color: #334155 !important;
+}
+
+/* 3. Corrección del botón "Cancelar": fondo visible, texto claro y borde nítido */
+body.dark-mode .btn-cancel,
+body.dark-mode .btn-cancel.close-modal {
+  background-color: #334155 !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+/* 4. Efecto Hover para el botón de cancelar en modo oscuro */
+body.dark-mode .btn-cancel:hover,
+body.dark-mode .btn-cancel.close-modal:hover {
+  background-color: #475569 !important;
+  border-color: #64748b !important;
+  color: #ffffff !important;
+}
+
+/* 5. Asegurar legibilidad en la explicación del modal */
+body.dark-mode .modal-body p {
+  color: #cbd5e1 !important;
 }
 
 /* =========================================

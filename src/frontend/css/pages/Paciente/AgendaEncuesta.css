@@ -12,8 +12,7 @@
   --nc-border: #e5e7eb;
   --nc-radius-md: 8px;
   --nc-radius-lg: 16px;
-  --nc-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --nc-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 /* ==========================================================================
@@ -26,11 +25,7 @@
 }
 
 .nutricore-layout {
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
   background-color: var(--nc-bg);
   color: var(--nc-text-main);
   min-height: 100vh;
@@ -45,7 +40,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1000px; /* Ancho máximo para la vista de encuesta */
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -151,7 +146,7 @@
   height: 2px;
   background-color: var(--nc-border);
   margin: 0 16px;
-  margin-bottom: 20px; /* Alineación vertical con los círculos */
+  margin-bottom: 20px;
 }
 
 .n-stepper__line--active {
@@ -214,9 +209,8 @@
   gap: 16px;
 }
 
-/* ==========================================================================
-   FASE 1: SCHEDULING (Calendario y Horas)
-   ========================================================================== */
+
+
 .n-time-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -403,7 +397,7 @@
   outline: none;
   transition: border-color 0.2s;
   background-color: var(--nc-surface);
-  margin-bottom: 12px; /* Espaciado para la grilla de inputs múltiples */
+  margin-bottom: 12px;
 }
 
 .n-input:focus,
@@ -447,7 +441,6 @@
   margin-bottom: 16px;
 }
 
-/* Tabla responsiva para la matriz de frecuencia */
 .n-table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -459,7 +452,7 @@
 .n-survey-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* Evita que las columnas se aplasten en móvil */
+  min-width: 600px;
 }
 
 .n-survey-table th,
@@ -578,16 +571,15 @@
     padding: 20px;
   }
 
-  /* Stepper en móvil: acortar líneas o esconder texto si es necesario */
   .n-stepper__line {
     margin: 0 8px;
     margin-bottom: 20px;
   }
+  
   .n-stepper__label {
     font-size: 0.65rem;
   }
 
-  /* Fase 1: Apilar calendario y horas */
   .n-schedule-container {
     flex-direction: column;
     gap: 24px;
@@ -598,17 +590,16 @@
   }
 
   .n-times__grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Fase 2: Formulario de encuesta */
   .n-form-grid--3cols {
-    grid-template-columns: 1fr; /* Una sola columna en móvil */
+    grid-template-columns: 1fr;
     gap: 0;
   }
 
   .n-form-label-static {
-    display: none; /* Ocultar labels estáticos del grid de padre/madre en móvil y usar placeholders o labels inline si se mejora el HTML, por ahora se apilan los inputs */
+    display: none;
   }
 
   .n-radio-group {
@@ -624,7 +615,6 @@
     width: 100%;
   }
 
-  /* Footer apilado */
   .n-footer {
     flex-direction: column;
     text-align: center;
@@ -634,4 +624,192 @@
     flex-wrap: wrap;
     justify-content: center;
   }
+}
+
+/* ==========================================================================
+   ACCESO DIRECTO MODO OSCURO (INHERITED & INJECTED)
+   ========================================================================== */
+body.dark-mode :host,
+body.dark-mode,
+:host-context(body.dark-mode) {
+  --nc-bg: #0b0f19;
+  --nc-surface: #1e293b;
+  --nc-text-main: #f8fafc;
+  --nc-text-muted: #94a3b8;
+  --nc-border: #334155;
+  --nc-primary: #34d399;
+  --nc-primary-hover: #059669;
+  --nc-primary-light: rgba(52, 211, 153, 0.15);
+}
+
+body.dark-mode .nutricore-layout {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .n-header,
+body.dark-mode .n-footer {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .n-header__title,
+body.dark-mode .n-footer__brand,
+body.dark-mode .n-icon-btn,
+body.dark-mode .n-calendar__nav-btn {
+  color: #34d399 !important;
+}
+
+body.dark-mode .n-icon-btn:hover {
+  background-color: rgba(52, 211, 153, 0.2) !important;
+}
+
+body.dark-mode .n-stepper__circle {
+  background-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .n-stepper__step--active .n-stepper__circle {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .n-stepper__step--active .n-stepper__label {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .n-stepper__line {
+  background-color: #334155 !important;
+}
+
+body.dark-mode .n-stepper__line--active {
+  background-color: #10b981 !important;
+}
+
+body.dark-mode .n-card {
+  background-color: #1e293b !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .n-card__header p,
+body.dark-mode .n-form-sublabel,
+body.dark-mode .n-form-label-static,
+body.dark-mode .n-calendar__day-name,
+body.dark-mode .n-footer__links a {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .n-card__footer {
+  border-top-color: #334155 !important;
+}
+
+body.dark-mode .n-calendar {
+  background-color: #0f172a !important;
+}
+
+body.dark-mode .n-calendar__month,
+body.dark-mode .n-times__title {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .n-calendar__day {
+  color: #e2e8f0 !important;
+}
+
+body.dark-mode .n-calendar__day:not(:disabled):hover {
+  background-color: #334155 !important;
+}
+
+body.dark-mode .n-calendar__day--muted {
+  color: #475569 !important;
+}
+
+body.dark-mode .n-calendar__day--selected {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .n-time-btn {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .n-time-btn:hover {
+  border-color: #34d399 !important;
+  color: #34d399 !important;
+}
+
+body.dark-mode .n-time-btn--selected {
+  background-color: rgba(52, 211, 153, 0.15) !important;
+  border-color: #34d399 !important;
+  color: #34d399 !important;
+}
+
+body.dark-mode .n-time-btn:disabled {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #475569 !important;
+}
+
+body.dark-mode .n-form-section__title {
+  color: #34d399 !important;
+  border-bottom-color: rgba(52, 211, 153, 0.2) !important;
+}
+
+body.dark-mode .n-input,
+body.dark-mode .n-select {
+  background-color: #0f172a !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .n-input:focus,
+body.dark-mode .n-select:focus {
+  border-color: #34d399 !important;
+}
+
+body.dark-mode .n-table-responsive {
+  border-color: #334155 !important;
+}
+
+body.dark-mode .n-survey-table th {
+  background-color: #0f172a !important;
+  color: #cbd5e1 !important;
+  border-bottom-color: #334155 !important;
+}
+
+body.dark-mode .n-survey-table td {
+  color: #e2e8f0 !important;
+  border-bottom-color: #334155 !important;
+}
+
+body.dark-mode .n-btn--primary {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .n-btn--primary:hover {
+  background-color: #059669 !important;
+}
+
+body.dark-mode .n-btn--outline {
+  border-color: #475569 !important;
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .n-btn--outline:hover {
+  background-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .n-footer__links a:hover {
+  color: #34d399 !important;
+}
+body.dark-mode .n-header img,
+body.dark-mode .n-header__brand img,
+body.dark-mode .n-header__logo,
+body.dark-mode .n-header svg {
+  filter: brightness(0) invert(1) !important;
+  display: inline-block !important;
 }

@@ -11,9 +11,9 @@ export class SettingPaciente extends HTMLElement {
   render() {
     this.innerHTML = `
       <div class="layout-wrapper">
-        <app-sidebar-paciente style="position: fixed;"></app-sidebar-paciente>
+        <app-sidebar-paciente style="position: fixed; z-index: 1000;"></app-sidebar-paciente>
         
-        <main class="settings-main">
+        <main class="settings-main" style="position: relative; z-index: 1;">
           <!-- Icono de notificaciones superior -->
           <div class="top-nav-bar">
              <button class="btn-icon-only">
@@ -100,9 +100,8 @@ export class SettingPaciente extends HTMLElement {
     // ==========================================
     const toggleDarkMode = this.querySelector("#toggle-dark-mode");
 
-    // Revisar preferencia guardada en localStorage
+    // Sincronizar el toggle con el estado guardado (main.js ya aplica la clase)
     if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark-mode");
       if (toggleDarkMode) toggleDarkMode.checked = true;
     }
 

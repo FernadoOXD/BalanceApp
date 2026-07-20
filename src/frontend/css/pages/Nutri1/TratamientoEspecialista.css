@@ -1,18 +1,118 @@
 /* ==========================================================================
-   1. CONTENEDOR GENERAL Y LAYOUT
+   VARIABLES DEL SISTEMA (:root)
+   ========================================================================== */
+:root {
+  /* Fuentes y Tipografías */
+  --font-main: "Segoe UI", system-ui, sans-serif;
+
+  /* Semántica de Colores Base (Modo Claro) */
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f8fafc;
+  --bg-sidebar: transparent;
+  
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-muted-alt: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --border-main: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-card-alt: #eef2f6;
+
+  /* Botones y Componentes Temáticos */
+  --color-brand: #005a36;
+  --color-brand-hover: #004428;
+  --color-brand-alt: #00593b;
+
+  --btn-sec-bg: #ffffff;
+  --btn-sec-border: #cbd5e1;
+  --btn-sec-text: #334155;
+  --btn-sec-hover-bg: #f8fafc;
+
+  --btn-del-hover-bg: #fee2e2;
+  --btn-del-hover-border: #cbd5e1;
+  --btn-del-hover-text: #334155;
+
+  --tab-inactive-bg: #f8fafc;
+  --tab-inactive-hover-bg: #f1f5f9;
+
+  /* Estados y Badges */
+  --avatar-bg: #e2e8f0;
+  --avatar-text: #475569;
+
+  --status-activo-bg: #e6f7ed;
+  --status-activo-text: #22c55e;
+  --status-pendiente-bg: #f1f5f9;
+  --status-pendiente-text: #64748b;
+
+  --form-focus-border: #005a36;
+  --form-focus-bg: #ffffff;
+  --form-focus-cell-bg: #f8fafc;
+
+  /* Filtros para Iconos */
+  --icon-filter: none;
+  --shadow-dropdown: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   CONTROL DE MODO OSCURO (Centralizado en Variables)
+   ========================================================================== */
+body.dark-mode .gestion-tratamientos-container {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-alt: #0f172a;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-muted-alt: #94a3b8;
+  
+  --border-main: #334155;
+  --border-subtle: #334155;
+  --border-card-alt: #334155;
+
+  --btn-sec-bg: #1e293b;
+  --btn-sec-border: #334155;
+  --btn-sec-text: #e2e8f0;
+  --btn-sec-hover-bg: #334155;
+
+  --btn-del-hover-bg: #7f1d1d;
+  --btn-del-hover-border: #ef4444;
+  --btn-del-hover-text: #e2e8f0;
+
+  --tab-inactive-bg: #0f172a;
+  --tab-inactive-hover-bg: #252f3f;
+
+  --avatar-bg: #334155;
+  --avatar-text: #f8fafc;
+
+  --status-activo-bg: rgba(34, 197, 94, 0.15);
+  --status-activo-text: #4ade80;
+  --status-pendiente-bg: rgba(148, 163, 184, 0.15);
+  --status-pendiente-text: #94a3b8;
+
+  --form-focus-border: #22c55e;
+  --form-focus-bg: #1e293b;
+  --form-focus-cell-bg: #1e293b;
+  --form-group-dia-label: #4ade80;
+
+  --icon-filter: brightness(0) invert(0.9);
+  --shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   1. LAYOUT
    ========================================================================== */
 .gestion-tratamientos-container {
   display: flex;
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  background-color: #f8fafc;
-  font-family: "Segoe UI", system-ui, sans-serif;
-}
-
-.sidebar-wrapper {
-  flex-shrink: 0;
-  width: 260px;
+  background-color: var(--bg-main);
+  font-family: var(--font-main);
+  transition: background-color 0.3s ease;
 }
 
 .main-content-wrapper {
@@ -22,10 +122,19 @@
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  width: 100%;
+}
+
+.pacientes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 /* ==========================================================================
-   2. ENCABEZADO Y COMPONENTES COMUNES
+   2. TOPBAR (ENCABEZADOS Y BÚSQUEDA)
    ========================================================================== */
 .content-header {
   display: flex;
@@ -33,30 +142,31 @@
   align-items: flex-start;
   margin-bottom: 2rem;
   width: 100%;
+  gap: 15px;
 }
 
 .header-text h1 {
   margin: 0 0 0.5rem 0;
   font-size: 1.8rem;
-  color: #1e293b;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .header-text p {
   margin: 0;
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
 .divider {
   border: 0;
   height: 1px;
-  background: #e2e8f0;
+  background: var(--border-main);
   margin-bottom: 20px;
+  transition: background-color 0.3s ease;
 }
 
-/* ==========================================================================
-   3. SECCIÓN DE BÚSQUEDA Y SUGERENCIAS FLOTANTES
-   ========================================================================== */
 .search-bar-section {
   display: flex;
   gap: 1rem;
@@ -67,6 +177,7 @@
 .search-container-relative {
   position: relative;
   flex-grow: 1;
+  width: 100%;
 }
 
 .search-input-wrapper {
@@ -83,21 +194,25 @@
   height: 20px;
   pointer-events: none;
   opacity: 0.6;
+  filter: var(--icon-filter);
+  transition: filter 0.3s ease;
 }
 
 .search-input-wrapper input {
   width: 100%;
   padding: 0.8rem 1rem 0.8rem 2.8rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-main);
+  background-color: var(--bg-card);
   border-radius: 12px;
   font-size: 1rem;
   box-sizing: border-box;
+  color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .search-input-wrapper input:focus {
-  border-color: #005a36;
+  border-color: var(--form-focus-border);
 }
 
 .search-suggest-dropdown {
@@ -105,16 +220,15 @@
   top: 100%;
   left: 0;
   width: 100%;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
   border-radius: 8px;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-dropdown);
   z-index: 999;
   max-height: 250px;
   overflow-y: auto;
   margin-top: 4px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .dropdown-item {
@@ -123,8 +237,8 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  transition: background 0.2s ease;
-  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease, border-color 0.3s ease;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .dropdown-item:last-child {
@@ -132,35 +246,189 @@
 }
 
 .dropdown-item:hover {
-  background: #f8fafc;
+  background: var(--tab-inactive-hover-bg);
 }
 
 .dropdown-name {
   font-size: 14px;
   font-weight: 500;
-  color: #1e293b;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .dropdown-id {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-muted-alt);
 }
 
 .dropdown-item.empty {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 14px;
   text-align: center;
   justify-content: center;
   cursor: default;
-  background: #ffffff !important;
+  background: var(--bg-card) !important;
 }
 
 /* ==========================================================================
-   4. BOTONES DEL SISTEMA
+   3. SIDEBAR
+   ========================================================================== */
+.sidebar-wrapper {
+  flex-shrink: 0;
+  width: 260px;
+  background-color: var(--bg-sidebar);
+}
+
+/* ==========================================================================
+   4. COMPONENTES Y TARJETAS (CARDS)
+   ========================================================================== */
+.tratamientos-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.section-icon {
+  width: 22px;
+  height: 22px;
+  filter: var(--icon-filter);
+  transition: filter 0.3s ease;
+}
+
+.paciente-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: 16px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  background-color: var(--avatar-bg);
+  color: var(--avatar-text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.paciente-info {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.paciente-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.paciente-id {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-activo {
+  background-color: var(--status-activo-bg);
+  color: var(--status-activo-text);
+}
+
+.status-pendiente {
+  background-color: var(--status-pendiente-bg);
+  color: var(--status-pendiente-text);
+}
+
+.card-body {
+  flex: 1;
+}
+
+.row-objetivo {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0.6rem 0;
+  transition: color 0.3s ease;
+}
+
+.row-objetivo strong {
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.card-body p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0.6rem 0;
+  color: var(--btn-sec-text);
+  transition: color 0.3s ease;
+}
+
+.card-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  filter: var(--icon-filter);
+  transition: filter 0.3s ease;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  align-items: center;
+  gap: 10px;
+}
+
+.no-results,
+.status-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+  transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   5. BOTONES
    ========================================================================== */
 .btn-primary {
-  background-color: #005a36;
-  color: white;
+  background-color: var(--color-brand);
+  color: var(--text-inverse);
   border: none;
   border-radius: 12px;
   padding: 0.8rem 1.5rem;
@@ -173,8 +441,8 @@
 }
 
 .btn-primary-sm {
-  background: #005a36;
-  color: #ffffff;
+  background: var(--color-brand);
+  color: var(--text-inverse);
   border: none;
   border-radius: 8px;
   padding: 6px 14px;
@@ -182,32 +450,34 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 
 .btn-primary-sm:hover {
-  background-color: #004428;
+  background-color: var(--color-brand-hover);
 }
 
 .btn-perfil,
 .btn-delete {
   display: inline-flex;
   align-items: center;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--btn-sec-border);
   border-radius: 8px;
-  background-color: white;
+  background-color: var(--btn-sec-bg);
   cursor: pointer;
-  transition: background-color 0.2s;
+  color: var(--btn-sec-text);
+  transition: background-color 0.2s, border-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-perfil {
   gap: 6px;
   padding: 0.5rem 0.8rem;
   font-size: 0.9rem;
-  color: #334155;
 }
 
 .btn-perfil:hover {
-  background-color: #f8fafc;
+  background-color: var(--btn-sec-hover-bg);
+  color: var(--text-inverse);
 }
 
 .btn-delete {
@@ -216,13 +486,17 @@
 }
 
 .btn-delete:hover {
-  background-color: #fee2e2;
+  background-color: var(--btn-del-hover-bg);
+  border-color: var(--btn-del-hover-border);
+  color: var(--btn-del-hover-text);
 }
 
 .btn-icon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  filter: var(--icon-filter);
+  transition: filter 0.3s ease;
 }
 
 .btn-icon-white {
@@ -235,255 +509,13 @@
   background: none;
   border: none;
   font-size: 22px;
-  color: #94a3b8;
+  color: var(--text-muted-alt);
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .close-x-btn:hover {
-  color: #64748b;
-}
-
-/* ==========================================================================
-   5. GRID Y TARJETAS DE PACIENTES
-   ========================================================================== */
-.tratamientos-section h2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1.4rem;
-  color: #1e293b;
-  margin-bottom: 1.5rem;
-}
-
-.section-icon {
-  width: 22px;
-  height: 22px;
-}
-
-.pacientes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 1.5rem;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.paciente-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 1.2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.avatar {
-  background-color: #e2e8f0;
-  color: #475569;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.paciente-info {
-  flex: 1;
-  margin-left: 10px;
-}
-
-.paciente-info h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #1e293b;
-}
-
-.paciente-id {
-  font-size: 0.85rem;
-  color: #64748b;
-}
-
-/* Badges Dinámicos basados en la captura */
-.badge {
-  padding: 0.2rem 0.6rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.status-activo {
-  background-color: #e6f7ed;
-  color: #22c55e;
-}
-
-.status-pendiente {
-  background-color: #f1f5f9;
-  color: #64748b;
-}
-
-.card-body {
-  flex: 1;
-}
-
-/* Corrección de la fila de Objetivo alineada en flujo continuo */
-.row-objetivo {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  font-size: 0.95rem;
-  color: #475569;
-  line-height: 1.4;
-  margin: 0.6rem 0;
-}
-
-.row-objetivo strong {
-  color: #1e293b;
-  white-space: nowrap;
-}
-
-.card-body p {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0.6rem 0;
-  color: #334155;
-}
-
-.card-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.2rem;
-  align-items: center;
-}
-
-.no-results,
-.status-message {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: #64748b;
-  padding: 2rem;
-}
-
-/* ==========================================================================
-   6. COMPONENTE PERFIL EXTENDIDO
-   ========================================================================== */
-.mini-perfil-modal-view {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  max-width: 600px;
-  margin: 20px auto;
-  position: relative;
-  border: 1px solid #eef2f6;
-  transition: max-width 0.2s ease;
-}
-
-/* Ampliación de espacio si está el formulario o la tabla activa */
-.perfil-vista-ampliada {
-  max-width: 750px;
-}
-
-.mini-perfil-close-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: -10px;
-}
-
-.section-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-/* Encabezado del perfil */
-.mini-perfil-card-header {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 24px;
-  border: 1px solid #f1f5f9;
-}
-
-.large-avatar {
-  width: 56px;
-  height: 56px;
-  background: #e2e8f0;
-  color: #475569;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 18px;
-}
-
-.mp-user-info {
-  flex-grow: 1;
-}
-
-.mp-user-info h2 {
-  margin: 0 0 4px 0;
-  font-size: 20px;
-  color: #1e293b;
-  font-weight: 600;
-}
-
-.mp-meta-data {
-  display: flex;
-  gap: 32px;
-}
-
-.meta-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  color: #64748b;
-  letter-spacing: 0.5px;
-  margin-bottom: 2px;
-  display: block;
-}
-
-.meta-value {
-  margin: 0;
-  font-size: 14px;
-  color: #334155;
-  font-weight: 500;
-}
-
-/* Pestañas (Tabs) */
-.mini-perfil-tratamientos-section h3 {
-  margin: 0;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  color: #334155;
-  font-weight: 600;
-}
-
-.mp-tabs-container {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
+  color: var(--text-muted);
 }
 
 .tab-btn {
@@ -495,53 +527,28 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
+  white-space: nowrap;
 }
 
 .tab-btn.active-tab {
-  background: #00593b;
-  color: #ffffff;
-  border: 1px solid #00593b;
+  background: var(--color-brand-alt);
+  color: var(--text-inverse);
+  border: 1px solid var(--color-brand-alt);
 }
 
 .tab-btn:not(.active-tab) {
-  background: #f8fafc;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: var(--tab-inactive-bg);
+  color: var(--avatar-text);
+  border: 1px solid var(--border-main);
 }
 
 .tab-btn:not(.active-tab):hover {
-  background: #f1f5f9;
-}
-
-/* Área de contenido interno del Perfil */
-.mp-tratamiento-content-box {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 24px 20px;
-}
-
-.tratamiento-activo-detalle {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.mp-row-info strong {
-  font-size: 13px;
-  color: #1e293b;
-}
-
-.mp-row-info p {
-  margin: 4px 0 0 0;
-  color: #475569;
-  font-size: 14px;
-  line-height: 1.4;
+  background: var(--tab-inactive-hover-bg);
+  color: var(--text-inverse);
 }
 
 /* ==========================================================================
-   7. FORMULARIOS MODULARES DE ASIGNACIÓN (DENTRO DEL PERFIL)
+   6. FORMULARIOS
    ========================================================================== */
 .form-perfil-modular {
   display: flex;
@@ -559,25 +566,28 @@
 .form-group label {
   font-size: 12px;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .form-perfil-modular textarea,
 .form-perfil-modular input[type="text"] {
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-main);
+  background-color: var(--bg-card);
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 14px;
-  color: #334155;
+  color: var(--btn-sec-text);
   outline: none;
   box-sizing: border-box;
   width: 100%;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .form-perfil-modular textarea:focus,
 .form-perfil-modular input[type="text"]:focus {
-  border-color: #005a36;
+  border-color: var(--form-focus-border);
+  background-color: var(--form-focus-bg);
 }
 
 .form-perfil-modular textarea {
@@ -597,10 +607,11 @@
 .sub-form-title {
   margin: 12px 0 4px 0;
   font-size: 14px;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 600;
-  border-bottom: 1px dashed #e2e8f0;
+  border-bottom: 1px dashed var(--border-main);
   padding-bottom: 4px;
+  transition: color 0.3s ease, border-bottom-color 0.3s ease;
 }
 
 .grid-dias-inputs {
@@ -619,8 +630,9 @@
   width: 75px;
   font-size: 12px;
   font-weight: 600;
-  color: #005a36;
+  color: var(--form-group-dia-label, var(--color-brand));
   flex-shrink: 0;
+  transition: color 0.3s ease;
 }
 
 .form-group-dia input {
@@ -634,56 +646,341 @@
 }
 
 /* ==========================================================================
-   8. TABLA DE NUTRICIÓN Y DISTRIBUCIÓN SEMANAL
+   7. TABLAS
    ========================================================================== */
 .table-section-title {
   margin: 16px 0 8px 0;
   font-size: 14px;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .tabla-contenedor-perfil {
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-main);
   border-radius: 8px;
-  overflow: hidden;
-  background: #ffffff;
+  overflow-x: auto;
+  background: var(--bg-card);
+  width: 100%;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tabla-nutricional-perfil {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  min-width: 480px;
 }
 
 .tabla-nutricional-perfil th {
-  background: #f8fafc;
+  background: var(--bg-card-alt);
   padding: 10px 12px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #475569;
+  border-bottom: 1px solid var(--border-main);
+  color: var(--text-secondary);
   font-weight: 600;
+  transition: background-color 0.3s ease, border-bottom-color 0.3s ease, color 0.3s ease;
 }
 
 .tabla-nutricional-perfil td {
   padding: 10px 12px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--btn-sec-text);
+  transition: border-bottom-color 0.3s ease, color 0.3s ease;
 }
 
 .tabla-nutricional-perfil tr:last-child td {
   border-bottom: none;
 }
+
 .cell-input {
   width: 100%;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-main);
+  background-color: var(--bg-card);
   border-radius: 4px;
   padding: 6px;
   font-size: 12px;
   box-sizing: border-box;
+  color: var(--text-primary);
   outline: none;
+  transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .cell-input:focus {
-  border-color: #005a36;
-  background-color: #f8fafc;
+  border-color: var(--form-focus-border);
+  background-color: var(--form-focus-cell-bg);
+}
+
+/* ==========================================================================
+   8. MODALES Y PERFILES DETALLADOS
+   ========================================================================== */
+.mini-perfil-modal-view {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 20px auto;
+  position: relative;
+  border: 1px solid var(--border-card-alt);
+  transition: max-width 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.perfil-vista-ampliada {
+  max-width: 750px;
+}
+
+.mini-perfil-close-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -10px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.mini-perfil-card-header {
+  background: var(--bg-card-alt);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-subtle);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.large-avatar {
+  width: 56px;
+  height: 56px;
+  background: var(--avatar-bg);
+  color: var(--avatar-text);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mp-user-info {
+  flex-grow: 1;
+}
+
+.mp-user-info h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.mp-meta-data {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.meta-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+.meta-value {
+  margin: 0;
+  font-size: 14px;
+  color: var(--btn-sec-text);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.mini-perfil-tratamientos-section h3 {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: var(--btn-sec-text);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.mp-tabs-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.mp-tratamiento-content-box {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-main);
+  border-radius: 12px;
+  padding: 24px 20px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.tratamiento-activo-detalle {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mp-row-info strong {
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.mp-row-info p {
+  margin: 4px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   9. MEDIA QUERIES (RESPONSIVIDAD ORIGINAL CON VARIABLES)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pacientes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .gestion-tratamientos-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-wrapper {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    max-height: 280px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-main);
+  }
+
+  .main-content-wrapper {
+    padding: 1rem;
+    overflow: visible;
+  }
+
+  .content-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .content-header .btn-perfil,
+  #btn-regresar {
+    width: auto;
+    flex-grow: 0;
+    padding: 6px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .search-bar-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .pacientes-grid {
+    grid-template-columns: 1fr;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .paciente-card {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .mini-perfil-modal-view,
+  .perfil-vista-ampliada {
+    width: 95%;
+    max-width: none;
+    margin: 10px auto;
+    padding: 16px;
+  }
+
+  .mini-perfil-card-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .mp-meta-data {
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .mp-tratamiento-content-box {
+    padding: 16px 12px;
+  }
+
+  .form-row-inputs,
+  .grid-dias-inputs {
+    flex-direction: column;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form-group-dia {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .form-group-dia label {
+    width: 100%;
+  }
+
+  .search-input-wrapper input,
+  .form-perfil-modular textarea,
+  .form-perfil-modular input[type="text"],
+  .cell-input {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .mp-tabs-container {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    width: 100%;
+  }
 }

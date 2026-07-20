@@ -13,9 +13,9 @@ export class SettingEspecialista extends HTMLElement {
   render() {
     this.innerHTML = `
       <div class="layout-wrapper">
-        <app-sidebar-especialista style="position: fixed;"></app-sidebar-especialista>
+        <app-sidebar-especialista style="position: fixed; z-index: 1000;"></app-sidebar-especialista>
         
-        <main class="settings-main">
+        <main class="settings-main" style="position: relative; z-index: 1;">
           <!-- Encabezado Principal -->
           <header class="settings-header">
             <h1>Configuración</h1>
@@ -140,9 +140,8 @@ export class SettingEspecialista extends HTMLElement {
     // ==========================================
     const toggleDarkMode = this.querySelector("#toggle-dark-mode");
 
-    // Revisar si el usuario ya tenía el modo oscuro guardado
+    // Sincronizar el toggle con el estado guardado (main.js ya aplica la clase)
     if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark-mode");
       if (toggleDarkMode) toggleDarkMode.checked = true;
     }
 
