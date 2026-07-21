@@ -1,45 +1,43 @@
 package models;
 
-import java.sql.Date;
-
 public class ExpedienteSeguimiento {
     private int idSeguimiento;
     private int idExpediente;
-    private Date fechaActualizacion;
+    private String fechaActualizacion;
+    private String peso;
+    private String altura;
+    private String imc;
+    private String cintura;
+    private String objetivoSeguimiento;
     private String notasInternasActualizada;
 
     public ExpedienteSeguimiento() {}
 
-    public int getIdSeguimiento() {
-        return idSeguimiento;
-    }
+    // Getters y Setters
+    public int getIdSeguimiento() { return idSeguimiento; }
+    public void setIdSeguimiento(int idSeguimiento) { this.idSeguimiento = idSeguimiento; }
 
-    public void setIdSeguimiento(int idSeguimiento) {
-        this.idSeguimiento = idSeguimiento;
-    }
+    public int getIdExpediente() { return idExpediente; }
+    public void setIdExpediente(int idExpediente) { this.idExpediente = idExpediente; }
 
-    public int getIdExpediente() {
-        return idExpediente;
-    }
+    public String getFechaActualizacion() { return fechaActualizacion; }
+    public void setFechaActualizacion(String fechaActualizacion) { this.fechaActualizacion = fechaActualizacion; }
 
-    public void setIdExpediente(int idExpediente) {
-        this.idExpediente = idExpediente;
-    }
+    public String getPeso() { return peso; }
+    public void setPeso(String peso) { this.peso = peso; }
 
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
+    public String getAltura() { return altura; }
+    public void setAltura(String altura) { this.altura = altura; }
 
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
+    public String getImc() { return imc; }
+    public void setImc(String imc) { this.imc = imc; }
 
-    public String getNotasInternasActualizada() {
-        return notasInternasActualizada;
-    }
+    public String getCintura() { return cintura; }
+    public void setCintura(String cintura) { this.cintura = cintura; }
 
-    public void setNotasInternasActualizada(String notasInternasActualizada) {
-        this.notasInternasActualizada = notasInternasActualizada;
-    }
+    public String getObjetivoSeguimiento() { return objetivoSeguimiento; }
+    public void setObjetivoSeguimiento(String objetivoSeguimiento) { this.objetivoSeguimiento = objetivoSeguimiento; }
 
+    public String getNotasInternasActualizada() { return notasInternasActualizada; }
+    public void setNotasInternasActualizada(String notasInternasActualizada) { this.notasInternasActualizada = notasInternasActualizada; }
 }

@@ -31,22 +31,28 @@ public class ExpedienteNuevoController {
     }
 
     private static int guardarEnBaseDeDatos(ExpedienteNuevo exp) throws Exception {
-        // SQL limpio, 13 columnas y 13 signos de interrogación
-        String sql = "INSERT INTO EXPEDIENTE_NUEVO (idPaciente, altura, peso, talla, imc, cintura, antecedenteFamiliares, patologiaPrevia, alergiaIntolerancia, medicamentoActual, habitoToxico, fechaInicializacion, notasInternas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO EXPEDIENTE_NUEVO (idPaciente, sexo, edad, ocupacion, procedencia, escolaridad, ejercicio, objetivo, altura, peso, talla, imc, cintura, antecedenteFamiliares, patologiaPrevia, alergiaIntolerancia, medicamentoActual, habitoToxico, fechaInicializacion, notasInternas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, exp.getIdPaciente());
-            pstmt.setString(2, exp.getAltura());
-            pstmt.setString(3, exp.getPeso());
-            pstmt.setString(4, exp.getTalla());
-            pstmt.setString(5, exp.getImc());
-            pstmt.setString(6, exp.getCintura());
-            pstmt.setString(7, exp.getAntecedenteFamiliares());
-            pstmt.setString(8, exp.getPatologiaPrevia());
-            pstmt.setString(9, exp.getAlergiaIntolerancia());
-            pstmt.setString(10, exp.getMedicamentoActual());
-            pstmt.setString(11, exp.getHabitoToxico());
+            pstmt.setString(2, exp.getSexo());
+            pstmt.setString(3, exp.getEdad());
+            pstmt.setString(4, exp.getOcupacion());
+            pstmt.setString(5, exp.getProcedencia());
+            pstmt.setString(6, exp.getEscolaridad());
+            pstmt.setString(7, exp.getEjercicio());
+            pstmt.setString(8, exp.getObjetivo());
+            pstmt.setString(9, exp.getAltura());
+            pstmt.setString(10, exp.getPeso());
+            pstmt.setString(11, exp.getTalla());
+            pstmt.setString(12, exp.getImc());
+            pstmt.setString(13, exp.getCintura());
+            pstmt.setString(14, exp.getAntecedenteFamiliares());
+            pstmt.setString(15, exp.getPatologiaPrevia());
+            pstmt.setString(16, exp.getAlergiaIntolerancia());
+            pstmt.setString(17, exp.getMedicamentoActual());
+            pstmt.setString(18, exp.getHabitoToxico());
 
             java.sql.Date fechaFinal;
             if (exp.getFechaInicializacion() != null && !exp.getFechaInicializacion().isEmpty()) {
@@ -54,9 +60,9 @@ public class ExpedienteNuevoController {
             } else {
                 fechaFinal = new java.sql.Date(System.currentTimeMillis());
             }
-            pstmt.setDate(12, fechaFinal);
+            pstmt.setDate(19, fechaFinal);
 
-            pstmt.setString(13, exp.getNotasInternas());
+            pstmt.setString(20, exp.getNotasInternas());
 
             int filasAfectadas = pstmt.executeUpdate();
             if (filasAfectadas > 0) {
@@ -82,7 +88,13 @@ public class ExpedienteNuevoController {
                 exp.setIdExpediente(rs.getInt("idExpediente"));
                 exp.setIdPaciente(rs.getInt("idPaciente"));
                 
-                // Ya no intentamos leer 'objetivo'
+                exp.setSexo(rs.getString("sexo"));
+                exp.setEdad(rs.getString("edad"));
+                exp.setOcupacion(rs.getString("ocupacion"));
+                exp.setProcedencia(rs.getString("procedencia"));
+                exp.setEscolaridad(rs.getString("escolaridad"));
+                exp.setEjercicio(rs.getString("ejercicio"));
+                exp.setObjetivo(rs.getString("objetivo"));
                 exp.setAltura(rs.getString("altura"));
                 exp.setPeso(rs.getString("peso"));
                 exp.setTalla(rs.getString("talla"));
@@ -109,7 +121,6 @@ public class ExpedienteNuevoController {
     // READ (OBTENER UNO POR PACIENTE)
     public static void obtenerPorPaciente(Context ctx) {
         int pacienteId = Integer.parseInt(ctx.pathParam("pacienteId"));
-        // Aquí estaba el error. Restaurado el SELECT correcto:
         String sql = "SELECT * FROM EXPEDIENTE_NUEVO WHERE idPaciente = ?";
 
         try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -122,7 +133,13 @@ public class ExpedienteNuevoController {
                     responseJS.put("idExpediente", rs.getInt("idExpediente"));
                     responseJS.put("idPaciente", rs.getInt("idPaciente"));
                     
-                    // Ya no intentamos leer 'objetivo'
+                    responseJS.put("sexo", rs.getString("sexo"));
+                    responseJS.put("edad", rs.getString("edad"));
+                    responseJS.put("ocupacion", rs.getString("ocupacion"));
+                    responseJS.put("procedencia", rs.getString("procedencia"));
+                    responseJS.put("escolaridad", rs.getString("escolaridad"));
+                    responseJS.put("ejercicio", rs.getString("ejercicio"));
+                    responseJS.put("objetivo", rs.getString("objetivo"));
                     responseJS.put("altura", rs.getString("altura"));
                     responseJS.put("peso", rs.getString("peso"));
                     responseJS.put("talla", rs.getString("talla"));
@@ -155,22 +172,28 @@ public class ExpedienteNuevoController {
         int id = Integer.parseInt(ctx.pathParam("id"));
         ExpedienteNuevo exp = ctx.bodyAsClass(ExpedienteNuevo.class);
 
-        // Eliminamos 'objetivo=?' de la consulta SQL
-        String sql = "UPDATE EXPEDIENTE_NUEVO SET idPaciente=?, altura=?, peso=?, talla=?, imc=?, cintura=?, antecedenteFamiliares=?, patologiaPrevia=?, alergiaIntolerancia=?, medicamentoActual=?, habitoToxico=?, fechaInicializacion=?, notasInternas=? WHERE idExpediente=?";
+        String sql = "UPDATE EXPEDIENTE_NUEVO SET idPaciente=?, sexo=?, edad=?, ocupacion=?, procedencia=?, escolaridad=?, ejercicio=?, objetivo=?, altura=?, peso=?, talla=?, imc=?, cintura=?, antecedenteFamiliares=?, patologiaPrevia=?, alergiaIntolerancia=?, medicamentoActual=?, habitoToxico=?, fechaInicializacion=?, notasInternas=? WHERE idExpediente=?";
 
         try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, exp.getIdPaciente());
-            pstmt.setString(2, exp.getAltura());
-            pstmt.setString(3, exp.getPeso());
-            pstmt.setString(4, exp.getTalla());
-            pstmt.setString(5, exp.getImc());
-            pstmt.setString(6, exp.getCintura());
-            pstmt.setString(7, exp.getAntecedenteFamiliares());
-            pstmt.setString(8, exp.getPatologiaPrevia());
-            pstmt.setString(9, exp.getAlergiaIntolerancia());
-            pstmt.setString(10, exp.getMedicamentoActual());
-            pstmt.setString(11, exp.getHabitoToxico());
+            pstmt.setString(2, exp.getSexo());
+            pstmt.setString(3, exp.getEdad());
+            pstmt.setString(4, exp.getOcupacion());
+            pstmt.setString(5, exp.getProcedencia());
+            pstmt.setString(6, exp.getEscolaridad());
+            pstmt.setString(7, exp.getEjercicio());
+            pstmt.setString(8, exp.getObjetivo());
+            pstmt.setString(9, exp.getAltura());
+            pstmt.setString(10, exp.getPeso());
+            pstmt.setString(11, exp.getTalla());
+            pstmt.setString(12, exp.getImc());
+            pstmt.setString(13, exp.getCintura());
+            pstmt.setString(14, exp.getAntecedenteFamiliares());
+            pstmt.setString(15, exp.getPatologiaPrevia());
+            pstmt.setString(16, exp.getAlergiaIntolerancia());
+            pstmt.setString(17, exp.getMedicamentoActual());
+            pstmt.setString(18, exp.getHabitoToxico());
 
             java.sql.Date fechaFinal;
             if (exp.getFechaInicializacion() != null && !exp.getFechaInicializacion().isEmpty()) {
@@ -178,12 +201,10 @@ public class ExpedienteNuevoController {
             } else {
                 fechaFinal = new java.sql.Date(System.currentTimeMillis());
             }
-            pstmt.setDate(12, fechaFinal);
+            pstmt.setDate(19, fechaFinal);
 
-            pstmt.setString(13, exp.getNotasInternas());
-            
-            // El ID es el parámetro 14
-            pstmt.setInt(14, id); 
+            pstmt.setString(20, exp.getNotasInternas());
+            pstmt.setInt(21, id);
 
             int filas = pstmt.executeUpdate();
             if (filas > 0) {
@@ -195,6 +216,7 @@ public class ExpedienteNuevoController {
             ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
+
     // DELETE
     public static void eliminarExpediente(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));

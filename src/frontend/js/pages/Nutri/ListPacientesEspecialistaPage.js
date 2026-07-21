@@ -68,7 +68,6 @@ const crearExpedienteVacio = () => {
     cintura: "",
     diagnosticoGeneral: "",
     observaciones: "• ",
-    // Valores por defecto para la BD
     antecedenteFamiliares: "Ninguno",
     alergiaIntolerancia: "Ninguna",
     medicamentoActual: "Ninguno",
@@ -125,11 +124,9 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     this.pacienteSeleccionado = null;
     this.mostrarModalDiagnostico = false;
 
-    // Control para modal de resumen de citas pasadas
     this.mostrarModalResumenCita = false;
     this.citaSeleccionadaDetalle = null;
 
-    // Control para modal de cita programada
     this.mostrarModalCitaProgramada = false;
     this.citaProgramadaActual = null;
 
@@ -161,9 +158,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     document.removeEventListener("click", this.cerrarMenuContextualGlobal);
   }
 
-  // ==========================================
-  // CONEXIÓN CON EL BACKEND (MÉTODOS API)
-  // ==========================================
   async cargarPacientesDesdeBackend() {
     try {
       const respuesta = await fetch(`${API_BASE_URL}/api/paciente`, {
@@ -277,31 +271,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       }
     } catch (error) {
       console.error("Error al consultar expediente:", error);
-    }
-  }
-
-  async obtenerDetallesCitaBackend(citaId, pacienteId, fechaIso) {
-    try {
-      const expCoincidente = this.historialExpedientes.find(
-        (entry) =>
-          entry.pacienteId === pacienteId && entry.datos.fecha === fechaIso,
-      );
-
-      if (expCoincidente) {
-        return {
-          peso: expCoincidente.datos.peso || "---",
-          imc: expCoincidente.datos.imc || "---",
-          grasa: "---",
-          cintura: expCoincidente.datos.cintura || "---",
-          diagnostico:
-            expCoincidente.datos.diagnosticoGeneral || "Sin diagnóstico.",
-          observaciones: expCoincidente.datos.observaciones || "Sin notas.",
-        };
-      }
-      return null;
-    } catch (error) {
-      console.error("Error pidiendo detalles de cita:", error);
-      return null;
     }
   }
 
@@ -954,7 +923,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
   }
 
   renderTablasDinamicasFormulario() {
-    // Renderizado estándar de tablas dinámicas si es necesario
+    // Renderizado estándar si es necesario
   }
 
   setupEventListeners() {
@@ -966,7 +935,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     const footerPacientes = this.querySelector("#footer-toggle-pacientes");
     if (footerPacientes) {
       footerPacientes.addEventListener("click", () => {
-        // Cambiamos el 10 por this.pacientes.length
         this.limitePacientes = this.limitePacientes > 3 ? 3 : this.pacientes.length;
         this.render();
       });
@@ -1054,7 +1022,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     }
 
-    // FORMULARIO DE EXPEDIENTE: POST O PUT
+    // FORMULARIO INTELIGENTE: CREAR EXPEDIENTE PRINCIPAL O AÑADIR SEGUIMIENTO
     const formExpediente = this.querySelector("#expediente-form");
     if (formExpediente) {
       formExpediente.addEventListener("submit", async (e) => {
@@ -1062,62 +1030,84 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
         const pId = this.pacienteSeleccionado?.id;
         if (!pId) return;
 
-        const nuevoExpedienteStruct = {
-          idPaciente: pId,
-          nombrePaciente: this.querySelector("#form-nombrePaciente").value || "",
-          apellidoPaterno: this.querySelector("#form-apellidoPaterno").value || "",
-          apellidoMaterno: this.querySelector("#form-apellidoMaterno").value || "",
-          sexo: this.querySelector("#form-sexo").value || "",
-          edad: this.querySelector("#form-edad").value || "",
-          ocupacion: this.querySelector("#form-ocupacion").value || "",
-          procedencia: this.querySelector("#form-procedencia").value || "",
-          escolaridad: this.querySelector("#form-escolaridad").value || "",
-          ejercicio: this.querySelector("#form-ejercicio").value || "",
-          objetivo: this.querySelector("#form-objetivo").value || "",
-          altura: this.querySelector("#form-altura").value || "",
-          peso: this.querySelector("#form-peso").value || "",
-          talla: this.querySelector("#form-talla").value || "",
-          imc: this.querySelector("#form-imc").value || "",
-          cintura: this.querySelector("#form-cintura").value || "",
-          fechaInicializacion:
-            this.querySelector("#form-fecha").value ||
-            new Date().toISOString().split("T")[0],
-          notasInternas:
-            this.querySelector("#form-observaciones").value || "Sin notas",
-          patologiaPrevia:
-            this.querySelector("#form-diagnosticoGeneral").value || "Ninguna",
-          antecedenteFamiliares: "Ninguno",
-          alergiaIntolerancia: "Ninguna",
-          medicamentoActual: "Ninguno",
-          habitoToxico: "Ninguno",
-        };
-
         const expExistente = this.expedientes[pId];
-        const esActualizacion = expExistente && expExistente.idExpediente;
-
-        const url = esActualizacion
-          ? `${API_BASE_URL}/api/expediente/${expExistente.idExpediente}`
-          : `${API_BASE_URL}/api/expediente`;
-
-        const method = esActualizacion ? "PUT" : "POST";
+        const tieneExpedienteBase = expExistente && expExistente.idExpediente;
 
         try {
-          const respuesta = await fetch(url, {
-            method: method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(nuevoExpedienteStruct),
-          });
+          if (!tieneExpedienteBase) {
+            // 1. SI NO TIENE EXPEDIENTE, LO CREAMOS EN EXPEDIENTE_NUEVO
+            const nuevoExpedienteStruct = {
+              idPaciente: pId,
+              nombrePaciente: this.querySelector("#form-nombrePaciente").value || "",
+              apellidoPaterno: this.querySelector("#form-apellidoPaterno").value || "",
+              apellidoMaterno: this.querySelector("#form-apellidoMaterno").value || "",
+              sexo: this.querySelector("#form-sexo").value || "",
+              edad: this.querySelector("#form-edad").value || "",
+              ocupacion: this.querySelector("#form-ocupacion").value || "",
+              procedencia: this.querySelector("#form-procedencia").value || "",
+              escolaridad: this.querySelector("#form-escolaridad").value || "",
+              ejercicio: this.querySelector("#form-ejercicio").value || "",
+              objetivo: this.querySelector("#form-objetivo").value || "",
+              altura: this.querySelector("#form-altura").value || "",
+              peso: this.querySelector("#form-peso").value || "",
+              talla: this.querySelector("#form-talla").value || "",
+              imc: this.querySelector("#form-imc").value || "",
+              cintura: this.querySelector("#form-cintura").value || "",
+              fechaInicializacion:
+                this.querySelector("#form-fecha").value ||
+                new Date().toISOString().split("T")[0],
+              notasInternas:
+                this.querySelector("#form-observaciones").value || "Sin notas",
+              patologiaPrevia:
+                this.querySelector("#form-diagnosticoGeneral").value || "Ninguna",
+              antecedenteFamiliares: "Ninguno",
+              alergiaIntolerancia: "Ninguna",
+              medicamentoActual: "Ninguno",
+              habitoToxico: "Ninguno",
+            };
 
-          if (respuesta.ok) {
-            alert(
-              esActualizacion
-                ? "¡Expediente actualizado exitosamente!"
-                : "¡Expediente guardado exitosamente!",
-            );
-            await this.obtenerExpedienteDelBackend(pId);
-            this.cambiarVista("ver-expediente");
+            const respuesta = await fetch(`${API_BASE_URL}/api/expediente`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(nuevoExpedienteStruct),
+            });
+
+            if (respuesta.ok) {
+              alert("¡Expediente guardado exitosamente!");
+              await this.obtenerExpedienteDelBackend(pId);
+              this.cambiarVista("ver-expediente");
+            } else {
+              alert("Error en el servidor al guardar el expediente.");
+            }
           } else {
-            alert("Error en el servidor al guardar el expediente.");
+            // 2. SI YA EXISTE, AÑADIMOS UNA NUEVA EVALUACIÓN A EXPEDIENTE_SEGUIMIENTO
+            const seguimientoStruct = {
+              idExpediente: expExistente.idExpediente,
+              fechaActualizacion:
+                this.querySelector("#form-fecha").value ||
+                new Date().toISOString().split("T")[0],
+              peso: this.querySelector("#form-peso").value || "",
+              altura: this.querySelector("#form-altura").value || "",
+              imc: this.querySelector("#form-imc").value || "",
+              cintura: this.querySelector("#form-cintura").value || "",
+              objetivoSeguimiento: this.querySelector("#form-objetivo").value || "",
+              notasInternasActualizada:
+                this.querySelector("#form-observaciones").value || "Sin notas",
+            };
+
+            const respuesta = await fetch(`${API_BASE_URL}/api/seguimiento`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(seguimientoStruct),
+            });
+
+            if (respuesta.ok) {
+              alert("¡Nueva evaluación de seguimiento registrada exitosamente!");
+              await this.obtenerExpedienteDelBackend(pId);
+              this.cambiarVista("ver-expediente");
+            } else {
+              alert("Error en el servidor al registrar el seguimiento.");
+            }
           }
         } catch (error) {
           console.error("Error al conectar con la API:", error);
@@ -1125,7 +1115,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     }
 
-    // BUSCADOR DE PACIENTES
     const searchInput = this.querySelector("#global-search-input");
     const dropdown = this.querySelector("#dropdown-clientes-nuevos");
     const resultsList = this.querySelector("#dropdown-results-list");
@@ -1189,7 +1178,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       }
     }
 
-    // MODAL DE RESUMEN DE CITA
     this.querySelectorAll(".btn-ver-resumen-cita").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const citaId = e.currentTarget.getAttribute("data-id");
