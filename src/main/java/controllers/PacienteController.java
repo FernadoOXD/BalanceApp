@@ -23,10 +23,27 @@ public class PacienteController {
             int idGenerado = guardarEnBaseDeDatos(nuevoPaciente);
 
             if (idGenerado > 0) {
-                // 👇 Línea que crea el tratamiento vacío automáticamente al registrar al paciente 👇
                 crearTratamientoVacio(idGenerado);
+<<<<<<< HEAD
 
                 ctx.status(201).json("{\"success\": true, \"message\": \"Paciente registrado exitosamente.\", \"id\": " + idGenerado + "}");
+=======
+                
+                // Aseguramos que el objeto devuelto al registrarse incluya los datos personales
+                String nombresStr = nuevoPaciente.getNombres() != null ? nuevoPaciente.getNombres() : "";
+                String apellidoStr = nuevoPaciente.getApellidoPaterno() != null ? nuevoPaciente.getApellidoPaterno() : "";
+                String emailStr = nuevoPaciente.getEmail() != null ? nuevoPaciente.getEmail() : "";
+
+                String jsonResponse = String.format(
+                    "{\"success\": true, \"message\": \"Paciente registrado exitosamente.\", \"idPaciente\": %d, \"nombres\": \"%s\", \"apellidoPaterno\": \"%s\", \"email\": \"%s\"}",
+                    idGenerado,
+                    nombresStr,
+                    apellidoStr,
+                    emailStr
+                );
+
+                ctx.status(201).json(jsonResponse);
+>>>>>>> 570d462 (fix(auth): corregir persistencia y visualización del nombre de usuario en SidebarPaciente)
             } else {
                 ctx.status(400).json("{\"success\": false, \"message\": \"No se pudo registrar el paciente.\"}");
             }
@@ -34,14 +51,38 @@ public class PacienteController {
             ctx.status(500).json("{\"error\": \"Error interno: " + e.getMessage() + "\"}");
         }
     }
-
+    
     private static int guardarEnBaseDeDatos(Paciente p) throws Exception {
         String sql = "INSERT INTO PACIENTE (nombres, apellidoPaterno, email, contrasena) VALUES (?, ?, ?, ?)";
+<<<<<<< HEAD
 
         try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, p.getNombres());
             pstmt.setString(2, p.getApellidoPaterno());
+=======
+        
+        // Protegemos la inserción por si el frontend manda todo en 'nombres'
+        String nombresOriginales = p.getNombres() != null ? p.getNombres().trim() : "";
+        String nombreFinal = nombresOriginales;
+        String apellidoFinal = p.getApellidoPaterno();
+
+        if ((apellidoFinal == null || apellidoFinal.isEmpty()) && nombresOriginales.contains(" ")) {
+            int primerEspacio = nombresOriginales.indexOf(" ");
+            nombreFinal = nombresOriginales.substring(0, primerEspacio);
+            apellidoFinal = nombresOriginales.substring(primerEspacio + 1);
+        }
+        
+        if (apellidoFinal == null || apellidoFinal.isEmpty()) {
+            apellidoFinal = "Sin apellido";
+        }
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
+            pstmt.setString(1, nombreFinal);
+            pstmt.setString(2, apellidoFinal);
+>>>>>>> 570d462 (fix(auth): corregir persistencia y visualización del nombre de usuario en SidebarPaciente)
             pstmt.setString(3, p.getEmail());
             pstmt.setString(4, p.getContrasena());
 
@@ -76,7 +117,7 @@ public class PacienteController {
             String email = credenciales.getEmail();
             String contrasena = credenciales.getContrasena();
 
-            String sql = "SELECT idPaciente FROM PACIENTE WHERE email = ? AND contrasena = ?";
+            String sql = "SELECT idPaciente, nombres, apellidoPaterno, email FROM PACIENTE WHERE email = ? AND contrasena = ?";
 
             try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -86,7 +127,19 @@ public class PacienteController {
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
                         int idEncontrado = rs.getInt("idPaciente");
-                        ctx.status(200).json("{\"success\": true, \"idPaciente\": " + idEncontrado + "}");
+                        String nombres = rs.getString("nombres");
+                        String apellidoPaterno = rs.getString("apellidoPaterno");
+                        String emailDB = rs.getString("email");
+
+                        String jsonResponse = String.format(
+                            "{\"success\": true, \"idPaciente\": %d, \"nombres\": \"%s\", \"apellidoPaterno\": \"%s\", \"email\": \"%s\"}",
+                            idEncontrado,
+                            nombres != null ? nombres : "",
+                            apellidoPaterno != null ? apellidoPaterno : "",
+                            emailDB != null ? emailDB : ""
+                        );
+
+                        ctx.status(200).json(jsonResponse);
                     } else {
                         ctx.status(401).json("{\"success\": false, \"message\": \"Correo o contraseña incorrectos\"}");
                     }
@@ -121,7 +174,6 @@ public class PacienteController {
                 p.setGenero(rs.getString("genero"));
                 p.setTelefono(rs.getString("telefono"));
                 p.setEmail(rs.getString("email"));
-                // Omitimos la contraseña por seguridad al listar
                 lista.add(p);
             }
             ctx.status(200).json(lista);

@@ -57,7 +57,7 @@ export class PacienteLoginPage extends HTMLElement {
                     <input type="checkbox" id="rememberMe">
                     <span class="custom-checkbox__box"></span>
                     Recordarme
-                  </label>                 
+                  </label>                
                 </div>
 
                 <button type="submit" class="btn-submit">Entrar</button>
@@ -98,7 +98,6 @@ export class PacienteLoginPage extends HTMLElement {
       window.location.hash = "/auth/paciente-register";
     });
 
-    // Se añadió 'async' para poder usar 'await' en la petición al servidor
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -111,7 +110,6 @@ export class PacienteLoginPage extends HTMLElement {
 
       let hasErrors = false;
 
-      // 1. Validación General
       if (!email || !password) {
         generalAlertMsg.textContent =
           "Por favor, completa todos los campos para continuar.";
@@ -119,7 +117,6 @@ export class PacienteLoginPage extends HTMLElement {
         hasErrors = true;
       }
 
-      // 2. Validación específica: Email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!email) {
         this._setError(emailInput, emailError, "Ingresa tu correo electrónico");
@@ -133,7 +130,6 @@ export class PacienteLoginPage extends HTMLElement {
         hasErrors = true;
       }
 
-      // 3. Validación específica: Contraseña
       if (!password) {
         this._setError(passwordInput, passwordError, "Ingresa tu contraseña");
         hasErrors = true;
@@ -148,9 +144,6 @@ export class PacienteLoginPage extends HTMLElement {
 
       if (hasErrors) return;
 
-      // ==========================================
-      // 4. CONEXIÓN AL BACKEND (JAVA / JAVALIN)
-      // ==========================================
       const btnSubmit = this.querySelector(".btn-submit");
       const originalText = btnSubmit.textContent;
       
@@ -158,14 +151,13 @@ export class PacienteLoginPage extends HTMLElement {
         btnSubmit.textContent = "Conectando...";
         btnSubmit.disabled = true;
 
-        // 1. Inyectamos la URL global (API_BASE_URL)
         const response = await fetch(`${API_BASE_URL}/api/paciente/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            email: email,       
+            email: email,      
             contrasena: password 
           })
         });
@@ -174,21 +166,21 @@ export class PacienteLoginPage extends HTMLElement {
           throw new Error("Credenciales incorrectas o error en el servidor");
         }
 
-        // Obtener el JSON que devuelve el backend
         const data = await response.json();
 
-        // 5. GUARDAR EL ID EN LOCALSTORAGE
-        // Asume que el backend devuelve un objeto con la propiedad 'id'
-        localStorage.setItem("idPaciente", data.idPaciente); 
+        // Se usa data.id o data.idPaciente de manera segura según lo devuelto por el servidor
+        const pacienteId = data.id || data.idPaciente;
+        if (pacienteId) {
+          localStorage.setItem("idPaciente", pacienteId);
+        }
+        localStorage.setItem("usuarioActivo", JSON.stringify(data));
 
         console.log("Login validado por el backend:", data);
 
-        // Opcional: Manejo de 'Recordarme'
         if (rememberMe) {
             localStorage.setItem("rememberMe", "true");
         }
 
-        // 6. Salto directo al Dashboard
         window.location.hash = "/paciente/agenda";
 
       } catch (error) {
@@ -196,7 +188,6 @@ export class PacienteLoginPage extends HTMLElement {
         generalAlertMsg.textContent = "Correo o contraseña incorrectos.";
         generalAlert.style.display = "flex";
       } finally {
-        // Restaurar el botón en caso de error para que el usuario pueda reintentar
         btnSubmit.textContent = originalText;
         btnSubmit.disabled = false;
       }

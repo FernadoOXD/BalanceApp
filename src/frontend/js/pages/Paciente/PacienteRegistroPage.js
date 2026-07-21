@@ -215,19 +215,19 @@ export class RegistroPacientePage extends HTMLElement {
       const apellidoMaterno =
         nameParts.length > 2 ? nameParts.slice(2).join(" ") : "";
 
-      fetch("http://localhost:5000/api/paciente", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombres,
-          apellidoPaterno,
-          apellidoMaterno,
-          email,
-          contrasena: password,
-        }),
-      })
+        fetch(`${API_BASE_URL}/api/paciente`, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        nombres,
+        apellidoPaterno,
+        apellidoMaterno,
+        email,
+        contrasena: password,
+    }),
+})
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {

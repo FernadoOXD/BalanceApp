@@ -154,9 +154,10 @@ export class SettingPaciente extends HTMLElement {
     const modalDelete = this.querySelector("#modal-delete-account");
 
     try {
-      btnConfirmDelete.textContent = "Eliminando...";
-      btnConfirmDelete.disabled = true;
+    btnConfirmDelete.textContent = "Eliminando...";
+    btnConfirmDelete.disabled = true;
 
+<<<<<<< HEAD
       const pacienteId = localStorage.getItem("idPaciente");
       if (!pacienteId) {
         throw new Error("No se encontró el ID del usuario en el localStorage.");
@@ -197,6 +198,37 @@ export class SettingPaciente extends HTMLElement {
       btnConfirmDelete.textContent = "Confirmar Eliminación";
       btnConfirmDelete.disabled = false;
       modalDelete.classList.add("hidden");
+=======
+    const idPaciente = localStorage.getItem('idPaciente');
+
+    // Validación estricta a prueba de fallos (tu código)
+    if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
+        alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
+        throw new Error("ID inválido detectado en la memoria del navegador.");
+>>>>>>> 570d462 (fix(auth): corregir persistencia y visualización del nombre de usuario en SidebarPaciente)
     }
+
+    // Petición DELETE usando la ruta correcta que me indicaste
+    const response = await fetch(`${API_BASE_URL}/api/paciente/${idPaciente}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("No se pudo completar la eliminación del paciente.");
+    }
+
+    // Limpieza de sesión y redirección exitosa
+    localStorage.clear();
+    window.location.href = "../../../index.html"; // o la ruta de tu login
+
+} catch (error) {
+    console.error(error);
+    alert(error.message);
+    btnConfirmDelete.textContent = "Eliminar cuenta";
+    btnConfirmDelete.disabled = false;
+}
   }
 }

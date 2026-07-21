@@ -28,6 +28,7 @@ public class Main {
                     // Permite peticiones locales adicionales (puerto 5501)
                     it.allowHost("http://localhost:5501");
                     it.allowHost("http://127.0.0.1:5501");
+                    
                     it.allowCredentials = true;
                 });
             });
