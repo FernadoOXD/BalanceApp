@@ -1,6 +1,5 @@
-import { API_BASE_URL } from '../../../config.js';
+import { API_BASE_URL } from "../../../config.js";
 export class RegistroPacientePage extends HTMLElement {
-
   connectedCallback() {
     this.render();
     this.initLogic();
@@ -176,7 +175,7 @@ export class RegistroPacientePage extends HTMLElement {
       if (!password) {
         this._setError(passwordInput, passwordError, "Ingresa una contraseña");
         hasErrors = true;
-      } else if (password.length < 6) {
+      } else if (password.length < 8) {
         this._setError(
           passwordInput,
           passwordError,
@@ -215,20 +214,27 @@ export class RegistroPacientePage extends HTMLElement {
       const apellidoMaterno =
         nameParts.length > 2 ? nameParts.slice(2).join(" ") : "";
 
-        fetch(`${API_BASE_URL}/api/paciente`, {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-        nombres,
-        apellidoPaterno,
-        apellidoMaterno,
-        email,
-        contrasena: password,
-    }),
-})
-        .then((response) => response.json())
+      fetch(`${API_BASE_URL}/api/paciente`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombres,
+          apellidoPaterno,
+          apellidoMaterno,
+          email,
+          contrasena: password,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((data) => {
+              throw new Error(data.message || "Error al registrar.");
+            });
+          }
+          return response.json();
+        })
         .then((data) => {
           if (data.success) {
             alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
@@ -239,7 +245,7 @@ export class RegistroPacientePage extends HTMLElement {
           }
         })
         .catch((error) => {
-          generalAlertMsg.textContent = "Error de conexión con el servidor.";
+          generalAlertMsg.textContent = error.message || "Error de conexión con el servidor.";
           generalAlert.style.display = "flex";
           console.error("Register error:", error);
         })

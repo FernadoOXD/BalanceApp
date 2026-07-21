@@ -38,12 +38,6 @@ export class SidebarEspecialista extends HTMLElement {
               </a>
             </li>
             <li class="sidebar__nav-item">
-              <a href="#/especialista/rendimiento" class="sidebar__nav-link">
-                <img src="./assets/icons/rendimiento.png" alt="Icono Pacientes" class="sidebar__nav-icon">
-                Rendimiento
-              </a>
-            </li>
-            <li class="sidebar__nav-item">
               <a href="#/especialista/lista-pacientes" class="sidebar__nav-link">
                 <img src="./assets/icons/pacientes.png" alt="Icono Pacientes" class="sidebar__nav-icon">
                 Pacientes

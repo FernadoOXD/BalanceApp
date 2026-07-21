@@ -40,12 +40,6 @@ export class SidebarPaciente extends HTMLElement {
               </a>
             </li>
             <li class="sidebar__nav-item">
-              <a href="#/paciente/rendimiento" class="sidebar__nav-link">
-                <img src="./assets/icons/rendimiento.png" alt="Icono Rendimiento" class="sidebar__nav-icon">
-                Rendimiento
-              </a>
-            </li>
-            <li class="sidebar__nav-item">
               <a href="#/paciente/tratamiento" class="sidebar__nav-link">
                 <img src="./assets/icons/tratamiento.png" alt="Icono Tratamiento" class="sidebar__nav-icon">
                 Tratamiento
@@ -225,7 +219,10 @@ export class SidebarPaciente extends HTMLElement {
         }
       }
     } catch (e) {
-      console.error("Error al cargar los datos del paciente en la barra lateral:", e);
+      console.error(
+        "Error al cargar los datos del paciente en la barra lateral:",
+        e,
+      );
     }
   }
 }

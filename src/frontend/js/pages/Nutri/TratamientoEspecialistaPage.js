@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../../config.js';
+import { API_BASE_URL } from "../../../config.js";
 
 export class TratamientoEspecialistaPage extends HTMLElement {
   constructor() {
@@ -28,17 +28,17 @@ export class TratamientoEspecialistaPage extends HTMLElement {
   }
 
   // ... tu código anterior ...
-  
+
   async fetchPacientesDesdeBD() {
     try {
       this.loading = true;
       this.renderDinamico();
 
       const response = await fetch(this.apiUrl, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       });
-      
+
       if (!response.ok) throw new Error(`Error: ${response.status}`);
 
       const datosCrudos = await response.json();
@@ -46,11 +46,14 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       // PARCHE DE NORMALIZACIÓN
       // PARCHE DE NORMALIZACIÓN Y PARSEO JSON
       // PARCHE DE NORMALIZACIÓN Y PARSEO JSON
-      this.pacientes = datosCrudos.map(p => {
+      this.pacientes = datosCrudos.map((p) => {
         let menuParseado = null;
         if (p.menuExcel) {
           try {
-            menuParseado = typeof p.menuExcel === 'string' ? JSON.parse(p.menuExcel) : p.menuExcel;
+            menuParseado =
+              typeof p.menuExcel === "string"
+                ? JSON.parse(p.menuExcel)
+                : p.menuExcel;
           } catch (e) {
             console.error("Error al leer el menú desde la BD", e);
           }
@@ -61,24 +64,33 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         const tieneTratamiento = Boolean(
           (p.tratamiento && p.tratamiento.trim() !== "") ||
           (p.alimentacion && p.alimentacion.trim() !== "") ||
-          (p.ejercicioDescripcion && p.ejercicioDescripcion.trim() !== "")
+          (p.ejercicioDescripcion && p.ejercicioDescripcion.trim() !== ""),
         );
 
         return {
           ...p,
           menuExcel: menuParseado,
-          nombre: p.nombre || `${p.nombres || ''} ${p.apellidoPaterno || ''}`.trim() || 'Paciente Sin Nombre',
-          id: p.id || p.idPaciente || 'S/N',
-          iniciales: (p.nombres ? p.nombres.charAt(0) : 'P') + (p.apellidoPaterno ? p.apellidoPaterno.charAt(0) : ''),
-          tieneTratamiento: tieneTratamiento // <--- Guardamos la bandera
+          nombre:
+            p.nombre ||
+            `${p.nombres || ""} ${p.apellidoPaterno || ""}`.trim() ||
+            "Paciente Sin Nombre",
+          id: p.id || p.idPaciente || "S/N",
+          iniciales:
+            (p.nombres ? p.nombres.charAt(0) : "P") +
+            (p.apellidoPaterno ? p.apellidoPaterno.charAt(0) : ""),
+          tieneTratamiento: tieneTratamiento, // <--- Guardamos la bandera
         };
       });
 
       // 👇 NUEVO: Separamos las listas. El grid principal SOLO mostrará a los activos.
-      this.pacientesRecientes = this.pacientes.filter(p => p.tieneTratamiento);
-      
+      this.pacientesRecientes = this.pacientes.filter(
+        (p) => p.tieneTratamiento,
+      );
     } catch (error) {
-      console.error("Error al conectar con la BD para obtener pacientes:", error);
+      console.error(
+        "Error al conectar con la BD para obtener pacientes:",
+        error,
+      );
       this.errorOccurred = true;
     } finally {
       this.loading = false;
@@ -152,7 +164,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           </button>
         </div>
       </div>
-    `
+    `,
       )
       .join("");
 
@@ -176,7 +188,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         <span class="dropdown-name" style="color: var(--text-primary);">${p.nombre}</span>
         <span class="dropdown-id" style="color: var(--text-muted);">ID: ${p.id}</span>
       </div>
-    `
+    `,
       )
       .join("");
 
@@ -185,7 +197,9 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     dropdown.querySelectorAll(".dropdown-item").forEach((item) => {
       item.addEventListener("click", (e) => {
         const id = e.currentTarget.getAttribute("data-id");
-        const seleccionado = this.pacientes.find((p) => p.id === id || p.id == id);
+        const seleccionado = this.pacientes.find(
+          (p) => p.id === id || p.id == id,
+        );
         if (seleccionado) {
           this.pacienteSeleccionado = seleccionado;
           this.vistaPerfil = true;
@@ -373,11 +387,11 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
                           >${fila[d] || ""}</textarea>
                         </td>
-                      `
+                      `,
                         )
                         .join("")}
                     </tr>
-                  `
+                  `,
                     )
                     .join("")}
                 </tbody>
@@ -574,8 +588,10 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           return;
         }
 
-        const filtrados = this.pacientes.filter((paciente) =>
-          !paciente.tieneTratamiento && paciente.nombre.toLowerCase().includes(query)
+        const filtrados = this.pacientes.filter(
+          (paciente) =>
+            !paciente.tieneTratamiento &&
+            paciente.nombre.toLowerCase().includes(query),
         );
 
         this.renderSugerencias(filtrados);
@@ -620,8 +636,10 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           return;
         }
 
-        const filtrados = this.pacientes.filter((paciente) =>
-          !paciente.tieneTratamiento && paciente.nombre.toLowerCase().includes(query)
+        const filtrados = this.pacientes.filter(
+          (paciente) =>
+            !paciente.tieneTratamiento &&
+            paciente.nombre.toLowerCase().includes(query),
         );
 
         if (filtrados.length === 0) {
@@ -646,7 +664,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               </button>
             </div>
           </div>
-        `
+        `,
           )
           .join("");
 
@@ -695,47 +713,48 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       "submit",
       async (e) => {
         e.preventDefault();
-        
+
         const btnGuardar = this.querySelector("#btn-guardar-base");
         const textoOriginal = btnGuardar.textContent;
         btnGuardar.textContent = "Guardando...";
         btnGuardar.disabled = true;
 
         const payload = {
-          objetivo: this.querySelector("#input-objetivo").value, 
+          objetivo: this.querySelector("#input-objetivo").value,
           alimentacion: this.querySelector("#input-plan").value,
-          ejercicioDescripcion: this.querySelector("#input-ejercicio-desc").value
+          ejercicioDescripcion: this.querySelector("#input-ejercicio-desc")
+            .value,
         };
 
-      try {
+        try {
           const response = await fetch(`${this.apiUrl}/${p.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload) 
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
           });
 
-          if (!response.ok) throw new Error("Fallo al actualizar el tratamiento base");
+          if (!response.ok)
+            throw new Error("Fallo al actualizar el tratamiento base");
 
           // Actualizamos los datos en memoria
-          p.objetivo = payload.objetivo; 
-          p.tratamiento = payload.objetivo; 
+          p.objetivo = payload.objetivo;
+          p.tratamiento = payload.objetivo;
           p.alimentacion = payload.alimentacion;
           p.ejercicioDescripcion = payload.ejercicioDescripcion;
           p.tieneTratamiento = true; // <--- ¡AQUÍ NACE COMO PACIENTE ACTIVO!
 
           // Lo metemos al arreglo de recientes para que aparezca en el Grid
-          if (!this.pacientesRecientes.some(pac => pac.id === p.id)) {
-              this.pacientesRecientes.push(p);
+          if (!this.pacientesRecientes.some((pac) => pac.id === p.id)) {
+            this.pacientesRecientes.push(p);
           } else {
-              this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
-                pac.id === p.id ? p : pac
-              );
+            this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
+              pac.id === p.id ? p : pac,
+            );
           }
-          
+
           this.editandoTratamiento = false;
           this.renderDinamico(); // Actualiza la pantalla para que aparezca en la tarjeta
           this.renderMiniPerfil();
-
         } catch (error) {
           console.error(error);
           alert("Error al intentar guardar el tratamiento en el servidor.");
@@ -807,34 +826,36 @@ export class TratamientoEspecialistaPage extends HTMLElement {
 
       // 5. GUARDAR MENÚ EXCEL (Petición PUT al servidor)
       // 5. GUARDAR MENÚ EXCEL (Petición PUT al servidor)
-      this.querySelector("#btn-excel-save")?.addEventListener("click", async (e) => {
-        const btn = e.currentTarget;
-        const textoOriginal = btn.textContent;
-        btn.textContent = "Guardando...";
-        btn.disabled = true;
+      this.querySelector("#btn-excel-save")?.addEventListener(
+        "click",
+        async (e) => {
+          const btn = e.currentTarget;
+          const textoOriginal = btn.textContent;
+          btn.textContent = "Guardando...";
+          btn.disabled = true;
 
-        this.sincronizarEstructuraExcelTemporal();
+          this.sincronizarEstructuraExcelTemporal();
 
-        try {
-          const response = await fetch(`${this.apiUrl}/${p.id}/menu`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-        
-            body: JSON.stringify({ menuExcel: JSON.stringify(p.menuExcel) }) 
-            
-          });
+          try {
+            const response = await fetch(`${this.apiUrl}/${p.id}/menu`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
 
-          if (!response.ok) throw new Error("Fallo al guardar el menú");
+              body: JSON.stringify({ menuExcel: JSON.stringify(p.menuExcel) }),
+            });
 
-          this.viendoModalExcel = false;
-          this.renderMiniPerfil();
-        } catch (error) {
-          console.error(error);
-          alert("Error al guardar el menú de dieta en el servidor.");
-          btn.textContent = textoOriginal;
-          btn.disabled = false;
-        }
-      });
+            if (!response.ok) throw new Error("Fallo al guardar el menú");
+
+            this.viendoModalExcel = false;
+            this.renderMiniPerfil();
+          } catch (error) {
+            console.error(error);
+            alert("Error al guardar el menú de dieta en el servidor.");
+            btn.textContent = textoOriginal;
+            btn.disabled = false;
+          }
+        },
+      );
     }
 
     if (this.viendoModalEjercicios) {
@@ -845,7 +866,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           this.renderMiniPerfil();
         },
       );
-      
+
       // 6. GUARDAR RUTINA DE EJERCICIOS (Petición PUT al servidor)
       this.querySelector("#btn-save-exercise")?.addEventListener(
         "click",
@@ -855,14 +876,17 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           btn.textContent = "Guardando...";
           btn.disabled = true;
 
-          const txtValue = this.querySelector("#textarea-notes-ejercicio")?.value;
-          const nuevoEjercicio = txtValue && txtValue.trim() !== "•" ? txtValue.trim() : "";
+          const txtValue = this.querySelector(
+            "#textarea-notes-ejercicio",
+          )?.value;
+          const nuevoEjercicio =
+            txtValue && txtValue.trim() !== "•" ? txtValue.trim() : "";
 
           try {
             const response = await fetch(`${this.apiUrl}/${p.id}/ejercicio`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ ejercicio: nuevoEjercicio })
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ejercicio: nuevoEjercicio }),
             });
 
             if (!response.ok) throw new Error("Fallo al guardar ejercicios");
@@ -871,7 +895,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
             this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
               pac.id === p.id ? p : pac,
             );
-            
+
             this.viendoModalEjercicios = false;
             this.renderMiniPerfil();
           } catch (error) {
@@ -921,7 +945,9 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     this.querySelectorAll(".btn-perfil").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
-        const encontrado = this.pacientes.find((p) => p.id === pacienteId || p.id == pacienteId);
+        const encontrado = this.pacientes.find(
+          (p) => p.id === pacienteId || p.id == pacienteId,
+        );
         if (encontrado) {
           this.pacienteSeleccionado = encontrado;
           this.vistaPerfil = true;
@@ -936,7 +962,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       btn.addEventListener("click", async (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
         const confirmar = confirm(
-          `¿Estás seguro? ¿Quieres eliminar el tratamiento de este paciente?`
+          `¿Estás seguro? ¿Quieres eliminar el tratamiento de este paciente?`,
         );
 
         if (confirmar) {
@@ -944,18 +970,17 @@ export class TratamientoEspecialistaPage extends HTMLElement {
             const response = await fetch(`${this.apiUrl}/${pacienteId}`, {
               method: "DELETE",
             });
-            
+
             if (!response.ok) throw new Error("Error al eliminar del servidor");
 
             this.pacientesRecientes = this.pacientesRecientes.filter(
               (p) => p.id !== pacienteId && p.id != pacienteId,
             );
             this.pacientes = this.pacientes.filter(
-              (p) => p.id !== pacienteId && p.id != pacienteId
+              (p) => p.id !== pacienteId && p.id != pacienteId,
             );
-            
-            this.renderListaRecientes();
 
+            this.renderListaRecientes();
           } catch (error) {
             console.error("No se pudo borrar en el servidor.", error);
             alert("No se pudo eliminar al paciente de la base de datos.");
@@ -969,7 +994,9 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     this.querySelectorAll(".btn-seleccionar-directo").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
-        const encontrado = this.pacientes.find((p) => p.id === pacienteId || p.id == pacienteId);
+        const encontrado = this.pacientes.find(
+          (p) => p.id === pacienteId || p.id == pacienteId,
+        );
         if (encontrado) {
           this.pacienteSeleccionado = encontrado;
           this.vistaAsignar = false;

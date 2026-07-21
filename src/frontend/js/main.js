@@ -19,7 +19,6 @@ import { EspecialistaLoginPage } from "./pages/Nutri/EspecialistaLoginPage.js";
 import { DashboardEspecialistaPage } from "./pages/Nutri/DashboardEspecialistaPage.js";
 import { SidebarEspecialista } from "./pages/Nutri/SidebarEspecialista.js";
 import { AgendaEspecialistaPage } from "./pages/Nutri/AgendaEspecialistaPage.js";
-import { RendimientoEspecialistaPage } from "./pages/Nutri/RendimientoEspecialistaPage.js";
 import { ListPacientesEspecialistaPage } from "./pages/Nutri/ListPacientesEspecialistaPage.js";
 import { TratamientoEspecialistaPage } from "./pages/Nutri/TratamientoEspecialistaPage.js";
 import { SettingEspecialista } from "./pages/Nutri/SettingEspecialista.js";
@@ -30,7 +29,6 @@ import { RegistroPacientePage } from "./pages/Paciente/PacienteRegistroPage.js";
 import { SidebarPaciente } from "./pages/Paciente/SidebarPaciente.js";
 import { AgendamientoEncuestaPage } from "./pages/Paciente/AgendamientoEncuestaPage.js";
 import { AgendaPacientePage } from "./pages/Paciente/AgendaPacientePage.js";
-import { RendimientoPacientePage } from "./pages/Paciente/RendimientoPacientePage.js";
 import { TratamientoPacientePage } from "./pages/Paciente/TratamientoPacientePage.js";
 import { SettingPaciente } from "./pages/Paciente/SettingPaciente.js";
 
@@ -53,10 +51,6 @@ customElements.define("page-especialista-login", EspecialistaLoginPage);
 customElements.define("agenda-especialista-page", AgendaEspecialistaPage);
 customElements.define("dashboard-especialista-page", DashboardEspecialistaPage);
 customElements.define(
-  "rendimiento-especialista-page",
-  RendimientoEspecialistaPage,
-);
-customElements.define(
   "list-pacientes-especialista-page",
   ListPacientesEspecialistaPage,
 );
@@ -72,7 +66,6 @@ customElements.define("registro-paciente-page", RegistroPacientePage);
 customElements.define("app-sidebar-paciente", SidebarPaciente);
 customElements.define("agendamiento-encuesta-page", AgendamientoEncuestaPage);
 customElements.define("agenda-paciente-page", AgendaPacientePage);
-customElements.define("rendimiento-paciente-page", RendimientoPacientePage);
 customElements.define("tratamiento-paciente-page", TratamientoPacientePage);
 customElements.define("setting-paciente", SettingPaciente);
 

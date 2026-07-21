@@ -26,9 +26,6 @@ export const routes = {
   "/especialista/dashboard": (container) => {
     container.innerHTML = `<dashboard-especialista-page></dashboard-especialista-page>`;
   },
-  "/especialista/rendimiento": (container) => {
-    container.innerHTML = `<rendimiento-especialista-page></rendimiento-especialista-page>`;
-  },
   "/especialista/lista-pacientes": (container) => {
     container.innerHTML = `<list-pacientes-especialista-page></list-pacientes-especialista-page>`;
   },
@@ -47,9 +44,6 @@ export const routes = {
   },
   "/paciente/dashboard": (container) => {
     container.innerHTML = `<dashboard-paciente></dashboard-paciente>`;
-  },
-  "/paciente/rendimiento": (container) => {
-    container.innerHTML = `<rendimiento-paciente-page></rendimiento-paciente-page>`;
   },
   "/paciente/tratamiento": (container) => {
     container.innerHTML = `<tratamiento-paciente-page></tratamiento-paciente-page>`;
