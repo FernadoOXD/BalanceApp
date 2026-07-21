@@ -25,7 +25,7 @@ public class PacienteController {
             if (idGenerado > 0) {
                 // 👇 Línea que crea el tratamiento vacío automáticamente al registrar al paciente 👇
                 crearTratamientoVacio(idGenerado);
-                
+
                 ctx.status(201).json("{\"success\": true, \"message\": \"Paciente registrado exitosamente.\", \"id\": " + idGenerado + "}");
             } else {
                 ctx.status(400).json("{\"success\": false, \"message\": \"No se pudo registrar el paciente.\"}");
@@ -37,17 +37,16 @@ public class PacienteController {
 
     private static int guardarEnBaseDeDatos(Paciente p) throws Exception {
         String sql = "INSERT INTO PACIENTE (nombres, apellidoPaterno, email, contrasena) VALUES (?, ?, ?, ?)";
-        
-        try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
+        try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             pstmt.setString(1, p.getNombres());
             pstmt.setString(2, p.getApellidoPaterno());
             pstmt.setString(3, p.getEmail());
             pstmt.setString(4, p.getContrasena());
-            
+
             int filasAfectadas = pstmt.executeUpdate();
-            
+
             if (filasAfectadas > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -61,8 +60,7 @@ public class PacienteController {
 
     private static void crearTratamientoVacio(int idPaciente) throws Exception {
         String sql = "INSERT INTO TRATAMIENTO (idPaciente, fechaInicio) VALUES (?, CURDATE())";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, idPaciente);
             pstmt.executeUpdate();
         }
@@ -80,8 +78,7 @@ public class PacienteController {
 
             String sql = "SELECT idPaciente FROM PACIENTE WHERE email = ? AND contrasena = ?";
 
-            try (Connection conn = Database.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
                 pstmt.setString(1, email);
                 pstmt.setString(2, contrasena);
@@ -104,13 +101,15 @@ public class PacienteController {
     // 3. OBTENER TODOS LOS PACIENTES
     // Ruta: GET /api/paciente
     // ==========================================
+// ==========================================
+    // 3. OBTENER TODOS LOS PACIENTES
+    // Ruta: GET /api/paciente
+    // ==========================================
     public static void obtenerTodos(Context ctx) {
         String sql = "SELECT * FROM PACIENTE";
         List<Paciente> lista = new ArrayList<>();
 
-        try (Connection conn = Database.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = Database.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 Paciente p = new Paciente();
@@ -138,12 +137,11 @@ public class PacienteController {
     public static void actualizarPaciente(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
         Paciente p = ctx.bodyAsClass(Paciente.class);
-        
+
         String sql = "UPDATE PACIENTE SET nombres=?, apellidoPaterno=?, apellidoMaterno=?, fechaNacimiento=?, genero=?, telefono=?, email=? WHERE idPaciente=?";
-        
-        try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
+        try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, p.getNombres());
             pstmt.setString(2, p.getApellidoPaterno());
             pstmt.setString(3, p.getApellidoMaterno());
@@ -152,7 +150,7 @@ public class PacienteController {
             pstmt.setString(6, p.getTelefono());
             pstmt.setString(7, p.getEmail());
             pstmt.setInt(8, id);
-            
+
             int filas = pstmt.executeUpdate();
             if (filas > 0) {
                 ctx.status(200).json("{\"success\": true, \"message\": \"Paciente actualizado\"}");
@@ -170,12 +168,11 @@ public class PacienteController {
     // ==========================================
     public static void eliminarPaciente(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
-        try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM PACIENTE WHERE idPaciente = ?")) {
-            
+        try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement("DELETE FROM PACIENTE WHERE idPaciente = ?")) {
+
             pstmt.setInt(1, id);
             int filas = pstmt.executeUpdate();
-            
+
             if (filas > 0) {
                 ctx.status(200).json("{\"success\": true, \"message\": \"Paciente eliminado\"}");
             } else {
@@ -185,19 +182,18 @@ public class PacienteController {
             ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");
         }
     }
-    
+
     // ==========================================
     // 6. OBTENER TRATAMIENTO DEL PACIENTE
     // ==========================================
     public static void obtenerTratamientoPorPaciente(Context ctx) {
         int idPaciente = Integer.parseInt(ctx.pathParam("id"));
-        String sql = "SELECT * FROM TRATAMIENTO WHERE idPaciente = ? LIMIT 1"; 
-        
-        try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-             
+        String sql = "SELECT * FROM TRATAMIENTO WHERE idPaciente = ? LIMIT 1";
+
+        try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setInt(1, idPaciente);
-            
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     models.Tratamiento t = new models.Tratamiento();
@@ -208,7 +204,7 @@ public class PacienteController {
                     t.setEjercicioDescripcion(rs.getString("ejercicioDescripcion"));
                     t.setEjercicio(rs.getString("ejercicio"));
                     t.setMenuExcel(rs.getString("menuExcel"));
-                    
+
                     ctx.status(200).json(t);
                 } else {
                     ctx.status(404).json("{\"message\": \"No hay tratamiento activo\"}");

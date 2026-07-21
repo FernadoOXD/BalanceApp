@@ -15,7 +15,7 @@ public class Database {
     private static final String URL = getEnv("DB_URL", "jdbc:mysql://localhost:3306/balanceapp");
     private static final String USER = getEnv("DB_USER", "root"); 
     
-    private static final String PASSWORD = getEnv("DB_PASSWORD", "q1w2e3r4t5y611"); 
+    private static final String PASSWORD = getEnv("DB_PASSWORD", "my-fer_510"); 
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);

@@ -121,7 +121,7 @@ export class SettingPaciente extends HTMLElement {
 
     // ==========================================
     // 2. LÓGICA DEL MODAL DE ELIMINACIÓN
-    // ========================================== 
+    // ==========================================
     const modalDelete = this.querySelector("#modal-delete-account");
 
     this.addEventListener("click", (e) => {
@@ -157,23 +157,6 @@ export class SettingPaciente extends HTMLElement {
       btnConfirmDelete.textContent = "Eliminando...";
       btnConfirmDelete.disabled = true;
 
-<<<<<<< HEAD
-      const idPaciente = localStorage.getItem('idPaciente');
-      
-      // Validación estricta a prueba de fallos
-      if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
-        alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
-        throw new Error("ID inválido detectado en la memoria del navegador.");
-      }
-
-      const response = await fetch(`${API_BASE_URL}/api/paciente/settings/${idPaciente}`, {
-        // ... (resto de tu fetch)
-        method: 'delete',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-=======
       const pacienteId = localStorage.getItem("idPaciente");
       if (!pacienteId) {
         throw new Error("No se encontró el ID del usuario en el localStorage.");
@@ -189,7 +172,6 @@ export class SettingPaciente extends HTMLElement {
           },
         },
       );
->>>>>>> d87cf5703ec693fa2c3c1b47923e124d054bc0e8
 
       // 3. Validar si el backend procesó correctamente la eliminación
       if (!response.ok) {

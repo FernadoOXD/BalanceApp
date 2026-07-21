@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../../../config.js";
+
 const crearFilaRegistro24hVacia = (
   comida = "",
   colIds = [
@@ -47,6 +49,7 @@ const crearExpedienteVacio = () => {
   ];
 
   return {
+    idExpediente: null,
     fecha: new Date().toISOString().split("T")[0],
     nombrePaciente: "",
     apellidoPaterno: "",
@@ -63,53 +66,55 @@ const crearExpedienteVacio = () => {
     talla: "",
     imc: "",
     cintura: "",
-    clinicos: {
-      alcohol: "No",
-      tabaco: "No",
-      habitosToxicos: "• ",
-      patologias: "",
-      gastritis: "No",
-      colitis: "No",
-      estrenimiento: "No",
-      hemorroides: "No",
-      medicamentos: "",
-      alergias: "• ",
-      antecedentesFamiliares: "• ",
-    },
-    antropometria: {
-      biceps: "",
-      triceps: "",
-      suprailiaco: "",
-      musloPliegue: "",
-      piernaPliegue: "",
-      brazoContraido: "",
-      brazoRelajado: "",
-      antebrazo: "",
-      muneca: "",
-      cadera: "",
-      musloCinta: "",
-      pantorrilla: "",
-      tobillo: "",
-      humero: "",
-      rodilla: "",
-    },
+    diagnosticoGeneral: "",
+    observaciones: "• ",
+    // Valores por defecto para la BD
+    antecedenteFamiliares: "Ninguno",
+    alergiaIntolerancia: "Ninguna",
+    medicamentoActual: "Ninguno",
+    habitoToxico: "Ninguno",
     columnasFrecuencia: colFrecuenciaDefault,
     frecuenciaAlimentos: [
-      crearFilaFrecuenciaVacia("Lácteos", colFrecuenciaDefault.map((c) => c.id)),
-      crearFilaFrecuenciaVacia("Leguminosas", colFrecuenciaDefault.map((c) => c.id)),
-      crearFilaFrecuenciaVacia("Carnes/Pescados", colFrecuenciaDefault.map((c) => c.id)),
-      crearFilaFrecuenciaVacia("Cereales", colFrecuenciaDefault.map((c) => c.id)),
+      crearFilaFrecuenciaVacia(
+        "Lácteos",
+        colFrecuenciaDefault.map((c) => c.id),
+      ),
+      crearFilaFrecuenciaVacia(
+        "Leguminosas",
+        colFrecuenciaDefault.map((c) => c.id),
+      ),
+      crearFilaFrecuenciaVacia(
+        "Carnes/Pescados",
+        colFrecuenciaDefault.map((c) => c.id),
+      ),
+      crearFilaFrecuenciaVacia(
+        "Cereales",
+        colFrecuenciaDefault.map((c) => c.id),
+      ),
     ],
     columnasRegistro24h: colRegistroDefault,
     recordatorio24h: [
-      crearFilaRegistro24hVacia("Desayuno", colRegistroDefault.map((c) => c.id)),
-      crearFilaRegistro24hVacia("Media Mañana", colRegistroDefault.map((c) => c.id)),
-      crearFilaRegistro24hVacia("Comida", colRegistroDefault.map((c) => c.id)),
-      crearFilaRegistro24hVacia("Merienda", colRegistroDefault.map((c) => c.id)),
-      crearFilaRegistro24hVacia("Cena", colRegistroDefault.map((c) => c.id)),
+      crearFilaRegistro24hVacia(
+        "Desayuno",
+        colRegistroDefault.map((c) => c.id),
+      ),
+      crearFilaRegistro24hVacia(
+        "Media Mañana",
+        colRegistroDefault.map((c) => c.id),
+      ),
+      crearFilaRegistro24hVacia(
+        "Comida",
+        colRegistroDefault.map((c) => c.id),
+      ),
+      crearFilaRegistro24hVacia(
+        "Merienda",
+        colRegistroDefault.map((c) => c.id),
+      ),
+      crearFilaRegistro24hVacia(
+        "Cena",
+        colRegistroDefault.map((c) => c.id),
+      ),
     ],
-    diagnosticoGeneral: "",
-    observaciones: "• ",
   };
 };
 
@@ -131,7 +136,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     this.limitePacientes = 3;
     this.limiteCitas = 4;
 
-    // ARREGLOS 100% VACÍOS (Aguardando respuesta del servidor)
     this.pacientes = [];
     this.todasLasCitas = [];
     this.historialExpedientes = [];
@@ -142,7 +146,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     this.columnasFrecuenciaTemporal = [];
     this.columnasRegistro24hTemporal = [];
 
-    this.cerrarMenuContextualGlobal = this.cerrarMenuContextualGlobal.bind(this);
+    this.cerrarMenuContextualGlobal =
+      this.cerrarMenuContextualGlobal.bind(this);
   }
 
   async connectedCallback() {
@@ -161,13 +166,22 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
   // ==========================================
   async cargarPacientesDesdeBackend() {
     try {
-      const respuesta = await fetch("http://localhost:5000/api/paciente");
+      const respuesta = await fetch(`${API_BASE_URL}/api/paciente`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       if (respuesta.ok) {
         const listaBD = await respuesta.json();
         if (Array.isArray(listaBD)) {
           this.pacientes = listaBD.map((p) => {
-            const nombreCompleto = `${p.nombre || ''} ${p.apellidoPaterno || ''}`.trim() || p.nombrePaciente || "Paciente";
-            const inis = (p.nombre ? p.nombre[0] : "P") + (p.apellidoPaterno ? p.apellidoPaterno[0] : "");
+            const nombreReal = p.nombre || p.nombres || "";
+            const nombreCompleto =
+              `${nombreReal} ${p.apellidoPaterno || ""}`.trim() ||
+              p.nombrePaciente ||
+              "Paciente";
+            const inis =
+              (nombreReal ? nombreReal[0] : "P") +
+              (p.apellidoPaterno ? p.apellidoPaterno[0] : "");
             return {
               id: p.idPaciente || p.id || "PAC-000",
               nombre: nombreCompleto,
@@ -187,11 +201,27 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
   async cargarCitasDesdeBackend() {
     try {
-      const respuesta = await fetch("http://localhost:5000/api/cita");
+      const respuesta = await fetch(`${API_BASE_URL}/api/cita`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       if (respuesta.ok) {
-        const citasBD = await respuesta.json();
-        if (Array.isArray(citasBD)) {
-          this.todasLasCitas = citasBD;
+        const respuestaBD = await respuesta.json();
+        if (respuestaBD.success) {
+          const citasUnidas = [
+            ...(respuestaBD.proximas || []),
+            ...(respuestaBD.historial || []),
+          ];
+          this.todasLasCitas = citasUnidas.map((c) => ({
+            id: c.id,
+            pacienteId: c.idPaciente,
+            fecha: c.fecha,
+            hora: c.hora,
+            doctor: "Especialista",
+            estatus: c.estado,
+            fechaIso: c.fecha,
+            diagnostico: c.motivoConsulta || "Consulta general",
+          }));
         }
       }
     } catch (error) {
@@ -201,10 +231,49 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
   async obtenerExpedienteDelBackend(pacienteId) {
     try {
-      const respuesta = await fetch(`http://localhost:5000/api/expediente/${pacienteId}`);
+      const respuesta = await fetch(
+        `${API_BASE_URL}/api/expediente/${pacienteId}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
       if (respuesta.ok) {
         const datosExpediente = await respuesta.json();
-        this.expedientes[pacienteId] = datosExpediente;
+        this.expedientes[pacienteId] = {
+          idExpediente: datosExpediente.idExpediente || datosExpediente.id,
+          nombrePaciente: datosExpediente.nombrePaciente || "",
+          apellidoPaterno: datosExpediente.apellidoPaterno || "",
+          apellidoMaterno: datosExpediente.apellidoMaterno || "",
+          sexo: datosExpediente.sexo || "",
+          edad: datosExpediente.edad || "",
+          ocupacion: datosExpediente.ocupacion || "",
+          procedencia: datosExpediente.procedencia || "",
+          escolaridad: datosExpediente.escolaridad || "",
+          ejercicio: datosExpediente.ejercicio || "",
+          objetivo: datosExpediente.objetivo || "",
+          altura: datosExpediente.altura || "",
+          peso: datosExpediente.peso || "",
+          talla: datosExpediente.talla || "",
+          imc: datosExpediente.imc || "",
+          cintura: datosExpediente.cintura || "",
+          fecha:
+            datosExpediente.fecha ||
+            datosExpediente.fechaInicializacion ||
+            new Date().toISOString().split("T")[0],
+          observaciones:
+            datosExpediente.observaciones ||
+            datosExpediente.notasInternas ||
+            "• ",
+          diagnosticoGeneral: datosExpediente.patologiaPrevia || "",
+          antecedenteFamiliares:
+            datosExpediente.antecedenteFamiliares || "Ninguno",
+          alergiaIntolerancia: datosExpediente.alergiaIntolerancia || "Ninguna",
+          medicamentoActual: datosExpediente.medicamentoActual || "Ninguno",
+          habitoToxico: datosExpediente.habitoToxico || "Ninguno",
+        };
+      } else {
+        this.expedientes[pacienteId] = null;
       }
     } catch (error) {
       console.error("Error al consultar expediente:", error);
@@ -214,7 +283,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
   async obtenerDetallesCitaBackend(citaId, pacienteId, fechaIso) {
     try {
       const expCoincidente = this.historialExpedientes.find(
-        (entry) => entry.pacienteId === pacienteId && entry.datos.fecha === fechaIso
+        (entry) =>
+          entry.pacienteId === pacienteId && entry.datos.fecha === fechaIso,
       );
 
       if (expCoincidente) {
@@ -223,7 +293,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
           imc: expCoincidente.datos.imc || "---",
           grasa: "---",
           cintura: expCoincidente.datos.cintura || "---",
-          diagnostico: expCoincidente.datos.diagnosticoGeneral || "Sin diagnóstico.",
+          diagnostico:
+            expCoincidente.datos.diagnosticoGeneral || "Sin diagnóstico.",
           observaciones: expCoincidente.datos.observaciones || "Sin notas.",
         };
       }
@@ -236,13 +307,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
   esPacienteNuevo(pacienteId) {
     const citasPaciente = this.todasLasCitas.filter(
-      (c) => (c.pacienteId === pacienteId || c.idPaciente === pacienteId) && 
-             (c.estatus === "Activo" || c.estatus === "Confirmada" || c.estatus === "Completada")
+      (c) =>
+        String(c.pacienteId) === String(pacienteId) ||
+        String(c.idPaciente) === String(pacienteId),
     );
-    const expedientesPaciente = this.historialExpedientes.filter(
-      (entry) => entry.pacienteId === pacienteId
-    );
-    return citasPaciente.length <= 1 && expedientesPaciente.length <= 1;
+    return citasPaciente.length <= 1;
   }
 
   formatearFechaEs(fechaStr) {
@@ -250,10 +319,21 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     const partes = String(fechaStr).split("-");
     if (partes.length === 3) {
       const mesIdx = parseInt(partes[1], 10);
-      const mesNombre = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-      ][mesIdx - 1] || partes[1];
+      const mesNombre =
+        [
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre",
+        ][mesIdx - 1] || partes[1];
       return `${partes[2]} de ${mesNombre} de ${partes[0]}`;
     }
     return fechaStr;
@@ -282,7 +362,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
           const start = textarea.selectionStart;
           const end = textarea.selectionEnd;
           const value = textarea.value;
-          textarea.value = value.substring(0, start) + "\n• " + value.substring(end);
+          textarea.value =
+            value.substring(0, start) + "\n• " + value.substring(end);
           textarea.selectionStart = textarea.selectionEnd = start + 3;
           textarea.dispatchEvent(new Event("input"));
         }
@@ -297,7 +378,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     this.mostrarModalCitaProgramada = false;
 
     if (idPaciente) {
-      this.pacienteSeleccionado = this.pacientes.find((p) => p.id === idPaciente) || null;
+      this.pacienteSeleccionado =
+        this.pacientes.find((p) => String(p.id) === String(idPaciente)) || null;
     }
 
     if (nuevaVista === "lista" || nuevaVista === "perfil") {
@@ -305,46 +387,45 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       this.limiteCitas = 4;
     }
 
-    if (nuevaVista === "ver-expediente") {
+    if (nuevaVista === "ver-expediente" || nuevaVista === "crear-expediente") {
       const pId = this.pacienteSeleccionado?.id;
-      if (pId) {
+      if (pId && !this.expedientes[pId]) {
         await this.obtenerExpedienteDelBackend(pId);
       }
     }
 
     if (nuevaVista === "crear-expediente") {
       const p = this.pacienteSeleccionado;
-      const exp = (p && this.expedientes[p.id]) ? this.expedientes[p.id] : crearExpedienteVacio();
+      const exp =
+        p && this.expedientes[p.id]
+          ? this.expedientes[p.id]
+          : crearExpedienteVacio();
 
-      this.columnasFrecuenciaTemporal = JSON.parse(
-        JSON.stringify(
-          exp.columnasFrecuencia || [
-            { id: "grupoAlimento", nombre: "Grupo Alimentario" },
-            { id: "frecuencia", nombre: "Frecuencia" },
-            { id: "observaciones", nombre: "Observaciones" },
-          ],
-        ),
+      this.columnasFrecuenciaTemporal = structuredClone(
+        exp.columnasFrecuencia || [
+          { id: "grupoAlimento", nombre: "Grupo Alimentario" },
+          { id: "frecuencia", nombre: "Frecuencia" },
+          { id: "observaciones", nombre: "Observaciones" },
+        ],
       );
-      this.tablaFrecuenciaTemporal = JSON.parse(
-        JSON.stringify(exp.frecuenciaAlimentos || []),
+      this.tablaFrecuenciaTemporal = structuredClone(
+        exp.frecuenciaAlimentos || [],
       );
 
-      this.columnasRegistro24hTemporal = JSON.parse(
-        JSON.stringify(
-          exp.columnasRegistro24h || [
-            { id: "comida", nombre: "Comida / Horario" },
-            { id: "lunes", nombre: "Lunes" },
-            { id: "martes", nombre: "Martes" },
-            { id: "miercoles", nombre: "Miércoles" },
-            { id: "jueves", nombre: "Jueves" },
-            { id: "viernes", nombre: "Viernes" },
-            { id: "sabado", nombre: "Sábado" },
-            { id: "domingo", nombre: "Domingo" },
-          ],
-        ),
+      this.columnasRegistro24hTemporal = structuredClone(
+        exp.columnasRegistro24h || [
+          { id: "comida", nombre: "Comida / Horario" },
+          { id: "lunes", nombre: "Lunes" },
+          { id: "martes", nombre: "Martes" },
+          { id: "miercoles", nombre: "Miércoles" },
+          { id: "jueves", nombre: "Jueves" },
+          { id: "viernes", nombre: "Viernes" },
+          { id: "sabado", nombre: "Sábado" },
+          { id: "domingo", nombre: "Domingo" },
+        ],
       );
-      this.tablaRegistro24hTemporal = JSON.parse(
-        JSON.stringify(exp.recordatorio24h || []),
+      this.tablaRegistro24hTemporal = structuredClone(
+        exp.recordatorio24h || [],
       );
     }
 
@@ -353,10 +434,14 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
   render() {
     if (this.vistaActual === "lista") this.innerHTML = this.getTemplateLista();
-    else if (this.vistaActual === "perfil") this.innerHTML = this.getTemplatePerfil();
-    else if (this.vistaActual === "ver-expediente") this.innerHTML = this.getTemplateVerExpediente();
-    else if (this.vistaActual === "crear-expediente") this.innerHTML = this.getTemplateFormularioExpediente();
-    else if (this.vistaActual === "historial-lista") this.innerHTML = this.getTemplateHistorialLista();
+    else if (this.vistaActual === "perfil")
+      this.innerHTML = this.getTemplatePerfil();
+    else if (this.vistaActual === "ver-expediente")
+      this.innerHTML = this.getTemplateVerExpediente();
+    else if (this.vistaActual === "crear-expediente")
+      this.innerHTML = this.getTemplateFormularioExpediente();
+    else if (this.vistaActual === "historial-lista")
+      this.innerHTML = this.getTemplateHistorialLista();
 
     this.setupEventListeners();
 
@@ -421,7 +506,9 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   ${
                     pacientesVisibles.length === 0
                       ? `<tr><td colspan="3" style="text-align:center; padding: 20px; color: var(--text-muted);">No hay pacientes registrados aún.</td></tr>`
-                      : pacientesVisibles.map((p) => `
+                      : pacientesVisibles
+                          .map(
+                            (p) => `
                         <tr class="row-paciente-item" data-id="${p.id}">
                           <td class="cell-profile-wrapper">
                             <div class="avatar-circle">
@@ -436,7 +523,9 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                           <td class="cell-standard-text">${p.ultimoReporte}</td>
                           <td class="cell-standard-text">${p.estado}</td>
                         </tr>
-                      `).join("")
+                      `,
+                          )
+                          .join("")
                   }
                 </tbody>
               </table>
@@ -478,8 +567,29 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       `;
     }
 
-    const citasDelPaciente = this.todasLasCitas.filter(c => c.pacienteId === p.id || c.idPaciente === p.id);
-    const citasVisibles = citasDelPaciente.slice(0, this.limiteCitas);
+    const citasDelPaciente = this.todasLasCitas.filter(
+      (c) =>
+        String(c.pacienteId) === String(p.id) ||
+        String(c.idPaciente) === String(p.id),
+    );
+
+    const hoyIso = new Date().toISOString().split("T")[0];
+    const citasPasadas = citasDelPaciente.filter(
+      (c) =>
+        c.fecha < hoyIso ||
+        c.estatus === "Cancelada" ||
+        c.estatus === "Concluida",
+    );
+    const citasFuturas = citasDelPaciente.filter(
+      (c) =>
+        c.fecha >= hoyIso &&
+        c.estatus !== "Cancelada" &&
+        c.estatus !== "Concluida",
+    );
+
+    const proximaCita = citasFuturas.length > 0 ? citasFuturas[0] : null;
+
+    const citasVisibles = citasPasadas.slice(0, this.limiteCitas);
     const estaExpandidoCitas = this.limiteCitas > 4;
 
     return `
@@ -544,23 +654,27 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                     ${
                       citasVisibles.length === 0
                         ? `<tr><td colspan="4" style="text-align:center; color: var(--text-muted); padding:15px;">Sin citas registradas para este paciente.</td></tr>`
-                        : citasVisibles.map((c) => `
+                        : citasVisibles
+                            .map(
+                              (c) => `
                           <tr>
                             <td>${c.fecha}</td>
                             <td>${c.doctor || c.nombreEspecialista || "Atención General"}</td>
                             <td><span class="badge-activo">${c.estatus}</span></td>
                             <td class="cell-align-right">
-                              <button class="btn-table-details btn-ver-resumen-cita" data-id="${c.id}" data-fecha="${c.fecha}" data-fecha-iso="${c.fechaIso || c.fecha}" data-doctor="${c.doctor || 'Especialista'}">
+                              <button class="btn-table-details btn-ver-resumen-cita" data-id="${c.id}" data-fecha="${c.fecha}" data-fecha-iso="${c.fechaIso || c.fecha}" data-doctor="${c.doctor || "Especialista"}">
                                 Ver Detalles
                               </button>
                             </td>
                           </tr>
-                        `).join("")
+                        `,
+                            )
+                            .join("")
                     }
                   </tbody>
                 </table>
                 ${
-                  citasDelPaciente.length > 4
+                  citasPasadas.length > 4
                     ? `
                     <div class="center-action-row">
                       <button class="btn-table-details load-more-btn-padding" id="btn-toggle-citas">
@@ -576,7 +690,21 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             <div>
               <div class="card-container-white">
                 <h3 class="card-title-sub tight-margin">Cita Programada</h3>
-                <p class="no-appointments-label">Sin citas programadas registradas</p>
+                ${
+                  proximaCita
+                    ? `
+                  <div style="margin-top: 15px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body);">
+                    <p style="margin: 0; font-weight: bold; color: var(--text-primary);">
+                      <span style="color: var(--color-sidebar-active-bg, #22c55e);">●</span> 
+                      ${this.formatearFechaEs(proximaCita.fecha)} - ${proximaCita.hora || "Por definir"}
+                    </p>
+                    <p style="margin: 5px 0 0 0; font-size: 13px; color: var(--text-secondary);">
+                      Motivo: ${proximaCita.diagnostico || "Consulta general"}
+                    </p>
+                  </div>
+                  `
+                    : `<p class="no-appointments-label">Sin citas programadas registradas</p>`
+                }
               </div>
             </div>
           </div>
@@ -603,7 +731,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <h5 style="margin:0; color:var(--text-primary);">${p.nombre} (ID: ${p.id})</h5>
             </div>
             <div>
-              <strong style="color:var(--text-primary);">Diagnóstico:</strong>
+              <strong style="color:var(--text-primary);">Diagnóstico / Motivo:</strong>
               <p style="color:var(--text-secondary); margin-top:4px;">${data.diagnostico}</p>
             </div>
           </div>
@@ -688,23 +816,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       `;
     }
 
-    const colsFrecuencia = exp.columnasFrecuencia || [
-      { id: "grupoAlimento", nombre: "Grupo Alimentario" },
-      { id: "frecuencia", nombre: "Frecuencia" },
-      { id: "observaciones", nombre: "Observaciones" },
-    ];
-
-    const colsRegistro = exp.columnasRegistro24h || [
-      { id: "comida", nombre: "Comida / Horario" },
-      { id: "lunes", nombre: "Lunes" },
-      { id: "martes", nombre: "Martes" },
-      { id: "miercoles", nombre: "Miércoles" },
-      { id: "jueves", nombre: "Jueves" },
-      { id: "viernes", nombre: "Viernes" },
-      { id: "sabado", nombre: "Sábado" },
-      { id: "domingo", nombre: "Domingo" },
-    ];
-
     return `
       <div class="main-layout-container">
         <app-sidebar-especialista class="sidebar-wrapper"></app-sidebar-especialista>
@@ -727,7 +838,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <h3 class="card-title-sub">1. Datos Generales de la Paciente</h3>
               <table class="citas-table" style="margin-bottom: 25px;">
-                <tr><td><strong>Nombre Completo:</strong> ${exp.nombrePaciente || "---"}</td><td><strong>Sexo:</strong> ${exp.sexo || "---"}</td><td><strong>Edad:</strong> ${exp.edad || "---"} años</td></tr>
+                <tr><td><strong>Nombre Completo:</strong> ${exp.nombrePaciente || p.nombre}</td><td><strong>Sexo:</strong> ${exp.sexo || "---"}</td><td><strong>Edad:</strong> ${exp.edad || "---"} años</td></tr>
                 <tr><td><strong>Ocupación:</strong> ${exp.ocupacion || "---"}</td><td><strong>Procedencia:</strong> ${exp.procedencia || "---"}</td><td><strong>Escolaridad:</strong> ${exp.escolaridad || "---"}</td></tr>
                 <tr><td colspan="2"><strong>Actividad Física:</strong> ${exp.ejercicio || "---"}</td><td><strong>Fecha Evaluación:</strong> ${this.formatearFechaEs(exp.fecha)}</td></tr>
                 <tr><td colspan="3"><strong>Objetivo Nutricional:</strong> ${exp.objetivo || "---"}</td></tr>
@@ -757,7 +868,10 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
   getTemplateFormularioExpediente() {
     const p = this.pacienteSeleccionado;
-    const exp = (p && this.expedientes[p.id]) ? this.expedientes[p.id] : crearExpedienteVacio();
+    const exp =
+      p && this.expedientes[p.id]
+        ? this.expedientes[p.id]
+        : crearExpedienteVacio();
 
     return `
       <div class="main-layout-container">
@@ -787,7 +901,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                       <option value="Masculino" ${exp.sexo === "Masculino" ? "selected" : ""}>Masculino</option>
                     </select>
                   </label>
-                  <label>Edad: <input type="number" id="form-edad" value="${exp.edad || ""}" required></label>
+                  <label>Edad: <input type="number" id="form-edad" value="${exp.edad || ""}"></label>
                   <label>Ocupación: <input type="text" id="form-ocupacion" value="${exp.ocupacion || ""}"></label>
                 </div>
                 <div class="form-grid-3-col">
@@ -806,9 +920,9 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <div class="card-container-white">
                 <h3 class="card-title-sub">2. Diagnóstico Antropométrico e Indicadores</h3>
                 <div class="form-grid-3-col">
-                  <label>Altura (m): <input type="number" step="0.01" id="form-altura" value="${exp.altura || ""}" required></label>
-                  <label>Peso (kg): <input type="number" step="0.1" id="form-peso" value="${exp.peso || ""}" required></label>
-                  <label>Talla (m): <input type="number" step="0.01" id="form-talla" value="${exp.talla || ""}" required></label>
+                  <label>Altura (m): <input type="number" step="0.01" id="form-altura" value="${exp.altura || ""}"></label>
+                  <label>Peso (kg): <input type="number" step="0.1" id="form-peso" value="${exp.peso || ""}"></label>
+                  <label>Talla (m): <input type="number" step="0.01" id="form-talla" value="${exp.talla || ""}"></label>
                 </div>
                 <div class="form-grid-2-col">
                   <label>IMC: <input type="number" step="0.1" id="form-imc" value="${exp.imc || ""}"></label>
@@ -818,10 +932,10 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <div class="card-container-white">
                 <h3 class="card-title-sub">3. Diagnóstico Clínico</h3>
-                <label>Diagnóstico General:
+                <label>Diagnóstico General / Patología:
                   <textarea id="form-diagnosticoGeneral" class="textarea-dinamica auto-expand" placeholder="Escriba el diagnóstico...">${exp.diagnosticoGeneral || ""}</textarea>
                 </label>
-                <label>Observaciones:
+                <label>Observaciones / Notas Internas:
                   <textarea id="form-observaciones" class="textarea-dinamica textarea-bullet auto-expand" placeholder="• Observaciones...">${exp.observaciones || "• "}</textarea>
                 </label>
               </div>
@@ -872,14 +986,20 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     });
 
-    const btnAnadirNuevoExpediente = this.querySelector("#btn-anadir-nuevo-expediente");
+    const btnAnadirNuevoExpediente = this.querySelector(
+      "#btn-anadir-nuevo-expediente",
+    );
     if (btnAnadirNuevoExpediente) {
-      btnAnadirNuevoExpediente.addEventListener("click", () => this.cambiarVista("crear-expediente"));
+      btnAnadirNuevoExpediente.addEventListener("click", () =>
+        this.cambiarVista("crear-expediente"),
+      );
     }
 
     const btnVerExpediente = this.querySelector("#btn-ver-expediente");
     if (btnVerExpediente) {
-      btnVerExpediente.addEventListener("click", () => this.cambiarVista("ver-expediente"));
+      btnVerExpediente.addEventListener("click", () =>
+        this.cambiarVista("ver-expediente"),
+      );
     }
 
     const btnVerDiagnostico = this.querySelector("#btn-ver-diagnostico");
@@ -890,7 +1010,9 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     }
 
-    const btnCerrarModalDiagnostico = this.querySelector("#btn-cerrar-modal-diagnostico");
+    const btnCerrarModalDiagnostico = this.querySelector(
+      "#btn-cerrar-modal-diagnostico",
+    );
     if (btnCerrarModalDiagnostico) {
       btnCerrarModalDiagnostico.addEventListener("click", () => {
         this.mostrarModalDiagnostico = false;
@@ -900,28 +1022,38 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
     const btnRegresarPerfil = this.querySelector("#btn-regresar-perfil");
     if (btnRegresarPerfil) {
-      btnRegresarPerfil.addEventListener("click", () => this.cambiarVista("perfil"));
+      btnRegresarPerfil.addEventListener("click", () =>
+        this.cambiarVista("perfil"),
+      );
     }
 
     const btnAnadirExpediente = this.querySelector("#btn-anadir-expediente");
     if (btnAnadirExpediente) {
-      btnAnadirExpediente.addEventListener("click", () => this.cambiarVista("crear-expediente"));
+      btnAnadirExpediente.addEventListener("click", () =>
+        this.cambiarVista("crear-expediente"),
+      );
     }
 
     const btnEditarExpediente = this.querySelector("#btn-editar-expediente");
     if (btnEditarExpediente) {
-      btnEditarExpediente.addEventListener("click", () => this.cambiarVista("crear-expediente"));
+      btnEditarExpediente.addEventListener("click", () =>
+        this.cambiarVista("crear-expediente"),
+      );
     }
 
-    const btnCancelarFormulario = this.querySelector("#btn-cancelar-formulario");
+    const btnCancelarFormulario = this.querySelector(
+      "#btn-cancelar-formulario",
+    );
     if (btnCancelarFormulario) {
       btnCancelarFormulario.addEventListener("click", () => {
         const p = this.pacienteSeleccionado;
-        const destino = (p && this.expedientes[p.id]) ? "ver-expediente" : "perfil";
+        const destino =
+          p && this.expedientes[p.id] ? "ver-expediente" : "perfil";
         this.cambiarVista(destino);
       });
     }
 
+    // FORMULARIO DE EXPEDIENTE: POST O PUT
     const formExpediente = this.querySelector("#expediente-form");
     if (formExpediente) {
       formExpediente.addEventListener("submit", async (e) => {
@@ -931,39 +1063,60 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
         const nuevoExpedienteStruct = {
           idPaciente: pId,
-          fecha: this.querySelector("#form-fecha").value,
-          nombrePaciente: this.querySelector("#form-nombrePaciente").value,
-          apellidoPaterno: this.querySelector("#form-apellidoPaterno").value,
-          apellidoMaterno: this.querySelector("#form-apellidoMaterno").value,
-          sexo: this.querySelector("#form-sexo").value,
-          edad: parseInt(this.querySelector("#form-edad").value, 10) || 0,
-          ocupacion: this.querySelector("#form-ocupacion").value,
-          procedencia: this.querySelector("#form-procedencia").value,
-          escolaridad: this.querySelector("#form-escolaridad").value,
-          ejercicio: this.querySelector("#form-ejercicio").value,
-          objetivo: this.querySelector("#form-objetivo").value,
-          altura: parseFloat(this.querySelector("#form-altura").value) || 0,
-          peso: parseFloat(this.querySelector("#form-peso").value) || 0,
-          talla: parseFloat(this.querySelector("#form-talla").value) || 0,
-          imc: parseFloat(this.querySelector("#form-imc").value) || 0,
-          cintura: parseFloat(this.querySelector("#form-cintura").value) || 0,
-          observaciones: this.querySelector("#form-observaciones").value,
-          diagnosticoGeneral: this.querySelector("#form-diagnosticoGeneral").value,
+          nombrePaciente: this.querySelector("#form-nombrePaciente").value || "",
+          apellidoPaterno: this.querySelector("#form-apellidoPaterno").value || "",
+          apellidoMaterno: this.querySelector("#form-apellidoMaterno").value || "",
+          sexo: this.querySelector("#form-sexo").value || "",
+          edad: this.querySelector("#form-edad").value || "",
+          ocupacion: this.querySelector("#form-ocupacion").value || "",
+          procedencia: this.querySelector("#form-procedencia").value || "",
+          escolaridad: this.querySelector("#form-escolaridad").value || "",
+          ejercicio: this.querySelector("#form-ejercicio").value || "",
+          objetivo: this.querySelector("#form-objetivo").value || "",
+          altura: this.querySelector("#form-altura").value || "",
+          peso: this.querySelector("#form-peso").value || "",
+          talla: this.querySelector("#form-talla").value || "",
+          imc: this.querySelector("#form-imc").value || "",
+          cintura: this.querySelector("#form-cintura").value || "",
+          fechaInicializacion:
+            this.querySelector("#form-fecha").value ||
+            new Date().toISOString().split("T")[0],
+          notasInternas:
+            this.querySelector("#form-observaciones").value || "Sin notas",
+          patologiaPrevia:
+            this.querySelector("#form-diagnosticoGeneral").value || "Ninguna",
+          antecedenteFamiliares: "Ninguno",
+          alergiaIntolerancia: "Ninguna",
+          medicamentoActual: "Ninguno",
+          habitoToxico: "Ninguno",
         };
 
+        const expExistente = this.expedientes[pId];
+        const esActualizacion = expExistente && expExistente.idExpediente;
+
+        const url = esActualizacion
+          ? `${API_BASE_URL}/api/expediente/${expExistente.idExpediente}`
+          : `${API_BASE_URL}/api/expediente`;
+
+        const method = esActualizacion ? "PUT" : "POST";
+
         try {
-          const respuesta = await fetch("http://localhost:5000/api/expediente", {
-            method: "POST",
+          const respuesta = await fetch(url, {
+            method: method,
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(nuevoExpedienteStruct)
+            body: JSON.stringify(nuevoExpedienteStruct),
           });
 
           if (respuesta.ok) {
-            alert("¡Expediente guardado exitosamente!");
-            this.expedientes[pId] = JSON.parse(JSON.stringify(nuevoExpedienteStruct));
+            alert(
+              esActualizacion
+                ? "¡Expediente actualizado exitosamente!"
+                : "¡Expediente guardado exitosamente!",
+            );
+            await this.obtenerExpedienteDelBackend(pId);
             this.cambiarVista("ver-expediente");
           } else {
-            alert("Error en el servidor al guardar.");
+            alert("Error en el servidor al guardar el expediente.");
           }
         } catch (error) {
           console.error("Error al conectar con la API:", error);
@@ -971,6 +1124,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       });
     }
 
+    // BUSCADOR DE PACIENTES
     const searchInput = this.querySelector("#global-search-input");
     const dropdown = this.querySelector("#dropdown-clientes-nuevos");
     const resultsList = this.querySelector("#dropdown-results-list");
@@ -988,11 +1142,11 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
         const filtrados = this.pacientes.filter((p) => {
           const coincideNombre = p.nombre.toLowerCase().includes(query);
-          const coincideId = p.id.toLowerCase().includes(query);
+          const coincideId = String(p.id).toLowerCase().includes(query);
           const coincideFiltro = coincideNombre || coincideId;
           const esNuevoReal = this.esPacienteNuevo(p.id);
 
-          return soloNuevos ? (coincideFiltro && esNuevoReal) : coincideFiltro;
+          return soloNuevos ? coincideFiltro && esNuevoReal : coincideFiltro;
         });
 
         if (filtrados.length === 0) {
@@ -1000,7 +1154,8 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             '<div class="dropdown-empty-state" style="padding:12px; font-size:13px; color:var(--text-muted); text-align:center;">No se encontraron pacientes</div>';
         } else {
           resultsList.innerHTML = filtrados
-            .map((p) => `
+            .map(
+              (p) => `
               <div class="dropdown-item-row" data-id="${p.id}" style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; cursor:pointer; border-bottom:1px solid var(--border-color);">
                 <div style="display:flex; align-items:center; gap:10px;">
                   <div class="avatar-circle small-avatar">
@@ -1015,10 +1170,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                 ${
                   this.esPacienteNuevo(p.id)
                     ? `<span style="background:var(--color-sidebar-active-bg, #22c55e); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px;">NUEVO</span>`
-                    : ''
+                    : ""
                 }
               </div>
-            `).join("");
+            `,
+            )
+            .join("");
         }
 
         if (dropdown) dropdown.classList.remove("hidden-dropdown");
@@ -1031,8 +1188,36 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
       }
     }
 
+    // MODAL DE RESUMEN DE CITA
+    this.querySelectorAll(".btn-ver-resumen-cita").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const citaId = e.currentTarget.getAttribute("data-id");
+        const citaObj = this.todasLasCitas.find(
+          (c) => String(c.id) === String(citaId),
+        );
+        if (citaObj) {
+          this.citaSeleccionadaDetalle = {
+            fecha: this.formatearFechaEs(citaObj.fecha),
+            diagnostico: citaObj.diagnostico || "Consulta de seguimiento.",
+          };
+          this.mostrarModalResumenCita = true;
+          this.render();
+        }
+      });
+    });
+
+    const btnCerrarResumenCita = this.querySelector("#btn-cerrar-resumen-cita");
+    if (btnCerrarResumenCita) {
+      btnCerrarResumenCita.addEventListener("click", () => {
+        this.mostrarModalResumenCita = false;
+        this.render();
+      });
+    }
+
     document.addEventListener("click", (e) => {
-      if (!this.querySelector(".search-context-container")?.contains(e.target)) {
+      if (
+        !this.querySelector(".search-context-container")?.contains(e.target)
+      ) {
         if (dropdown) dropdown.classList.add("hidden-dropdown");
       }
     });
