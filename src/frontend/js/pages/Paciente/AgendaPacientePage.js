@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../../config.js';
+import { API_BASE_URL } from "../../../config.js";
 
 function getPacienteSession() {
   try {
@@ -7,9 +7,11 @@ function getPacienteSession() {
     if (idPacienteDirecto) {
       return { idPaciente: parseInt(idPacienteDirecto, 10) };
     }
-    
+
     // 2. Si no está directa, buscar el objeto JSON guardado como usuarioActivo
-    const raw = localStorage.getItem("usuarioActivo") || sessionStorage.getItem("usuarioActivo");
+    const raw =
+      localStorage.getItem("usuarioActivo") ||
+      sessionStorage.getItem("usuarioActivo");
     if (raw) {
       const parsed = JSON.parse(raw);
       // Asegurar compatibilidad si el backend devuelve 'id' o 'idPaciente'
@@ -18,7 +20,7 @@ function getPacienteSession() {
         return { idPaciente: parseInt(id, 10) };
       }
     }
-    
+
     return null;
   } catch (e) {
     console.error("Error al obtener la sesión del paciente:", e);
@@ -28,16 +30,16 @@ function getPacienteSession() {
 
 function formatFecha(isoStr) {
   console.log("formatFecha received:", isoStr, "type:", typeof isoStr);
-  
-  if (typeof isoStr !== 'string' || !isoStr) return "—";
-  
+
+  if (typeof isoStr !== "string" || !isoStr) return "—";
+
   // Parsear fecha en formato YYYY-MM-DD del backend
-  const [year, month, day] = isoStr.split('-').map(Number);
+  const [year, month, day] = isoStr.split("-").map(Number);
   console.log("Parsed date parts:", year, month, day);
-  
+
   const date = new Date(year, month - 1, day); // month - 1 porque los meses en JS son 0-indexed
   console.log("Date object:", date, "isValid:", !isNaN(date.getTime()));
-  
+
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
   const manana = new Date(hoy);
@@ -110,19 +112,25 @@ export class AgendaPacientePage extends HTMLElement {
     }
 
     try {
-      const idPaciente = this.paciente.idPaciente || this.paciente.id || this.paciente.paciente_id;
-      
+      const idPaciente =
+        this.paciente.idPaciente ||
+        this.paciente.id ||
+        this.paciente.paciente_id;
+
       // Aquí inyectamos el API_BASE_URL dinámico
-      const response = await fetch(`${API_BASE_URL}/api/cita?paciente_id=${idPaciente}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      
+      const response = await fetch(
+        `${API_BASE_URL}/api/cita?paciente_id=${idPaciente}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        },
+      );
+
       const data = await response.json();
-      
+
       if (!response.ok || !data.success) {
-         throw new Error(data.message || "Error al obtener las citas.");
+        throw new Error(data.message || "Error al obtener las citas.");
       }
 
       // Procesamos la data real del backend
@@ -148,7 +156,6 @@ export class AgendaPacientePage extends HTMLElement {
         motivo: c.motivoConsulta || "—",
         estado: c.estado || "—",
       }));
-
     } catch (err) {
       console.error("[AgendaPacientePage] fetchCitasFromDB:", err);
       this.error = err.message || "Ocurrió un error inesperado.";
@@ -169,19 +176,25 @@ export class AgendaPacientePage extends HTMLElement {
         btnConfirm.disabled = true;
       }
 
-      const idPaciente = this.paciente?.idPaciente || this.paciente?.id || this.paciente?.paciente_id;
-      
+      const idPaciente =
+        this.paciente?.idPaciente ||
+        this.paciente?.id ||
+        this.paciente?.paciente_id;
+
       // Inyectamos el API_BASE_URL dinámico
-      // Nota: El backend actualmente no tiene un endpoint PATCH /api/cita/{id}/cancelar. 
+      // Nota: El backend actualmente no tiene un endpoint PATCH /api/cita/{id}/cancelar.
       // Se ajusta la ruta a /api/cita para consistencia, pero necesitarás implementar este método en Java.
-      const response = await fetch(`${API_BASE_URL}/api/cita/${idCita}/cancelar?paciente_id=${idPaciente}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      
+      const response = await fetch(
+        `${API_BASE_URL}/api/cita/${idCita}/cancelar?paciente_id=${idPaciente}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        },
+      );
+
       const data = await response.json();
-      
+
       if (!response.ok || !data.success) {
         alert(data.message || "No se pudo cancelar la cita.");
         return;
@@ -189,12 +202,11 @@ export class AgendaPacientePage extends HTMLElement {
 
       // Volvemos a pedir las citas a la base de datos para que la vista se actualice
       await this.fetchCitasFromDB();
-      
+
       this.citaToCancel = null;
       // Cerrar modal
       const modalCancel = this.querySelector("#modal-cancel-cita");
       if (modalCancel) modalCancel.classList.add("hidden");
-
     } catch (err) {
       console.error("[AgendaPacientePage] cancelarCita:", err);
       alert("Error de conexión. Intenta de nuevo.");
