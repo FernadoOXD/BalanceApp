@@ -18,7 +18,7 @@ export class SidebarPaciente extends HTMLElement {
             <img src="assets/images/default_user.png" alt="Paciente">
           </div>
           <div class="sidebar__profile-info">
-            <h3 class="sidebar__profile-name">Nombre del Paciente</h3>
+            <h3 id="sidebar-nombre-paciente" class="sidebar__profile-name">Nombre del Paciente</h3>
             <p class="sidebar__profile-title">Paciente</p>
           </div>
         </div>
@@ -82,8 +82,8 @@ export class SidebarPaciente extends HTMLElement {
       </aside>
 
       <!-- ==========================================
-           VENTANA MODAL: CONFIRMAR CERRAR SESIÓN
-           ========================================== -->
+            VENTANA MODAL: CONFIRMAR CERRAR SESIÓN
+            ========================================== -->
       <div id="modal-logout" class="modal-overlay hidden">
         <div class="modal-content modal-small">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
@@ -110,6 +110,9 @@ export class SidebarPaciente extends HTMLElement {
   }
 
   initLogic() {
+    // --- NUEVO: Cargar los datos del paciente desde el localStorage ---
+    this.cargarDatosPaciente();
+
     const toggleBtn = this.querySelector(".sidebar__mobile-toggle");
     const sidebar = this.querySelector(".sidebar");
     const navLinks = this.querySelectorAll(".sidebar__nav-link");
@@ -201,6 +204,28 @@ export class SidebarPaciente extends HTMLElement {
           window.location.href = "#/";
         }, 400);
       });
+    }
+  }
+
+  // --- NUEVA FUNCIÓN: Lee el localStorage y pinta el nombre en la barra lateral ---
+  cargarDatosPaciente() {
+    const usuarioGuardado = localStorage.getItem("usuarioActivo");
+    if (!usuarioGuardado) return;
+
+    try {
+      const data = JSON.parse(usuarioGuardado);
+      const nombre = data.nombres || "";
+      const apellido = data.apellidoPaterno || "";
+
+      if (nombre || apellido) {
+        const nombreCompleto = `${nombre} ${apellido}`.trim();
+        const elementoNombre = this.querySelector("#sidebar-nombre-paciente");
+        if (elementoNombre) {
+          elementoNombre.textContent = nombreCompleto;
+        }
+      }
+    } catch (e) {
+      console.error("Error al cargar los datos del paciente en la barra lateral:", e);
     }
   }
 }

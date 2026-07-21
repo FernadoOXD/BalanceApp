@@ -2,18 +2,26 @@ import { API_BASE_URL } from '../../../config.js';
 
 function getPacienteSession() {
   try {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      return { idPaciente: parseInt(userId, 10) };
+    // 1. Buscar primero la clave directa que guarda el login
+    const idPacienteDirecto = localStorage.getItem("idPaciente");
+    if (idPacienteDirecto) {
+      return { idPaciente: parseInt(idPacienteDirecto, 10) };
     }
     
-    const raw =
-      localStorage.getItem("user") ||
-      sessionStorage.getItem("user") ||
-      localStorage.getItem("paciente_session") ||
-      sessionStorage.getItem("paciente_session");
-    return raw ? JSON.parse(raw) : null;
-  } catch {
+    // 2. Si no está directa, buscar el objeto JSON guardado como usuarioActivo
+    const raw = localStorage.getItem("usuarioActivo") || sessionStorage.getItem("usuarioActivo");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Asegurar compatibilidad si el backend devuelve 'id' o 'idPaciente'
+      const id = parsed.idPaciente || parsed.id;
+      if (id) {
+        return { idPaciente: parseInt(id, 10) };
+      }
+    }
+    
+    return null;
+  } catch (e) {
+    console.error("Error al obtener la sesión del paciente:", e);
     return null;
   }
 }

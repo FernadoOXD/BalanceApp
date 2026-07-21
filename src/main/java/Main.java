@@ -1,15 +1,15 @@
 import io.javalin.Javalin;
 import routes.CitaRoutes;
+import routes.ConfiguracionRoutes;
 import routes.DiagnosticoRoutes;
 import routes.EncuestaRoutes;
+import routes.EstadisticasRoutes;
 import routes.ExpedienteNuevoRoutes;
 import routes.ExpedienteSeguimientoRoutes;
 import routes.MedicionRoutes;
 import routes.MenuRoutes;
 import routes.PacienteRoutes;
 import routes.TratamientoRoutes;
-import routes.ConfiguracionRoutes;
-import routes.EstadisticasRoutes;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,10 +26,7 @@ public class Main {
                     // Permite peticiones locales adicionales (puerto 5501)
                     it.allowHost("http://localhost:5501");
                     it.allowHost("http://127.0.0.1:5501");
-<<<<<<< HEAD
                     
-=======
->>>>>>> d87cf5703ec693fa2c3c1b47923e124d054bc0e8
                     it.allowCredentials = true;
                 });
             });

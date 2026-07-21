@@ -154,67 +154,38 @@ export class SettingPaciente extends HTMLElement {
     const modalDelete = this.querySelector("#modal-delete-account");
 
     try {
-      btnConfirmDelete.textContent = "Eliminando...";
-      btnConfirmDelete.disabled = true;
+    btnConfirmDelete.textContent = "Eliminando...";
+    btnConfirmDelete.disabled = true;
 
-<<<<<<< HEAD
-      const idPaciente = localStorage.getItem('idPaciente');
-      
-      // Validación estricta a prueba de fallos
-      if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
+    const idPaciente = localStorage.getItem('idPaciente');
+
+    // Validación estricta a prueba de fallos (tu código)
+    if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
         alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
         throw new Error("ID inválido detectado en la memoria del navegador.");
-      }
-
-      const response = await fetch(`${API_BASE_URL}/api/paciente/settings/${idPaciente}`, {
-        // ... (resto de tu fetch)
-        method: 'delete',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-=======
-      const pacienteId = localStorage.getItem("idPaciente");
-      if (!pacienteId) {
-        throw new Error("No se encontró el ID del usuario en el localStorage.");
-      }
-
-      const response = await fetch(
-        `${API_BASE_URL}/api/paciente/${pacienteId}`,
-        {
-          // ... resto de la petición DELETE
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
->>>>>>> d87cf5703ec693fa2c3c1b47923e124d054bc0e8
-
-      // 3. Validar si el backend procesó correctamente la eliminación
-      if (!response.ok) {
-        throw new Error(`Error en el servidor: Código ${response.status}`);
-      }
-
-      // 4. Éxito: Limpiar datos y redirigir
-      console.log("Cuenta eliminada exitosamente en la base de datos.");
-      localStorage.clear(); // Limpiamos la sesión entera
-
-      alert(
-        "Tu cuenta ha sido eliminada permanentemente. Serás redirigido al inicio.",
-      );
-      window.location.hash = "#/";
-      window.location.reload(); // Recarga recomendada para limpiar la memoria del navegador
-    } catch (error) {
-      console.error("Error al eliminar la cuenta:", error);
-      alert(
-        "Hubo un problema de conexión con el servidor. Intenta de nuevo más tarde.",
-      );
-
-      // 5. Restaurar la interfaz en caso de error
-      btnConfirmDelete.textContent = "Confirmar Eliminación";
-      btnConfirmDelete.disabled = false;
-      modalDelete.classList.add("hidden");
     }
+
+    // Petición DELETE usando la ruta correcta que me indicaste
+    const response = await fetch(`${API_BASE_URL}/api/paciente/${idPaciente}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("No se pudo completar la eliminación del paciente.");
+    }
+
+    // Limpieza de sesión y redirección exitosa
+    localStorage.clear();
+    window.location.href = "../../../index.html"; // o la ruta de tu login
+
+} catch (error) {
+    console.error(error);
+    alert(error.message);
+    btnConfirmDelete.textContent = "Eliminar cuenta";
+    btnConfirmDelete.disabled = false;
+}
   }
 }
