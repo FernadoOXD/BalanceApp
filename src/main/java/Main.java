@@ -1,3 +1,4 @@
+
 import io.javalin.Javalin;
 import routes.CitaRoutes;
 import routes.ConfiguracionRoutes;
@@ -12,8 +13,9 @@ import routes.PacienteRoutes;
 import routes.TratamientoRoutes;
 
 public class Main {
+
     public static void main(String[] args) {
-        
+
         // Inicialización del servidor con CORS configurado para producción y pruebas locales
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableCors(cors -> {
@@ -44,7 +46,7 @@ public class Main {
         MenuRoutes.registrar(app);
         ConfiguracionRoutes.registrar(app);
         EstadisticasRoutes.registrar(app);
-        
+
         System.out.println("Servidor iniciado en el puerto 5000 con CORS habilitado para Vercel y Live Server (Local).");
     }
 }

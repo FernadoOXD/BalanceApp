@@ -12,12 +12,17 @@ public class Database {
         return (value != null && !value.trim().isEmpty()) ? value : defaultValue;
     }
 
-    private static final String URL = getEnv("DB_URL", "jdbc:mysql://localhost:3306/balanceapp");
+    private static final String URL = getEnv("DB_URL", "jdbc:mysql://localhost:3306/balanceapp?useSSL=false&serverTimezone=UTC");
     private static final String USER = getEnv("DB_USER", "root"); 
     
     private static final String PASSWORD = getEnv("DB_PASSWORD", "pochitateamo11/12/2005"); 
 
     public static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Driver de MySQL no encontrado", e);
+        }
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

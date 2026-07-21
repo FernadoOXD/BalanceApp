@@ -121,7 +121,7 @@ export class SettingPaciente extends HTMLElement {
 
     // ==========================================
     // 2. LÓGICA DEL MODAL DE ELIMINACIÓN
-    // ========================================== 
+    // ==========================================
     const modalDelete = this.querySelector("#modal-delete-account");
 
     this.addEventListener("click", (e) => {
@@ -154,38 +154,40 @@ export class SettingPaciente extends HTMLElement {
     const modalDelete = this.querySelector("#modal-delete-account");
 
     try {
-    btnConfirmDelete.textContent = "Eliminando...";
-    btnConfirmDelete.disabled = true;
+      btnConfirmDelete.textContent = "Eliminando...";
+      btnConfirmDelete.disabled = true;
 
-    const idPaciente = localStorage.getItem('idPaciente');
+      const idPaciente = localStorage.getItem('idPaciente');
 
-    // Validación estricta a prueba de fallos (tu código)
-    if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
-        alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
-        throw new Error("ID inválido detectado en la memoria del navegador.");
+      // Validación estricta a prueba de fallos
+      if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
+          alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
+          throw new Error("ID inválido detectado en la memoria del navegador.");
+      }
+
+      // Petición DELETE usando la ruta correcta
+      const response = await fetch(`${API_BASE_URL}/api/paciente/${idPaciente}`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error("No se pudo completar la eliminación del paciente.");
+      }
+
+      // Limpieza de sesión y redirección exitosa
+      localStorage.clear();
+      window.location.hash = "#/";
+      window.location.reload();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+        btnConfirmDelete.textContent = "Confirmar Eliminación";
+        btnConfirmDelete.disabled = false;
+        modalDelete.classList.add("hidden");
     }
-
-    // Petición DELETE usando la ruta correcta que me indicaste
-    const response = await fetch(`${API_BASE_URL}/api/paciente/${idPaciente}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    if (!response.ok) {
-        throw new Error("No se pudo completar la eliminación del paciente.");
-    }
-
-    // Limpieza de sesión y redirección exitosa
-    localStorage.clear();
-    window.location.href = "../../../index.html"; // o la ruta de tu login
-
-} catch (error) {
-    console.error(error);
-    alert(error.message);
-    btnConfirmDelete.textContent = "Eliminar cuenta";
-    btnConfirmDelete.disabled = false;
-}
   }
 }
