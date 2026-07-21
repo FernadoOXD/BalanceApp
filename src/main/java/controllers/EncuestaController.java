@@ -38,7 +38,6 @@ public class EncuestaController {
             
             Encuesta nuevaEncuesta = new Encuesta();
             nuevaEncuesta.setIdCita(Integer.parseInt(idCitaObj.toString()));
-            nuevaEncuesta.setIdPaciente(Integer.parseInt(idPacienteObj.toString()));
             nuevaEncuesta.setDatosEncuesta(body.get("datosEncuesta") != null ? body.get("datosEncuesta").toString() : "{}");
             nuevaEncuesta.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
             
@@ -63,11 +62,11 @@ public class EncuestaController {
     }
 
     private static int guardarEnBaseDeDatos(Encuesta e) throws Exception {
-        String sql = "INSERT INTO ENCUESTA (idCita, idPaciente, datosEncuesta, fechaCreacion) VALUES (?, ?, ?, ?)";
+        // La consulta tiene 3 signos de interrogación (?, ?, ?)
+        String sql = "INSERT INTO ENCUESTA (idCita, datosEncuesta, fechaCreacion) VALUES (?, ?, ?)";
         
         System.out.println("SQL: " + sql);
         System.out.println("idCita: " + e.getIdCita());
-        System.out.println("idPaciente: " + e.getIdPaciente());
         System.out.println("datosEncuesta: " + e.getDatosEncuesta());
         System.out.println("fechaCreacion: " + e.getFechaCreacion());
         
@@ -75,12 +74,11 @@ public class EncuestaController {
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setInt(1, e.getIdCita());
-            pstmt.setInt(2, e.getIdPaciente());
-            pstmt.setString(3, e.getDatosEncuesta());
+            pstmt.setString(2, e.getDatosEncuesta()); // ¡Corregido al número 2!
             
             // Si la fecha viene nula desde el cliente, asignamos el momento exacto actual
             Timestamp fecha = e.getFechaCreacion() != null ? e.getFechaCreacion() : new Timestamp(System.currentTimeMillis());
-            pstmt.setTimestamp(4, fecha);
+            pstmt.setTimestamp(3, fecha); // ¡Corregido al número 3!
             
             int filasAfectadas = pstmt.executeUpdate();
             if (filasAfectadas > 0) {

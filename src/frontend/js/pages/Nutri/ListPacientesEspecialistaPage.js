@@ -962,11 +962,12 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
     if (btnRegresar) {
       btnRegresar.addEventListener("click", () => this.cambiarVista("lista"));
     }
-
+      
     const footerPacientes = this.querySelector("#footer-toggle-pacientes");
     if (footerPacientes) {
       footerPacientes.addEventListener("click", () => {
-        this.limitePacientes = this.limitePacientes > 3 ? 3 : 10;
+        // Cambiamos el 10 por this.pacientes.length
+        this.limitePacientes = this.limitePacientes > 3 ? 3 : this.pacientes.length;
         this.render();
       });
     }

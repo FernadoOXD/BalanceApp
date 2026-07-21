@@ -603,7 +603,7 @@ export class AgendamientoEncuestaPage extends HTMLElement {
   async _handleSubmit(e) {
     e.preventDefault();
 
-    const idPaciente = localStorage.getItem("userId");
+    const idPaciente = localStorage.getItem("idPaciente");
     if (!idPaciente) {
       alert("Error: No se encontró tu sesión. Por favor, inicia sesión nuevamente.");
       window.location.hash = "/auth";
