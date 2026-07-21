@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../../../config.js';
+
 export class SettingPaciente extends HTMLElement {
   constructor() {
     super();
@@ -154,21 +156,17 @@ export class SettingPaciente extends HTMLElement {
     try {
       btnConfirmDelete.textContent = "Eliminando...";
       btnConfirmDelete.disabled = true;
-
-      // 1. Obtener el ID del paciente desde la sesión
-      // Asegúrate de que 'userId' sea la clave exacta que usas al iniciar sesión
-      const pacienteId = localStorage.getItem('userId'); 
-
-      if (!pacienteId) {
+      
+      const pacienteId = localStorage.getItem('idPaciente');
+       if (!pacienteId) {
         throw new Error("No se encontró el ID del usuario en el localStorage.");
-      }
+       }
 
-      // 2. Realizar la petición DELETE al backend (Java/Javalin)
-      const response = await fetch(`http://localhost:5000/api/paciente/${pacienteId}`, {
+const response = await fetch(`${API_BASE_URL}/api/paciente/${pacienteId}`, {
+  // ... resto de la petición DELETE
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
-          // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Descomenta esta línea si tu API usa tokens JWT de seguridad
         }
       });
 
@@ -183,7 +181,7 @@ export class SettingPaciente extends HTMLElement {
 
       alert("Tu cuenta ha sido eliminada permanentemente. Serás redirigido al inicio.");
       window.location.hash = "#/"; 
-      // Si el enrutador no reacciona al hash, puedes forzar la recarga con: window.location.reload();
+      window.location.reload(); // Recarga recomendada para limpiar la memoria del navegador
 
     } catch (error) {
       console.error("Error al eliminar la cuenta:", error);

@@ -1,4 +1,6 @@
+import { API_BASE_URL } from '../../../config.js';
 export class RegistroPacientePage extends HTMLElement {
+
   connectedCallback() {
     this.render();
     this.initLogic();
