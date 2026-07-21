@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import config.Database;
 import io.javalin.http.Context;
@@ -17,17 +19,15 @@ public class PacienteController {
     // ==========================================
     public static void crearPaciente(Context ctx) {
         try {
-            // Javalin + Jackson convierten el JSON mágicamente a tu clase Paciente
             Paciente nuevoPaciente = ctx.bodyAsClass(Paciente.class);
-
-            // Llamamos a la función de guardado
             int idGenerado = guardarEnBaseDeDatos(nuevoPaciente);
 
             if (idGenerado > 0) {
-                // Éxito: 201 Created
+                // 👇 Línea que crea el tratamiento vacío automáticamente al registrar al paciente 👇
+                crearTratamientoVacio(idGenerado);
+                
                 ctx.status(201).json("{\"success\": true, \"message\": \"Paciente registrado exitosamente.\", \"id\": " + idGenerado + "}");
             } else {
-                // Error de validación o base de datos
                 ctx.status(400).json("{\"success\": false, \"message\": \"No se pudo registrar el paciente.\"}");
             }
         } catch (Exception e) {
@@ -35,7 +35,6 @@ public class PacienteController {
         }
     }
 
-    // Función auxiliar para insertar en MySQL (Retorna un entero con el ID)
     private static int guardarEnBaseDeDatos(Paciente p) throws Exception {
         String sql = "INSERT INTO PACIENTE (nombres, apellidoPaterno, email, contrasena) VALUES (?, ?, ?, ?)";
         
@@ -52,26 +51,33 @@ public class PacienteController {
             if (filasAfectadas > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
-                        return rs.getInt(1); // Retorna el nuevo ID asignado por MySQL
+                        return rs.getInt(1);
                     }
                 }
             }
-            return 0; // 0 significa que la inserción falló
+            return 0;
+        }
+    }
+
+    private static void crearTratamientoVacio(int idPaciente) throws Exception {
+        String sql = "INSERT INTO TRATAMIENTO (idPaciente, fechaInicio) VALUES (?, CURDATE())";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idPaciente);
+            pstmt.executeUpdate();
         }
     }
 
     // ==========================================
     // 2. INICIAR SESIÓN (Login)
-    // Ruta: POST /api/paciente/login
+    // Ruta: POST /api/paciente/login   
     // ==========================================
     public static void login(Context ctx) {
         try {
-            // Extraer el correo y contraseña enviados desde el frontend en JavaScript
             Paciente credenciales = ctx.bodyAsClass(Paciente.class);
             String email = credenciales.getEmail();
             String contrasena = credenciales.getContrasena();
 
-            // Buscar en MySQL si existe un paciente con ESA combinación exacta
             String sql = "SELECT idPaciente FROM PACIENTE WHERE email = ? AND contrasena = ?";
 
             try (Connection conn = Database.getConnection();
@@ -82,13 +88,9 @@ public class PacienteController {
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
-                        // Si hay un resultado, las credenciales son correctas
                         int idEncontrado = rs.getInt("idPaciente");
-                        
-                        // Devolvemos status 200 y el ID para que el frontend lo guarde en localStorage
                         ctx.status(200).json("{\"success\": true, \"idPaciente\": " + idEncontrado + "}");
                     } else {
-                        // Si no hay resultados, el correo o la contraseña están mal
                         ctx.status(401).json("{\"success\": false, \"message\": \"Correo o contraseña incorrectos\"}");
                     }
                 }
@@ -103,7 +105,30 @@ public class PacienteController {
     // Ruta: GET /api/paciente
     // ==========================================
     public static void obtenerTodos(Context ctx) {
-        ctx.json("{\"message\": \"Aquí iría la lista de pacientes\"}");
+        String sql = "SELECT * FROM PACIENTE";
+        List<Paciente> lista = new ArrayList<>();
+
+        try (Connection conn = Database.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Paciente p = new Paciente();
+                p.setIdPaciente(rs.getInt("idPaciente"));
+                p.setNombres(rs.getString("nombres"));
+                p.setApellidoPaterno(rs.getString("apellidoPaterno"));
+                p.setApellidoMaterno(rs.getString("apellidoMaterno"));
+                p.setFechaNacimiento(rs.getDate("fechaNacimiento"));
+                p.setGenero(rs.getString("genero"));
+                p.setTelefono(rs.getString("telefono"));
+                p.setEmail(rs.getString("email"));
+                // Omitimos la contraseña por seguridad al listar
+                lista.add(p);
+            }
+            ctx.status(200).json(lista);
+        } catch (Exception e) {
+            ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     // ==========================================
@@ -141,7 +166,7 @@ public class PacienteController {
 
     // ==========================================
     // 5. ELIMINAR PACIENTE
-    // Ruta: DELETE /api/paciente/settings/{id}
+    // Ruta: DELETE /api/paciente/{id}
     // ==========================================
     public static void eliminarPaciente(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
@@ -155,6 +180,39 @@ public class PacienteController {
                 ctx.status(200).json("{\"success\": true, \"message\": \"Paciente eliminado\"}");
             } else {
                 ctx.status(404).json("{\"message\": \"No encontrado\"}");
+            }
+        } catch (Exception e) {
+            ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+    
+    // ==========================================
+    // 6. OBTENER TRATAMIENTO DEL PACIENTE
+    // ==========================================
+    public static void obtenerTratamientoPorPaciente(Context ctx) {
+        int idPaciente = Integer.parseInt(ctx.pathParam("id"));
+        String sql = "SELECT * FROM TRATAMIENTO WHERE idPaciente = ? LIMIT 1"; 
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             
+            pstmt.setInt(1, idPaciente);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    models.Tratamiento t = new models.Tratamiento();
+                    t.setIdTratamiento(rs.getInt("idTratamiento"));
+                    t.setIdPaciente(rs.getInt("idPaciente"));
+                    t.setObjetivo(rs.getString("objetivo"));
+                    t.setAlimentacion(rs.getString("alimentacion"));
+                    t.setEjercicioDescripcion(rs.getString("ejercicioDescripcion"));
+                    t.setEjercicio(rs.getString("ejercicio"));
+                    t.setMenuExcel(rs.getString("menuExcel"));
+                    
+                    ctx.status(200).json(t);
+                } else {
+                    ctx.status(404).json("{\"message\": \"No hay tratamiento activo\"}");
+                }
             }
         } catch (Exception e) {
             ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");

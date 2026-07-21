@@ -179,7 +179,7 @@ export class PacienteLoginPage extends HTMLElement {
 
         // 5. GUARDAR EL ID EN LOCALSTORAGE
         // Asume que el backend devuelve un objeto con la propiedad 'id'
-        localStorage.setItem("userId", data.idPaciente); 
+        localStorage.setItem("idPaciente", data.idPaciente); 
 
         console.log("Login validado por el backend:", data);
 

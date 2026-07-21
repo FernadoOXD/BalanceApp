@@ -44,7 +44,7 @@ public class MenuController {
         }
     }
 
-    // READ (LISTAR)
+    // READ (LISTAR TODOS)
     public static void obtenerTodos(Context ctx) {
         String sql = "SELECT * FROM MENU";
         List<Menu> lista = new ArrayList<>();
@@ -62,6 +62,34 @@ public class MenuController {
                 m.setDescripcionAlimento(rs.getString("descripcionAlimento"));
                 m.setMacronutrientes(rs.getString("macronutrientes"));
                 lista.add(m);
+            }
+            ctx.status(200).json(lista);
+        } catch (Exception e) {
+            ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    // READ (OBTENER MENÚ POR ID DE TRATAMIENTO - ¡NUEVO Y NECESARIO!)
+    public static void obtenerPorTratamiento(Context ctx) {
+        int idTratamiento = Integer.parseInt(ctx.pathParam("idTratamiento"));
+        String sql = "SELECT * FROM MENU WHERE idTratamiento = ?";
+        List<Menu> lista = new ArrayList<>();
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, idTratamiento);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Menu m = new Menu();
+                    m.setIdMenu(rs.getInt("idMenu"));
+                    m.setIdTratamiento(rs.getInt("idTratamiento"));
+                    m.setTipoComida(rs.getString("tipoComida"));
+                    m.setDiaSemana(rs.getString("diaSemana"));
+                    m.setDescripcionAlimento(rs.getString("descripcionAlimento"));
+                    m.setMacronutrientes(rs.getString("macronutrientes"));
+                    lista.add(m);
+                }
             }
             ctx.status(200).json(lista);
         } catch (Exception e) {

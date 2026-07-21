@@ -10,8 +10,24 @@ public class Tratamiento {
     private String objetivo;
     private float caloriaDiaria;
     private String estado;
+    private String alimentacion;
+    private String ejercicioDescripcion; // Resumen corto para la tarjeta
+    private String ejercicio;            // Rutina detallada (modal de ejercicios)
+    private String menuExcel;            // Matriz JSON del menú semanal
+    private String nombrePaciente;       // Nombre real obtenido del JOIN con PACIENTE
 
-    public Tratamiento() {}
+    // Método clave para que el frontend (p.nombre) lo lea sin errores
+    public String getNombre() {
+        return nombrePaciente;
+    }
+
+    public String getNombrePaciente() {
+        return nombrePaciente;
+    }
+
+    public void setNombrePaciente(String nombrePaciente) {
+        this.nombrePaciente = nombrePaciente;
+    }
 
     public int getIdTratamiento() {
         return idTratamiento;
@@ -69,4 +85,35 @@ public class Tratamiento {
         this.estado = estado;
     }
 
+    public String getAlimentacion() {
+        return alimentacion;
+    }
+
+    public void setAlimentacion(String alimentacion) {
+        this.alimentacion = alimentacion;
+    }
+
+    public String getEjercicioDescripcion() {
+        return ejercicioDescripcion;
+    }
+
+    public void setEjercicioDescripcion(String ejercicioDescripcion) {
+        this.ejercicioDescripcion = ejercicioDescripcion;
+    }
+
+    public String getEjercicio() {
+        return ejercicio;
+    }
+
+    public void setEjercicio(String ejercicio) {
+        this.ejercicio = ejercicio;
+    }
+
+    public String getMenuExcel() {
+        return menuExcel;
+    }
+
+    public void setMenuExcel(String menuExcel) {
+        this.menuExcel = menuExcel;
+    }
 }

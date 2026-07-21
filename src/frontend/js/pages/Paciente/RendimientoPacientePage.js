@@ -223,7 +223,7 @@
         // ==========================================
         const submitBtn = this.querySelector(".btn-send-report");
         const originalText = submitBtn.innerHTML;
-        const pacienteId = localStorage.getItem("userId");
+        const pacienteId = localStorage.getItem("idPaciente");
 
         if (!pacienteId) {
           alert("Error: No se encontró tu sesión. Por favor, inicia sesión nuevamente.");

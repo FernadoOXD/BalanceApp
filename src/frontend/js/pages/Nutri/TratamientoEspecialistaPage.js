@@ -1,87 +1,11 @@
+import { API_BASE_URL } from '../../../config.js';
+
 export class TratamientoEspecialistaPage extends HTMLElement {
   constructor() {
     super();
-    this.pacientes = [
-      {
-        id: "PAC-1046",
-        nombre: "Sofía Medina Ruiz",
-        iniciales: "SM",
-        edad: "24 años",
-        telefono: "961-456-7890",
-        tratamiento: "Reducción de porcentaje de grasa y tonificación muscular",
-        alimentacion: "Dieta Hipocalórica - 1800 kcal",
-        ejercicio:
-          "• 4 series de Sentadillas con barra libre x 12 rep\n• 3 series de Desplantes estáticos x 10 rep por pierna\n• 4 series de Prensa inclinada (enfoque cuádriceps) x 15 rep\n• 30 minutos de caminata a velocidad moderada en inclinación",
-        ejercicioDescripcion:
-          "Enfoque en Fuerza + Cardio moderado de 4 días (Vistazo rápido)",
-        menuExcel: [
-          {
-            comida: "Desayuno",
-            Lunes: "Avena con fresas",
-            Martes: "Huevos con espinaca",
-            Miercoles: "Licuado proteico",
-            Jueves: "Avena con fresas",
-            Viernes: "Huevos con espinaca",
-            Sabado: "Panqueques de avena",
-            Domingo: "Desayuno libre",
-          },
-          {
-            comida: "Colación 1",
-            Lunes: "Nueces",
-            Martes: "Almendras",
-            Miercoles: "Fruta",
-            Jueves: "Nueces",
-            Viernes: "Almendras",
-            Sabado: "Fruta",
-            Domingo: "Batido ligero",
-          },
-          {
-            comida: "Comida",
-            Lunes: "Pollo a la plancha",
-            Martes: "Filete de pescado",
-            Miercoles: "Ensalada de atún",
-            Jueves: "Pollo a la plancha",
-            Viernes: "Filete de pescado",
-            Sabado: "Ajuste calórico",
-            Domingo: "Libre",
-          },
-          {
-            comida: "Colación 2",
-            Lunes: "Yogurt",
-            Martes: "Gelatina",
-            Miercoles: "Yogurt",
-            Jueves: "Yogurt",
-            Viernes: "Gelatina",
-            Sabado: "Yogurt",
-            Domingo: "Libre",
-          },
-          {
-            comida: "Cena",
-            Lunes: "Ensalada",
-            Martes: "Tacos de pollo",
-            Miercoles: "Cena ligera",
-            Jueves: "Ensalada",
-            Viernes: "Tacos de pollo",
-            Sabado: "Libre",
-            Domingo: "Licuado ligero",
-          },
-        ],
-      },
-      {
-        id: "PAC-2033",
-        nombre: "Carlos Mendoza Ortiz",
-        iniciales: "CM",
-        edad: "30 años",
-        telefono: "555-123-4567",
-        tratamiento: "Aumento de masa muscular magra",
-        alimentacion: "",
-        ejercicio: "",
-        ejercicioDescripcion: "",
-        menuExcel: null,
-      },
-    ];
-
-    this.pacientesRecientes = [...this.pacientes];
+    // 1. Datos inicializados vacíos (se llenarán con la base de datos)
+    this.pacientes = [];
+    this.pacientesRecientes = [];
     this.sugerenciasBusqueda = [];
 
     this.loading = false;
@@ -94,7 +18,8 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     this.modoModalSoloLectura = false;
     this.viendoModalEjercicios = false;
 
-    this.apiUrl = "http://localhost:3000/api/tratamientos";
+    // 2. URL dinámica basada en tu configuración global
+    this.apiUrl = `${API_BASE_URL}/api/tratamiento`;
   }
 
   async connectedCallback() {
@@ -102,19 +27,59 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     await this.fetchPacientesDesdeBD();
   }
 
+  // ... tu código anterior ...
+  
   async fetchPacientesDesdeBD() {
     try {
       this.loading = true;
-      const response = await fetch(this.apiUrl);
+      this.renderDinamico();
+
+      const response = await fetch(this.apiUrl, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
       if (!response.ok) throw new Error(`Error: ${response.status}`);
 
-      this.pacientes = await response.json();
-      this.pacientesRecientes = [...this.pacientes];
+      const datosCrudos = await response.json();
+
+      // PARCHE DE NORMALIZACIÓN
+      // PARCHE DE NORMALIZACIÓN Y PARSEO JSON
+      // PARCHE DE NORMALIZACIÓN Y PARSEO JSON
+      this.pacientes = datosCrudos.map(p => {
+        let menuParseado = null;
+        if (p.menuExcel) {
+          try {
+            menuParseado = typeof p.menuExcel === 'string' ? JSON.parse(p.menuExcel) : p.menuExcel;
+          } catch (e) {
+            console.error("Error al leer el menú desde la BD", e);
+          }
+        }
+
+        // 👇 NUEVA LÓGICA: ¿Tiene un tratamiento activo?
+        // Es activo si tiene objetivo, plan alimenticio o ejercicios.
+        const tieneTratamiento = Boolean(
+          (p.tratamiento && p.tratamiento.trim() !== "") ||
+          (p.alimentacion && p.alimentacion.trim() !== "") ||
+          (p.ejercicioDescripcion && p.ejercicioDescripcion.trim() !== "")
+        );
+
+        return {
+          ...p,
+          menuExcel: menuParseado,
+          nombre: p.nombre || `${p.nombres || ''} ${p.apellidoPaterno || ''}`.trim() || 'Paciente Sin Nombre',
+          id: p.id || p.idPaciente || 'S/N',
+          iniciales: (p.nombres ? p.nombres.charAt(0) : 'P') + (p.apellidoPaterno ? p.apellidoPaterno.charAt(0) : ''),
+          tieneTratamiento: tieneTratamiento // <--- Guardamos la bandera
+        };
+      });
+
+      // 👇 NUEVO: Separamos las listas. El grid principal SOLO mostrará a los activos.
+      this.pacientesRecientes = this.pacientes.filter(p => p.tieneTratamiento);
+      
     } catch (error) {
-      console.error(
-        "Error al conectar con la BD, manteniendo datos de prueba.",
-        error,
-      );
+      console.error("Error al conectar con la BD para obtener pacientes:", error);
+      this.errorOccurred = true;
     } finally {
       this.loading = false;
       this.renderDinamico();
@@ -136,12 +101,17 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     if (!container) return;
 
     if (this.loading) {
-      container.innerHTML = `<div class="status-message"><p>Cargando...</p></div>`;
+      container.innerHTML = `<div class="status-message"><p>Cargando pacientes desde el servidor...</p></div>`;
+      return;
+    }
+
+    if (this.errorOccurred) {
+      container.innerHTML = `<div class="status-message empty"><p>No se pudo conectar con el servidor.</p></div>`;
       return;
     }
 
     if (this.pacientesRecientes.length === 0) {
-      container.innerHTML = `<div class="status-message empty"><p>No hay tratamientos recientes.</p></div>`;
+      container.innerHTML = `<div class="status-message empty"><p>No hay tratamientos registrados en el sistema.</p></div>`;
       return;
     }
 
@@ -182,7 +152,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           </button>
         </div>
       </div>
-    `,
+    `
       )
       .join("");
 
@@ -206,7 +176,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         <span class="dropdown-name" style="color: var(--text-primary);">${p.nombre}</span>
         <span class="dropdown-id" style="color: var(--text-muted);">ID: ${p.id}</span>
       </div>
-    `,
+    `
       )
       .join("");
 
@@ -215,7 +185,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     dropdown.querySelectorAll(".dropdown-item").forEach((item) => {
       item.addEventListener("click", (e) => {
         const id = e.currentTarget.getAttribute("data-id");
-        const seleccionado = this.pacientes.find((p) => p.id === id);
+        const seleccionado = this.pacientes.find((p) => p.id === id || p.id == id);
         if (seleccionado) {
           this.pacienteSeleccionado = seleccionado;
           this.vistaPerfil = true;
@@ -305,7 +275,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                 </div>
 
                 <div class="form-actions-row" style="margin-top: 10px;">
-                  <button type="submit" class="btn-primary-sm" style="background: var(--color-brand); color: var(--text-primary); border: none;">Guardar Tratamiento</button>
+                  <button type="submit" id="btn-guardar-base" class="btn-primary-sm" style="background: var(--color-brand); color: var(--text-primary); border: none;">Guardar Tratamiento</button>
                   <button type="button" id="btn-cancelar-tratamiento" class="btn-perfil" style="margin-left: 10px; background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">Cancelar</button>
                 </div>
               </form>
@@ -403,11 +373,11 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
                           >${fila[d] || ""}</textarea>
                         </td>
-                      `,
+                      `
                         )
                         .join("")}
                     </tr>
-                  `,
+                  `
                     )
                     .join("")}
                 </tbody>
@@ -463,6 +433,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               `
                   : `
                 <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 14px; color: var(--text-primary);">Escribe los ejercicios, series y repeticiones:</label>
+                <!-- ID corregido aquí a 'textarea-notes-ejercicio' -->
                 <textarea id="textarea-notes-ejercicio" 
                   placeholder="Escribe un ejercicio y presiona Enter para crear otra viñeta..." 
                   style="width: 100%; height: 250px; padding: 12px; border: 1px solid var(--form-border); background: var(--bg-body); color: var(--text-secondary); border-radius: 6px; font-family: inherit; font-size: 14px; line-height: 1.6; resize: vertical; outline: none; box-sizing: border-box;"
@@ -604,7 +575,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         }
 
         const filtrados = this.pacientes.filter((paciente) =>
-          paciente.nombre.toLowerCase().includes(query),
+          !paciente.tieneTratamiento && paciente.nombre.toLowerCase().includes(query)
         );
 
         this.renderSugerencias(filtrados);
@@ -650,7 +621,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         }
 
         const filtrados = this.pacientes.filter((paciente) =>
-          paciente.nombre.toLowerCase().includes(query),
+          !paciente.tieneTratamiento && paciente.nombre.toLowerCase().includes(query)
         );
 
         if (filtrados.length === 0) {
@@ -675,7 +646,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
               </button>
             </div>
           </div>
-        `,
+        `
           )
           .join("");
 
@@ -719,21 +690,58 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       },
     );
 
+    // 4. GUARDAR TRATAMIENTO BASE (Petición PUT al servidor)
     this.querySelector("#form-asignar-tratamiento")?.addEventListener(
       "submit",
-      (e) => {
+      async (e) => {
         e.preventDefault();
-        p.tratamiento = this.querySelector("#input-objetivo").value;
-        p.alimentacion = this.querySelector("#input-plan").value;
-        p.ejercicioDescripcion = this.querySelector(
-          "#input-ejercicio-desc",
-        ).value;
+        
+        const btnGuardar = this.querySelector("#btn-guardar-base");
+        const textoOriginal = btnGuardar.textContent;
+        btnGuardar.textContent = "Guardando...";
+        btnGuardar.disabled = true;
 
-        this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
-          pac.id === p.id ? p : pac,
-        );
-        this.editandoTratamiento = false;
-        this.renderMiniPerfil();
+        const payload = {
+          objetivo: this.querySelector("#input-objetivo").value, 
+          alimentacion: this.querySelector("#input-plan").value,
+          ejercicioDescripcion: this.querySelector("#input-ejercicio-desc").value
+        };
+
+      try {
+          const response = await fetch(`${this.apiUrl}/${p.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload) 
+          });
+
+          if (!response.ok) throw new Error("Fallo al actualizar el tratamiento base");
+
+          // Actualizamos los datos en memoria
+          p.objetivo = payload.objetivo; 
+          p.tratamiento = payload.objetivo; 
+          p.alimentacion = payload.alimentacion;
+          p.ejercicioDescripcion = payload.ejercicioDescripcion;
+          p.tieneTratamiento = true; // <--- ¡AQUÍ NACE COMO PACIENTE ACTIVO!
+
+          // Lo metemos al arreglo de recientes para que aparezca en el Grid
+          if (!this.pacientesRecientes.some(pac => pac.id === p.id)) {
+              this.pacientesRecientes.push(p);
+          } else {
+              this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
+                pac.id === p.id ? p : pac
+              );
+          }
+          
+          this.editandoTratamiento = false;
+          this.renderDinamico(); // Actualiza la pantalla para que aparezca en la tarjeta
+          this.renderMiniPerfil();
+
+        } catch (error) {
+          console.error(error);
+          alert("Error al intentar guardar el tratamiento en el servidor.");
+          btnGuardar.textContent = textoOriginal;
+          btnGuardar.disabled = false;
+        }
       },
     );
 
@@ -797,10 +805,35 @@ export class TratamientoEspecialistaPage extends HTMLElement {
         });
       });
 
-      this.querySelector("#btn-excel-save")?.addEventListener("click", () => {
+      // 5. GUARDAR MENÚ EXCEL (Petición PUT al servidor)
+      // 5. GUARDAR MENÚ EXCEL (Petición PUT al servidor)
+      this.querySelector("#btn-excel-save")?.addEventListener("click", async (e) => {
+        const btn = e.currentTarget;
+        const textoOriginal = btn.textContent;
+        btn.textContent = "Guardando...";
+        btn.disabled = true;
+
         this.sincronizarEstructuraExcelTemporal();
-        this.viendoModalExcel = false;
-        this.renderMiniPerfil();
+
+        try {
+          const response = await fetch(`${this.apiUrl}/${p.id}/menu`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+        
+            body: JSON.stringify({ menuExcel: JSON.stringify(p.menuExcel) }) 
+            
+          });
+
+          if (!response.ok) throw new Error("Fallo al guardar el menú");
+
+          this.viendoModalExcel = false;
+          this.renderMiniPerfil();
+        } catch (error) {
+          console.error(error);
+          alert("Error al guardar el menú de dieta en el servidor.");
+          btn.textContent = textoOriginal;
+          btn.disabled = false;
+        }
       });
     }
 
@@ -812,19 +845,41 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           this.renderMiniPerfil();
         },
       );
+      
+      // 6. GUARDAR RUTINA DE EJERCICIOS (Petición PUT al servidor)
       this.querySelector("#btn-save-exercise")?.addEventListener(
         "click",
-        () => {
-          const txtValue = this.querySelector(
-            "#textarea-notas-ejercicio",
-          )?.value;
-          p.ejercicio =
-            txtValue && txtValue.trim() !== "•" ? txtValue.trim() : "";
-          this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
-            pac.id === p.id ? p : pac,
-          );
-          this.viendoModalEjercicios = false;
-          this.renderMiniPerfil();
+        async (e) => {
+          const btn = e.currentTarget;
+          const textoOriginal = btn.textContent;
+          btn.textContent = "Guardando...";
+          btn.disabled = true;
+
+          const txtValue = this.querySelector("#textarea-notes-ejercicio")?.value;
+          const nuevoEjercicio = txtValue && txtValue.trim() !== "•" ? txtValue.trim() : "";
+
+          try {
+            const response = await fetch(`${this.apiUrl}/${p.id}/ejercicio`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ejercicio: nuevoEjercicio })
+            });
+
+            if (!response.ok) throw new Error("Fallo al guardar ejercicios");
+
+            p.ejercicio = nuevoEjercicio;
+            this.pacientesRecientes = this.pacientesRecientes.map((pac) =>
+              pac.id === p.id ? p : pac,
+            );
+            
+            this.viendoModalEjercicios = false;
+            this.renderMiniPerfil();
+          } catch (error) {
+            console.error(error);
+            alert("Error al guardar las rutinas en el servidor.");
+            btn.textContent = textoOriginal;
+            btn.disabled = false;
+          }
         },
       );
     }
@@ -866,7 +921,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     this.querySelectorAll(".btn-perfil").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
-        const encontrado = this.pacientes.find((p) => p.id === pacienteId);
+        const encontrado = this.pacientes.find((p) => p.id === pacienteId || p.id == pacienteId);
         if (encontrado) {
           this.pacienteSeleccionado = encontrado;
           this.vistaPerfil = true;
@@ -876,32 +931,35 @@ export class TratamientoEspecialistaPage extends HTMLElement {
       });
     });
 
+    // 7. ELIMINAR PACIENTE (Petición DELETE real)
     this.querySelectorAll(".btn-delete").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
-
         const confirmar = confirm(
-          `¿Estás seguro? ¿Quieres eliminar este paciente del sistema por completo?`,
+          `¿Estás seguro? ¿Quieres eliminar el tratamiento de este paciente?`
         );
 
         if (confirmar) {
-          this.pacientesRecientes = this.pacientesRecientes.filter(
-            (p) => p.id !== pacienteId,
-          );
-          this.pacientes = this.pacientes.filter((p) => p.id !== pacienteId);
-
           try {
-            await fetch(`${this.apiUrl}/${pacienteId}`, {
+            const response = await fetch(`${this.apiUrl}/${pacienteId}`, {
               method: "DELETE",
             });
-          } catch (error) {
-            console.error(
-              "No se pudo borrar en el servidor, pero se removió de la vista local.",
-              error,
-            );
-          }
+            
+            if (!response.ok) throw new Error("Error al eliminar del servidor");
 
-          this.renderListaRecientes();
+            this.pacientesRecientes = this.pacientesRecientes.filter(
+              (p) => p.id !== pacienteId && p.id != pacienteId,
+            );
+            this.pacientes = this.pacientes.filter(
+              (p) => p.id !== pacienteId && p.id != pacienteId
+            );
+            
+            this.renderListaRecientes();
+
+          } catch (error) {
+            console.error("No se pudo borrar en el servidor.", error);
+            alert("No se pudo eliminar al paciente de la base de datos.");
+          }
         }
       });
     });
@@ -911,7 +969,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
     this.querySelectorAll(".btn-seleccionar-directo").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const pacienteId = e.currentTarget.getAttribute("data-id");
-        const encontrado = this.pacientes.find((p) => p.id === pacienteId);
+        const encontrado = this.pacientes.find((p) => p.id === pacienteId || p.id == pacienteId);
         if (encontrado) {
           this.pacienteSeleccionado = encontrado;
           this.vistaAsignar = false;
