@@ -1038,9 +1038,6 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             // 1. SI NO TIENE EXPEDIENTE, LO CREAMOS EN EXPEDIENTE_NUEVO
             const nuevoExpedienteStruct = {
               idPaciente: pId,
-              nombrePaciente: this.querySelector("#form-nombrePaciente").value || "",
-              apellidoPaterno: this.querySelector("#form-apellidoPaterno").value || "",
-              apellidoMaterno: this.querySelector("#form-apellidoMaterno").value || "",
               sexo: this.querySelector("#form-sexo").value || "",
               edad: this.querySelector("#form-edad").value || "",
               ocupacion: this.querySelector("#form-ocupacion").value || "",
@@ -1053,19 +1050,15 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               talla: this.querySelector("#form-talla").value || "",
               imc: this.querySelector("#form-imc").value || "",
               cintura: this.querySelector("#form-cintura").value || "",
-              fechaInicializacion:
-                this.querySelector("#form-fecha").value ||
-                new Date().toISOString().split("T")[0],
-              notasInternas:
-                this.querySelector("#form-observaciones").value || "Sin notas",
-              patologiaPrevia:
-                this.querySelector("#form-diagnosticoGeneral").value || "Ninguna",
+              fechaInicializacion: this.querySelector("#form-fecha").value || new Date().toISOString().split("T")[0],
+              notasInternas: this.querySelector("#form-observaciones").value || "Sin notas",
+              patologiaPrevia: this.querySelector("#form-diagnosticoGeneral").value || "Ninguna",
               antecedenteFamiliares: "Ninguno",
               alergiaIntolerancia: "Ninguna",
               medicamentoActual: "Ninguno",
               habitoToxico: "Ninguno",
             };
-
+            
             const respuesta = await fetch(`${API_BASE_URL}/api/expediente`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
