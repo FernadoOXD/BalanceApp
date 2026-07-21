@@ -10,5 +10,6 @@ public class CitaRoutes {
         app.get("/api/cita", CitaController::obtenerTodas);
         app.put("/api/cita/{id}", CitaController::actualizarCita);
         app.delete("/api/cita/{id}", CitaController::eliminarCita);
+        app.patch("/api/cita/{id}/cancelar", CitaController::cancelarCita);
     }
 }

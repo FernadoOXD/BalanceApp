@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../../../config.js";
+
 export class SettingEspecialista extends HTMLElement {
   constructor() {
     super();
@@ -216,67 +218,34 @@ export class SettingEspecialista extends HTMLElement {
   }
 
   async loadData() {
+    // Datos por defecto en caso de que la API no responda
+    const defaultSettings = {
+      duration: 60,
+      notifications: true,
+      schedule: [
+        { day: "Lunes", id: "lun", start: "08:00", end: "16:00", active: true },
+        { day: "Martes", id: "mar", start: "08:00", end: "16:00", active: true },
+        { day: "Miércoles", id: "mie", start: "08:00", end: "16:00", active: true },
+        { day: "Jueves", id: "jue", start: "08:00", end: "16:00", active: true },
+        { day: "Viernes", id: "vie", start: "08:00", end: "16:00", active: true },
+        { day: "Sábado", id: "sab", start: "08:00", end: "14:00", active: true },
+      ],
+    };
+
     try {
-      /* ========================================================
-         AQUÍ CONECTARÁS CON TU API. Ejemplo:
-         const response = await fetch('https://tu-api.com/especialista/settings');
-         this.settingsData = await response.json();
-      ======================================================== */
-
-      // MOCK DATA: Simula los datos de tu Base de Datos
-      this.settingsData = {
-        duration: 60,
-        notifications: true,
-        schedule: [
-          {
-            day: "Lunes",
-            id: "lun",
-            start: "08:00",
-            end: "16:00",
-            active: true,
-          },
-          {
-            day: "Martes",
-            id: "mar",
-            start: "08:00",
-            end: "16:00",
-            active: true,
-          },
-          {
-            day: "Miércoles",
-            id: "mie",
-            start: "08:00",
-            end: "16:00",
-            active: true,
-          },
-          {
-            day: "Jueves",
-            id: "jue",
-            start: "08:00",
-            end: "16:00",
-            active: true,
-          },
-          {
-            day: "Viernes",
-            id: "vie",
-            start: "08:00",
-            end: "16:00",
-            active: true,
-          },
-          {
-            day: "Sábado",
-            id: "sab",
-            start: "08:00",
-            end: "14:00",
-            active: true,
-          }, // Sábado termina antes
-        ],
-      };
-
-      this.renderDynamicContent();
+      const response = await fetch(`${API_BASE_URL}/api/configuracion`);
+      if (response.ok) {
+        this.settingsData = await response.json();
+      } else {
+        console.warn("API no disponible, usando datos por defecto.");
+        this.settingsData = defaultSettings;
+      }
     } catch (error) {
-      console.error("Error al cargar configuraciones:", error);
+      console.warn("Error al conectar con la API, usando datos por defecto:", error);
+      this.settingsData = defaultSettings;
     }
+
+    this.renderDynamicContent();
   }
 
   renderDynamicContent() {
@@ -351,6 +320,7 @@ export class SettingEspecialista extends HTMLElement {
     rows.forEach((row) => {
       schedulePayload.push({
         id: row.getAttribute("data-day"),
+        day: row.querySelector(".col-day strong").textContent,
         active: row.querySelector(".day-active-toggle").checked,
         start: row.querySelector(".start-time").value,
         end: row.querySelector(".end-time").value,
@@ -371,16 +341,15 @@ export class SettingEspecialista extends HTMLElement {
       btnSave.textContent = "Guardando...";
       btnSave.disabled = true;
 
-      /* ========================================================
-         AQUÍ HARÁS EL POST/PUT A TU API. Ejemplo:
-         await fetch('https://tu-api.com/especialista/settings', {
-           method: 'PUT',
-           body: JSON.stringify(finalData)
-         });
-      ======================================================== */
-      await new Promise((resolve) => setTimeout(resolve, 800)); // Simulación
+      const response = await fetch(`${API_BASE_URL}/api/configuracion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalData),
+      });
 
-      console.log("Datos listos para enviar a la DB:", finalData);
+      if (!response.ok) {
+        throw new Error("Error al guardar la configuración.");
+      }
 
       btnSave.textContent = "¡Guardado con éxito!";
       btnSave.style.backgroundColor = "var(--color-green)";
