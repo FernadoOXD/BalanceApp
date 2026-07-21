@@ -46,13 +46,20 @@ public class CitaController {
             int idGenerado = guardarEnBaseDeDatos(nuevaCita);
 
             if (idGenerado > 0) {
-                ctx.status(201).json("{\"success\": true, \"message\": \"Cita registrada exitosamente.\", \"id\": " + idGenerado + "}");
+                java.util.Map<String, Object> response = new java.util.HashMap<>();
+                response.put("success", true);
+                response.put("message", "Cita registrada exitosamente.");
+                response.put("id", idGenerado);
+                ctx.status(201).json(response);
             } else {
-                ctx.status(400).json("{\"success\": false, \"message\": \"No se pudo registrar la cita.\"}");
+                ctx.status(400).json(java.util.Map.of("success", false, "message", "No se pudo registrar la cita."));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ctx.status(500).json("{\"error\": \"Error interno: " + e.getMessage() + "\"}");
+            java.util.Map<String, Object> error = new java.util.HashMap<>();
+            error.put("success", false);
+            error.put("error", "Error interno: " + e.getMessage());
+            ctx.status(500).json(error);
         }
     }
 
@@ -110,12 +117,28 @@ public class CitaController {
         }
     }
 
+    /**
+     * Convierte java.sql.Time a formato AM/PM (ej. "10:00 AM", "02:30 PM")
+     */
+    private static String formatHoraAMPM(java.sql.Time time) {
+        java.time.LocalTime localTime = time.toLocalTime();
+        int hour = localTime.getHour();
+        int minute = localTime.getMinute();
+        String ampm = hour >= 12 ? "PM" : "AM";
+        hour = hour % 12;
+        if (hour == 0) hour = 12;
+        return String.format("%d:%02d %s", hour, minute, ampm);
+    }
+
     // READ (LISTAR)
     public static void obtenerTodas(Context ctx) {
         String pacienteIdStr = ctx.queryParam("paciente_id");
-        String sql = "SELECT * FROM CITA";
+        String sql = "SELECT c.idCita, c.idPaciente, c.fecha, c.hora, c.motivoConsulta, c.estado, " +
+                     "p.nombres, p.apellidoPaterno, p.apellidoMaterno " +
+                     "FROM CITA c " +
+                     "LEFT JOIN PACIENTE p ON c.idPaciente = p.idPaciente";
         if (pacienteIdStr != null && !pacienteIdStr.isEmpty()) {
-            sql += " WHERE idPaciente = ?";
+            sql += " WHERE c.idPaciente = ?";
         }
         
         List<java.util.Map<String, Object>> proximas = new ArrayList<>();
@@ -132,25 +155,40 @@ public class CitaController {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     java.util.Map<String, Object> citaMap = new java.util.HashMap<>();
-                    citaMap.put("idCita", rs.getInt("idCita"));
+                    citaMap.put("id", rs.getInt("idCita"));
                     citaMap.put("idPaciente", rs.getInt("idPaciente"));
                     
                     // Convertir fecha a string YYYY-MM-DD
                     java.sql.Date fecha = rs.getDate("fecha");
                     citaMap.put("fecha", fecha != null ? fecha.toString() : null);
                     
-                    // Convertir hora a string
+                    // Convertir hora a string formato AM/PM
                     java.sql.Time hora = rs.getTime("hora");
-                    citaMap.put("hora", hora != null ? hora.toString() : null);
+                    citaMap.put("hora", hora != null ? formatHoraAMPM(hora) : null);
                     
-                    citaMap.put("motivoConsulta", rs.getString("motivoConsulta"));
+                    String motivoConsulta = rs.getString("motivoConsulta");
+                    citaMap.put("motivoConsulta", motivoConsulta);
+                    citaMap.put("tipo", motivoConsulta != null ? motivoConsulta : "Consulta");
                     String estado = rs.getString("estado");
                     citaMap.put("estado", estado);
+                    
+                    // Nombre completo del paciente
+                    String nombres = rs.getString("nombres");
+                    String apellidoPaterno = rs.getString("apellidoPaterno");
+                    String apellidoMaterno = rs.getString("apellidoMaterno");
+                    String nombreCompleto = nombres;
+                    if (apellidoPaterno != null && !apellidoPaterno.isEmpty()) {
+                        nombreCompleto += " " + apellidoPaterno;
+                    }
+                    if (apellidoMaterno != null && !apellidoMaterno.isEmpty()) {
+                        nombreCompleto += " " + apellidoMaterno;
+                    }
+                    citaMap.put("paciente", nombreCompleto != null ? nombreCompleto : "Paciente desconocido");
                     
                     // Clasificar: historial si la fecha pasó O si está cancelada/completada
                     boolean esHistorial = (fecha != null && fecha.before(hoy)) || 
                                         "Cancelada".equalsIgnoreCase(estado) || 
-                                        "Completada".equalsIgnoreCase(estado);
+                                        "Concluida".equalsIgnoreCase(estado);
                     
                     if (esHistorial) {
                         historial.add(citaMap);
@@ -236,12 +274,102 @@ public class CitaController {
             
             int filas = pstmt.executeUpdate();
             if (filas > 0) {
-                ctx.status(200).json("{\"success\": true, \"message\": \"Cita cancelada exitosamente\"}");
+                ctx.status(200).json(java.util.Map.of("success", true, "message", "Cita cancelada exitosamente"));
             } else {
-                ctx.status(404).json("{\"success\": false, \"message\": \"Cita no encontrada\"}");
+                ctx.status(404).json(java.util.Map.of("success", false, "message", "Cita no encontrada"));
             }
         } catch (Exception e) {
-            ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\"}");
+            ctx.status(500).json(java.util.Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+    // CONCLUIR (PATCH)
+    public static void concluirCita(Context ctx) {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        
+        String sql = "UPDATE CITA SET estado = 'Concluida' WHERE idCita = ?";
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            
+            int filas = pstmt.executeUpdate();
+            if (filas > 0) {
+                ctx.status(200).json(java.util.Map.of("success", true, "message", "Cita concluida exitosamente"));
+            } else {
+                ctx.status(404).json(java.util.Map.of("success", false, "message", "Cita no encontrada"));
+            }
+        } catch (Exception e) {
+            ctx.status(500).json(java.util.Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+    // OBTENER CITAS POR FECHA (con nombres de pacientes)
+    public static void obtenerCitasPorFecha(Context ctx) {
+        String fechaStr = ctx.queryParam("fecha");
+        if (fechaStr == null || fechaStr.isEmpty()) {
+            ctx.status(400).json("{\"success\": false, \"message\": \"El parámetro fecha es requerido\"}");
+            return;
+        }
+        
+        String sql = "SELECT c.idCita, c.idPaciente, c.fecha, c.hora, c.motivoConsulta, c.estado, " +
+                     "p.nombres, p.apellidoPaterno, p.apellidoMaterno " +
+                     "FROM CITA c " +
+                     "LEFT JOIN PACIENTE p ON c.idPaciente = p.idPaciente " +
+                     "WHERE c.fecha = ? " +
+                     "ORDER BY c.hora";
+        
+        List<java.util.Map<String, Object>> citas = new ArrayList<>();
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setDate(1, java.sql.Date.valueOf(fechaStr));
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    java.util.Map<String, Object> citaMap = new java.util.HashMap<>();
+                    citaMap.put("id", rs.getInt("idCita"));
+                    citaMap.put("idPaciente", rs.getInt("idPaciente"));
+                    
+                    // Convertir fecha a string YYYY-MM-DD
+                    java.sql.Date fecha = rs.getDate("fecha");
+                    citaMap.put("fecha", fecha != null ? fecha.toString() : null);
+                    
+                    // Convertir hora a string formato AM/PM
+                    java.sql.Time hora = rs.getTime("hora");
+                    citaMap.put("hora", hora != null ? formatHoraAMPM(hora) : null);
+                    
+                    citaMap.put("motivoConsulta", rs.getString("motivoConsulta"));
+                    citaMap.put("estado", rs.getString("estado"));
+                    
+                    // Nombre completo del paciente
+                    String nombres = rs.getString("nombres");
+                    String apellidoPaterno = rs.getString("apellidoPaterno");
+                    String apellidoMaterno = rs.getString("apellidoMaterno");
+                    String nombreCompleto = nombres;
+                    if (apellidoPaterno != null && !apellidoPaterno.isEmpty()) {
+                        nombreCompleto += " " + apellidoPaterno;
+                    }
+                    if (apellidoMaterno != null && !apellidoMaterno.isEmpty()) {
+                        nombreCompleto += " " + apellidoMaterno;
+                    }
+                    citaMap.put("paciente", nombreCompleto != null ? nombreCompleto : "Paciente desconocido");
+                    citaMap.put("tipo", rs.getString("motivoConsulta") != null ? rs.getString("motivoConsulta") : "Consulta");
+                    
+                    citas.add(citaMap);
+                }
+            }
+            
+            java.util.Map<String, Object> response = new java.util.HashMap<>();
+            response.put("success", true);
+            response.put("citas", citas);
+            ctx.status(200).json(response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(500).json("{\"success\": false, \"error\": \"" + e.getMessage() + "\"}");
         }
     }
 }

@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../../../config.js";
+
 export class AgendaEspecialistaPage extends HTMLElement {
   constructor() {
     super();
@@ -126,12 +128,12 @@ export class AgendaEspecialistaPage extends HTMLElement {
     if (btnPrev)
       btnPrev.addEventListener("click", () => {
         this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-        this.renderCalendar();
+        this.loadData(); // Recargar citas para el nuevo mes
       });
     if (btnNext)
       btnNext.addEventListener("click", () => {
         this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-        this.renderCalendar();
+        this.loadData(); // Recargar citas para el nuevo mes
       });
 
     this.addEventListener("click", (e) => {
@@ -217,37 +219,30 @@ export class AgendaEspecialistaPage extends HTMLElement {
 
   async loadData() {
     try {
-      // MOCK DATA
-      this.appointments = [
-        {
-          id: 1,
-          paciente: "Juan Pérez",
-          fecha: this.formatDateStr(new Date()),
-          hora: "10:00 AM",
-          estado: "Pendiente",
-          tipo: "Seguimiento Nutricional",
-        },
-        {
-          id: 2,
-          paciente: "María García",
-          fecha: this.formatDateStr(new Date()),
-          hora: "11:30 AM",
-          estado: "Concluida",
-          tipo: "Análisis de Laboratorio",
-        },
-        {
-          id: 3,
-          paciente: "Carlos López",
-          fecha: this.formatDateStr(new Date()),
-          hora: "02:00 PM",
-          estado: "Cancelada",
-          tipo: "Consulta Inicial",
-        },
-      ];
+      const year = this.currentDate.getFullYear();
+      const month = this.currentDate.getMonth();
+      
+      const response = await fetch(`${API_BASE_URL}/api/cita`);
+      const data = await response.json();
+      
+      if (data.success) {
+        const todasLasCitas = [...(data.proximas || []), ...(data.historial || [])];
+        this.appointments = todasLasCitas.filter((cita) => {
+          if (!cita.fecha) return false;
+          const [citaYear, citaMonth] = cita.fecha.split("-").map(Number);
+          return citaYear === year && citaMonth === month + 1;
+        });
+      } else {
+        this.appointments = [];
+      }
+      
       this.renderCalendar();
       this.renderAppointments();
     } catch (error) {
       console.error("Error al cargar las citas:", error);
+      this.appointments = [];
+      this.renderCalendar();
+      this.renderAppointments();
     }
   }
 
@@ -425,28 +420,38 @@ export class AgendaEspecialistaPage extends HTMLElement {
       btnConfirm.textContent = "Procesando...";
       btnConfirm.disabled = true;
 
-      /* ========================================================
-         AQUÍ HARÁS LA PETICIÓN A TU API. Ejemplo:
-         await fetch(`https://tu-api.com/citas/${targetId}`, {
-           method: 'PUT',
-           body: JSON.stringify({ estado: newStatus })
-         });
-      ======================================================== */
-      await new Promise((resolve) => setTimeout(resolve, 800)); // Simulación
-
-      // Actualizamos arreglo local
-      const appt = this.appointments.find((a) => a.id == targetId);
-      if (appt) appt.estado = newStatus;
-
-      // Restaurar y repintar
-      btnConfirm.textContent = originalText;
-      btnConfirm.disabled = false;
-      this.closeModal(isCanceling ? "cancel" : "conclude");
-      this.renderAppointments();
-      this.renderCalendar();
+      const endpoint = isCanceling 
+        ? `${API_BASE_URL}/api/cita/${targetId}/cancelar`
+        : `${API_BASE_URL}/api/cita/${targetId}/concluir`;
+      
+      const response = await fetch(endpoint, {
+        method: 'PATCH'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Actualizamos arreglo local
+        const appt = this.appointments.find((a) => a.id == targetId);
+        if (appt) appt.estado = newStatus;
+        
+        // Restaurar y repintar
+        btnConfirm.textContent = originalText;
+        btnConfirm.disabled = false;
+        this.closeModal(isCanceling ? "cancel" : "conclude");
+        this.renderAppointments();
+        this.renderCalendar();
+      } else {
+        throw new Error(data.message || "Error al cambiar estado");
+      }
     } catch (error) {
       console.error("Error al procesar:", error);
-      alert("Error al intentar cambiar el estado de la cita.");
+      alert("Error al intentar cambiar el estado de la cita: " + error.message);
+      
+      // Restaurar botón
+      const btnConfirm = this.querySelector(btnId);
+      btnConfirm.textContent = originalText;
+      btnConfirm.disabled = false;
     }
   }
 

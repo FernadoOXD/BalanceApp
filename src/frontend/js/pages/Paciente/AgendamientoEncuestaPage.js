@@ -677,6 +677,10 @@ export class AgendamientoEncuestaPage extends HTMLElement {
         throw new Error(resultCita.message || resultCita.error || "Error al guardar la cita en la base de datos");
       }
 
+      if (!resultCita.id) {
+        throw new Error("El servidor no devolvió el ID de la cita creada");
+      }
+
       // 2. Guardar la encuesta asociada a esa cita
       const encuestaPayload = {
         idCita: resultCita.id,

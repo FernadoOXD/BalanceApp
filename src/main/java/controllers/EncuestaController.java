@@ -45,13 +45,20 @@ public class EncuestaController {
             int idGenerado = guardarEnBaseDeDatos(nuevaEncuesta);
 
             if (idGenerado > 0) {
-                ctx.status(201).json("{\"success\": true, \"message\": \"Encuesta registrada exitosamente.\", \"id\": " + idGenerado + "}");
+                java.util.Map<String, Object> response = new java.util.HashMap<>();
+                response.put("success", true);
+                response.put("message", "Encuesta registrada exitosamente.");
+                response.put("id", idGenerado);
+                ctx.status(201).json(response);
             } else {
-                ctx.status(400).json("{\"success\": false, \"message\": \"No se pudo registrar la encuesta.\"}");
+                ctx.status(400).json(java.util.Map.of("success", false, "message", "No se pudo registrar la encuesta."));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ctx.status(500).json("{\"error\": \"Error interno: " + e.getMessage() + "\"}");
+            java.util.Map<String, Object> error = new java.util.HashMap<>();
+            error.put("success", false);
+            error.put("error", "Error interno: " + e.getMessage());
+            ctx.status(500).json(error);
         }
     }
 

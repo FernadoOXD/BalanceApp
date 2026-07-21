@@ -47,6 +47,7 @@ function formatFecha(isoStr) {
 
 function formatHora(horaStr) {
   if (!horaStr) return "—";
+  if (/AM|PM/i.test(horaStr)) return horaStr;
   const [hh, mm] = horaStr.split(":").map(Number);
   const ampm = hh >= 12 ? "PM" : "AM";
   const h12 = hh % 12 || 12;
@@ -118,7 +119,7 @@ export class AgendaPacientePage extends HTMLElement {
 
       // Procesamos la data real del backend
       this.citas = (data.proximas || []).map((c) => ({
-        id: c.idCita,
+        id: c.id ?? c.idCita,
         tipo: getTipoCita(c.motivoConsulta),
         fechaRaw: c.fecha,
         fecha: formatFecha(String(c.fecha)),
@@ -131,7 +132,7 @@ export class AgendaPacientePage extends HTMLElement {
       }));
 
       this.historial = (data.historial || []).map((c) => ({
-        id: c.idCita,
+        id: c.id ?? c.idCita,
         fechaRaw: c.fecha,
         fecha: formatFecha(String(c.fecha)),
         horaRaw: c.hora,
