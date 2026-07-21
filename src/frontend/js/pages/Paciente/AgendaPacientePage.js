@@ -2,20 +2,34 @@ import { API_BASE_URL } from '../../../config.js';
 
 function getPacienteSession() {
   try {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      return { idPaciente: parseInt(userId, 10) };
+    }
+    
     const raw =
       localStorage.getItem("user") ||
       sessionStorage.getItem("user") ||
       localStorage.getItem("paciente_session") ||
       sessionStorage.getItem("paciente_session");
-    return raw ? JSON.parse(raw) : { idPaciente: 1, nombre: "Paciente Demo" };
+    return raw ? JSON.parse(raw) : null;
   } catch {
-    return { idPaciente: 1, nombre: "Paciente Demo" };
+    return null;
   }
 }
 
 function formatFecha(isoStr) {
-  if (!isoStr) return "—";
-  const date = new Date(isoStr + "T00:00:00");
+  console.log("formatFecha received:", isoStr, "type:", typeof isoStr);
+  
+  if (typeof isoStr !== 'string' || !isoStr) return "—";
+  
+  // Parsear fecha en formato YYYY-MM-DD del backend
+  const [year, month, day] = isoStr.split('-').map(Number);
+  console.log("Parsed date parts:", year, month, day);
+  
+  const date = new Date(year, month - 1, day); // month - 1 porque los meses en JS son 0-indexed
+  console.log("Date object:", date, "isValid:", !isNaN(date.getTime()));
+  
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
   const manana = new Date(hoy);
@@ -33,6 +47,7 @@ function formatFecha(isoStr) {
 
 function formatHora(horaStr) {
   if (!horaStr) return "—";
+  if (/AM|PM/i.test(horaStr)) return horaStr;
   const [hh, mm] = horaStr.split(":").map(Number);
   const ampm = hh >= 12 ? "PM" : "AM";
   const h12 = hh % 12 || 12;
@@ -90,7 +105,7 @@ export class AgendaPacientePage extends HTMLElement {
       const idPaciente = this.paciente.idPaciente || this.paciente.id || this.paciente.paciente_id;
       
       // Aquí inyectamos el API_BASE_URL dinámico
-      const response = await fetch(`${API_BASE_URL}/api/citas?paciente_id=${idPaciente}`, {
+      const response = await fetch(`${API_BASE_URL}/api/cita?paciente_id=${idPaciente}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -104,10 +119,10 @@ export class AgendaPacientePage extends HTMLElement {
 
       // Procesamos la data real del backend
       this.citas = (data.proximas || []).map((c) => ({
-        id: c.idCita,
+        id: c.id ?? c.idCita,
         tipo: getTipoCita(c.motivoConsulta),
         fechaRaw: c.fecha,
-        fecha: formatFecha(c.fecha),
+        fecha: formatFecha(String(c.fecha)),
         horaRaw: c.hora,
         hora: formatHora(c.hora),
         motivo: c.motivoConsulta || "—",
@@ -117,9 +132,9 @@ export class AgendaPacientePage extends HTMLElement {
       }));
 
       this.historial = (data.historial || []).map((c) => ({
-        id: c.idCita,
+        id: c.id ?? c.idCita,
         fechaRaw: c.fecha,
-        fecha: formatFecha(c.fecha),
+        fecha: formatFecha(String(c.fecha)),
         horaRaw: c.hora,
         hora: formatHora(c.hora),
         motivo: c.motivoConsulta || "—",
@@ -149,7 +164,9 @@ export class AgendaPacientePage extends HTMLElement {
       const idPaciente = this.paciente?.idPaciente || this.paciente?.id || this.paciente?.paciente_id;
       
       // Inyectamos el API_BASE_URL dinámico
-      const response = await fetch(`${API_BASE_URL}/api/citas/${idCita}/cancelar?paciente_id=${idPaciente}`, {
+      // Nota: El backend actualmente no tiene un endpoint PATCH /api/cita/{id}/cancelar. 
+      // Se ajusta la ruta a /api/cita para consistencia, pero necesitarás implementar este método en Java.
+      const response = await fetch(`${API_BASE_URL}/api/cita/${idCita}/cancelar?paciente_id=${idPaciente}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

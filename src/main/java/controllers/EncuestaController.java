@@ -17,31 +17,70 @@ public class EncuestaController {
     // CREATE
     public static void crearEncuesta(Context ctx) {
         try {
-            Encuesta nuevaEncuesta = ctx.bodyAsClass(Encuesta.class);
+            @SuppressWarnings("unchecked")
+            java.util.Map<String, Object> body = ctx.bodyAsClass(java.util.Map.class);
+            
+            System.out.println("Encuesta body recibido: " + body);
+            
+            // Validar que idCita esté presente
+            Object idCitaObj = body.get("idCita");
+            if (idCitaObj == null) {
+                ctx.status(400).json("{\"success\": false, \"message\": \"El campo idCita es requerido\"}");
+                return;
+            }
+            
+            // Validar que idPaciente esté presente
+            Object idPacienteObj = body.get("idPaciente");
+            if (idPacienteObj == null) {
+                ctx.status(400).json("{\"success\": false, \"message\": \"El campo idPaciente es requerido\"}");
+                return;
+            }
+            
+            Encuesta nuevaEncuesta = new Encuesta();
+            nuevaEncuesta.setIdCita(Integer.parseInt(idCitaObj.toString()));
+            nuevaEncuesta.setIdPaciente(Integer.parseInt(idPacienteObj.toString()));
+            nuevaEncuesta.setDatosEncuesta(body.get("datosEncuesta") != null ? body.get("datosEncuesta").toString() : "{}");
+            nuevaEncuesta.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+            
             int idGenerado = guardarEnBaseDeDatos(nuevaEncuesta);
 
             if (idGenerado > 0) {
-                ctx.status(201).json("{\"success\": true, \"message\": \"Encuesta registrada exitosamente.\", \"id\": " + idGenerado + "}");
+                java.util.Map<String, Object> response = new java.util.HashMap<>();
+                response.put("success", true);
+                response.put("message", "Encuesta registrada exitosamente.");
+                response.put("id", idGenerado);
+                ctx.status(201).json(response);
             } else {
-                ctx.status(400).json("{\"success\": false, \"message\": \"No se pudo registrar la encuesta.\"}");
+                ctx.status(400).json(java.util.Map.of("success", false, "message", "No se pudo registrar la encuesta."));
             }
         } catch (Exception e) {
-            ctx.status(500).json("{\"error\": \"Error interno: " + e.getMessage() + "\"}");
+            e.printStackTrace();
+            java.util.Map<String, Object> error = new java.util.HashMap<>();
+            error.put("success", false);
+            error.put("error", "Error interno: " + e.getMessage());
+            ctx.status(500).json(error);
         }
     }
 
     private static int guardarEnBaseDeDatos(Encuesta e) throws Exception {
-        String sql = "INSERT INTO ENCUESTA (idCita, datosEncuesta, fechaCreacion) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO ENCUESTA (idCita, idPaciente, datosEncuesta, fechaCreacion) VALUES (?, ?, ?, ?)";
+        
+        System.out.println("SQL: " + sql);
+        System.out.println("idCita: " + e.getIdCita());
+        System.out.println("idPaciente: " + e.getIdPaciente());
+        System.out.println("datosEncuesta: " + e.getDatosEncuesta());
+        System.out.println("fechaCreacion: " + e.getFechaCreacion());
         
         try (Connection conn = Database.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setInt(1, e.getIdCita());
-            pstmt.setString(2, e.getDatosEncuesta());
+            pstmt.setInt(2, e.getIdPaciente());
+            pstmt.setString(3, e.getDatosEncuesta());
             
             // Si la fecha viene nula desde el cliente, asignamos el momento exacto actual
             Timestamp fecha = e.getFechaCreacion() != null ? e.getFechaCreacion() : new Timestamp(System.currentTimeMillis());
-            pstmt.setTimestamp(3, fecha);
+            pstmt.setTimestamp(4, fecha);
             
             int filasAfectadas = pstmt.executeUpdate();
             if (filasAfectadas > 0) {

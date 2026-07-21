@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../../config.js';
+import { API_BASE_URL } from "../../../config.js";
 
 export class SettingPaciente extends HTMLElement {
   constructor() {
@@ -7,7 +7,7 @@ export class SettingPaciente extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    this.initLogic();            
+    this.initLogic();
   }
 
   render() {
@@ -157,6 +157,7 @@ export class SettingPaciente extends HTMLElement {
       btnConfirmDelete.textContent = "Eliminando...";
       btnConfirmDelete.disabled = true;
 
+<<<<<<< HEAD
       const idPaciente = localStorage.getItem('idPaciente');
       
       // Validación estricta a prueba de fallos
@@ -172,6 +173,23 @@ export class SettingPaciente extends HTMLElement {
           'Content-Type': 'application/json'
         }
       });
+=======
+      const pacienteId = localStorage.getItem("idPaciente");
+      if (!pacienteId) {
+        throw new Error("No se encontró el ID del usuario en el localStorage.");
+      }
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/paciente/${pacienteId}`,
+        {
+          // ... resto de la petición DELETE
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+>>>>>>> d87cf5703ec693fa2c3c1b47923e124d054bc0e8
 
       // 3. Validar si el backend procesó correctamente la eliminación
       if (!response.ok) {
@@ -182,13 +200,16 @@ export class SettingPaciente extends HTMLElement {
       console.log("Cuenta eliminada exitosamente en la base de datos.");
       localStorage.clear(); // Limpiamos la sesión entera
 
-      alert("Tu cuenta ha sido eliminada permanentemente. Serás redirigido al inicio.");
-      window.location.hash = "#/"; 
+      alert(
+        "Tu cuenta ha sido eliminada permanentemente. Serás redirigido al inicio.",
+      );
+      window.location.hash = "#/";
       window.location.reload(); // Recarga recomendada para limpiar la memoria del navegador
-
     } catch (error) {
       console.error("Error al eliminar la cuenta:", error);
-      alert("Hubo un problema de conexión con el servidor. Intenta de nuevo más tarde.");
+      alert(
+        "Hubo un problema de conexión con el servidor. Intenta de nuevo más tarde.",
+      );
 
       // 5. Restaurar la interfaz en caso de error
       btnConfirmDelete.textContent = "Confirmar Eliminación";

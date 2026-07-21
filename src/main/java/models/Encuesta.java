@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class Encuesta {
     private int idEncuesta;
     private int idCita;
+    private int idPaciente;
     private String datosEncuesta;
     private Timestamp fechaCreacion;
 
@@ -24,6 +25,14 @@ public class Encuesta {
 
     public void setIdCita(int idCita) {
         this.idCita = idCita;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
     }
 
     public String getDatosEncuesta() {
