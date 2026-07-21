@@ -9,6 +9,7 @@ import routes.MenuRoutes;
 import routes.PacienteRoutes;
 import routes.TratamientoRoutes;
 import routes.ConfiguracionRoutes;
+import routes.EstadisticasRoutes;
 
 public class Main {
     public static void main(String[] args) {
@@ -41,6 +42,7 @@ public class Main {
         MedicionRoutes.registrar(app);
         MenuRoutes.registrar(app);
         ConfiguracionRoutes.registrar(app);
+        EstadisticasRoutes.registrar(app);
         
         System.out.println("Servidor iniciado en el puerto 5000 con CORS habilitado para Vercel y Live Server (Local).");
     }

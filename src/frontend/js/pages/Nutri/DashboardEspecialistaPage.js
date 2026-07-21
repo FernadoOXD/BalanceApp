@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../../../config.js';
+
 export class DashboardEspecialistaPage extends HTMLElement {
   constructor() {
     super();
@@ -252,30 +254,55 @@ export class DashboardEspecialistaPage extends HTMLElement {
 
   async loadData() {
     try {
-      this.demografia = [
-        { rango: "18-25 años", frecuencia: 12 },
-        { rango: "26-35 años", frecuencia: 35 },
-        { rango: "36-45 años", frecuencia: 22 },
-        { rango: "46-55 años", frecuencia: 8 },
-      ];
+      // Fase 4: Consumo de datos pre-calculados del backend
+      
+      // 1. Obtener demografía (distribución de edades)
+      const demografiaResponse = await fetch(`${API_BASE_URL}/api/estadisticas/demografia`);
+      const demografiaData = await demografiaResponse.json();
+      
+      if (demografiaData.success) {
+        this.demografia = Object.entries(demografiaData.distribucion).map(([rango, frecuencia]) => ({
+          rango: rango + " años",
+          frecuencia: frecuencia
+        }));
+      }
 
-      this.diagnosticos = [
-        { descripcionPrincipal: "Obesidad Grado 1", cantidad: 45 },
-        { descripcionPrincipal: "Sobrepeso", cantidad: 30 },
-        { descripcionPrincipal: "Normopeso", cantidad: 15 },
-        { descripcionPrincipal: "Desnutrición leve", cantidad: 10 },
-      ];
+      // 2. Obtener distribución de diagnósticos
+      const diagnosticosResponse = await fetch(`${API_BASE_URL}/api/estadisticas/diagnosticos`);
+      const diagnosticosData = await diagnosticosResponse.json();
+      
+      if (diagnosticosData.success) {
+        this.diagnosticos = diagnosticosData.diagnosticos.map(d => ({
+          descripcionPrincipal: d.descripcionPrincipal,
+          cantidad: d.frecuenciaAbsoluta
+        }));
+      }
 
-      this.evolucion = [
-        { fechaMedicion: "2026-04-10", pesoKg: 88.5, porcentajeGrasa: 28.5 },
-        { fechaMedicion: "2026-05-15", pesoKg: 86.2, porcentajeGrasa: 27.0 },
-        { fechaMedicion: "2026-06-20", pesoKg: 84.0, porcentajeGrasa: 25.5 },
-        { fechaMedicion: "2026-07-10", pesoKg: 82.5, porcentajeGrasa: 24.2 },
-      ];
+      // 3. Obtener evolución de un paciente (usando paciente ID 21 como ejemplo)
+      // En producción, esto debería obtenerse del paciente seleccionado
+      const evolucionResponse = await fetch(`${API_BASE_URL}/api/estadisticas/evolucion/21`);
+      const evolucionData = await evolucionResponse.json();
+      
+      if (evolucionData.success && evolucionData.mediciones.length > 0) {
+        this.evolucion = evolucionData.mediciones;
+      } else {
+        // Fallback a datos de ejemplo si no hay mediciones
+        this.evolucion = [];
+      }
 
       this.renderCharts();
     } catch (error) {
       console.error("Error al cargar los datos estadísticos:", error);
+      // Fallback a datos de ejemplo en caso de error
+      this.demografia = [
+        { rango: "18-25 años", frecuencia: 0 },
+        { rango: "26-35 años", frecuencia: 0 },
+        { rango: "36-45 años", frecuencia: 0 },
+        { rango: "46-55 años", frecuencia: 0 },
+      ];
+      this.diagnosticos = [];
+      this.evolucion = [];
+      this.renderCharts();
     }
   }
 
