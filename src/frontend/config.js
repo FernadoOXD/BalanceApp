@@ -1,4 +1,4 @@
-const isProduction = false;
+const isProduction = true;
 
 // URL de desarrollo (Javalin corriendo en tu computadora)
 const LOCAL_URL = "http://localhost:5000";
