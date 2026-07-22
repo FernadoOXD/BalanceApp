@@ -85,7 +85,7 @@ export class AgendamientoEncuestaPage extends HTMLElement {
         </div>
 
         <div class="n-card__footer">
-          <button type="button" class="n-btn n-btn--outline"><a href="#/paciente/agenda" style="text-decoration:none; color:inherit;">Volver</a></button>
+          <button type="button" class="n-btn n-btn--outline"><a href="./#/paciente/agenda" style="text-decoration:none; color:inherit;">Volver</a></button>
           <button type="button" id="btn-next-phase" class="n-btn n-btn--primary">
             Siguiente 
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -237,7 +237,9 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       if (response.ok) {
         this.specialistSettings = await response.json();
       } else {
-        console.warn("No se pudo cargar la configuración, usando predeterminados (todos los días hábiles).");
+        console.warn(
+          "No se pudo cargar la configuración, usando predeterminados (todos los días hábiles).",
+        );
         this.specialistSettings = null;
       }
 
@@ -605,7 +607,9 @@ export class AgendamientoEncuestaPage extends HTMLElement {
 
     const idPaciente = localStorage.getItem("idPaciente");
     if (!idPaciente) {
-      alert("Error: No se encontró tu sesión. Por favor, inicia sesión nuevamente.");
+      alert(
+        "Error: No se encontró tu sesión. Por favor, inicia sesión nuevamente.",
+      );
       window.location.hash = "/auth";
       return;
     }
@@ -653,7 +657,7 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       fecha: formatDateToMySQL(this.state.selectedDate), // Ej. "2026-10-15"
       hora: this.state.selectedTime, // Ej. "10:00 AM" (el backend lo parseará a TIME si está en buen formato o podrías necesitar convertirlo)
       motivoConsulta: surveyData.motivoConsulta || "Consulta general",
-      estado: "Pendiente"
+      estado: "Pendiente",
     };
 
     console.log("Cita payload:", citaPayload);
@@ -674,7 +678,11 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       const resultCita = await responseCita.json();
 
       if (!responseCita.ok || !resultCita.success) {
-        throw new Error(resultCita.message || resultCita.error || "Error al guardar la cita en la base de datos");
+        throw new Error(
+          resultCita.message ||
+            resultCita.error ||
+            "Error al guardar la cita en la base de datos",
+        );
       }
 
       if (!resultCita.id) {
@@ -685,7 +693,7 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       const encuestaPayload = {
         idCita: resultCita.id,
         idPaciente: parseInt(idPaciente, 10),
-        datosEncuesta: JSON.stringify(surveyData)
+        datosEncuesta: JSON.stringify(surveyData),
       };
 
       const responseEncuesta = await fetch(`${API_BASE_URL}/api/encuesta`, {
@@ -697,7 +705,11 @@ export class AgendamientoEncuestaPage extends HTMLElement {
       const resultEncuesta = await responseEncuesta.json();
 
       if (!responseEncuesta.ok || !resultEncuesta.success) {
-        throw new Error(resultEncuesta.message || resultEncuesta.error || "Error al guardar la encuesta de la cita");
+        throw new Error(
+          resultEncuesta.message ||
+            resultEncuesta.error ||
+            "Error al guardar la encuesta de la cita",
+        );
       }
 
       alert("¡Cita agendada y encuesta guardada con éxito!");

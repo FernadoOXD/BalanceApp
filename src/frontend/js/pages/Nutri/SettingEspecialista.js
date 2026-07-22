@@ -55,7 +55,7 @@ export class SettingEspecialista extends HTMLElement {
             <section class="settings-card">
               <div class="card-header-icon">
                 <div class="icon-box icon-green-light">
-                  <img src="assets/icons/relog-tiempo.png" alt="Horarios" class="custom-icon">
+                  <img src="./assets/icons/relog-tiempo.png" alt="Horarios" class="custom-icon">
                 </div>
                 <div class="header-text">
                   <h2>Horarios de Cita</h2>
@@ -88,7 +88,7 @@ export class SettingEspecialista extends HTMLElement {
                   <div class="custom-dropdown" id="duration-dropdown">
                     <div class="dropdown-selected">
                       <span id="duration-selected-text">1 hora</span>
-                      <img src="assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
+                      <img src="./assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
                     </div>
                     <div class="dropdown-options">
                       <div class="dropdown-item" data-value="30">30 minutos</div>
@@ -224,11 +224,41 @@ export class SettingEspecialista extends HTMLElement {
       notifications: true,
       schedule: [
         { day: "Lunes", id: "lun", start: "08:00", end: "16:00", active: true },
-        { day: "Martes", id: "mar", start: "08:00", end: "16:00", active: true },
-        { day: "Miércoles", id: "mie", start: "08:00", end: "16:00", active: true },
-        { day: "Jueves", id: "jue", start: "08:00", end: "16:00", active: true },
-        { day: "Viernes", id: "vie", start: "08:00", end: "16:00", active: true },
-        { day: "Sábado", id: "sab", start: "08:00", end: "14:00", active: true },
+        {
+          day: "Martes",
+          id: "mar",
+          start: "08:00",
+          end: "16:00",
+          active: true,
+        },
+        {
+          day: "Miércoles",
+          id: "mie",
+          start: "08:00",
+          end: "16:00",
+          active: true,
+        },
+        {
+          day: "Jueves",
+          id: "jue",
+          start: "08:00",
+          end: "16:00",
+          active: true,
+        },
+        {
+          day: "Viernes",
+          id: "vie",
+          start: "08:00",
+          end: "16:00",
+          active: true,
+        },
+        {
+          day: "Sábado",
+          id: "sab",
+          start: "08:00",
+          end: "14:00",
+          active: true,
+        },
       ],
     };
 
@@ -241,7 +271,10 @@ export class SettingEspecialista extends HTMLElement {
         this.settingsData = defaultSettings;
       }
     } catch (error) {
-      console.warn("Error al conectar con la API, usando datos por defecto:", error);
+      console.warn(
+        "Error al conectar con la API, usando datos por defecto:",
+        error,
+      );
       this.settingsData = defaultSettings;
     }
 
@@ -267,7 +300,7 @@ export class SettingEspecialista extends HTMLElement {
           </div>
           <div class="col-time">
             <div class="input-icon-wrapper">
-              <img src="assets/icons/boton-editar.png" class="custom-icon tiny-icon">
+              <img src="./assets/icons/boton-editar.png" class="custom-icon tiny-icon">
               <input type="time" class="time-input end-time" value="${d.end}" ${d.active ? "" : "disabled"}>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../../config.js';
+import { API_BASE_URL } from "../../../config.js";
 export class PacienteLoginPage extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -10,13 +10,13 @@ export class PacienteLoginPage extends HTMLElement {
       <div class="auth-container">
         <div class="auth-image-panel">
           <img
-            src="assets/images/login_paciente_image.png"
+            src="./assets/images/login_paciente_image.png"
             alt="Tazón de granola con frutas frescas"
             class="auth-image-panel__img"
           />
           <div class="auth-image-panel__logo">
             <img
-              src="assets/images/logo_horizontal.png"
+              src="./assets/images/logo_horizontal.png"
               alt="BalanceApp — Nutrición y Bienestar"
             />
           </div>
@@ -65,7 +65,7 @@ export class PacienteLoginPage extends HTMLElement {
             </div>
 
             <a
-              href="#/auth"
+              href="./#/auth"
               class="specialist-back-link"
               id="specialist-back-link"
               aria-label="Volver a la pantalla de bienvenida"
@@ -146,7 +146,7 @@ export class PacienteLoginPage extends HTMLElement {
 
       const btnSubmit = this.querySelector(".btn-submit");
       const originalText = btnSubmit.textContent;
-      
+
       try {
         btnSubmit.textContent = "Conectando...";
         btnSubmit.disabled = true;
@@ -154,12 +154,12 @@ export class PacienteLoginPage extends HTMLElement {
         const response = await fetch(`${API_BASE_URL}/api/paciente/login`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,      
-            contrasena: password 
-          })
+            email: email,
+            contrasena: password,
+          }),
         });
 
         if (!response.ok) {
@@ -178,11 +178,10 @@ export class PacienteLoginPage extends HTMLElement {
         console.log("Login validado por el backend:", data);
 
         if (rememberMe) {
-            localStorage.setItem("rememberMe", "true");
+          localStorage.setItem("rememberMe", "true");
         }
 
         window.location.hash = "/paciente/agenda";
-
       } catch (error) {
         console.error("Error en login:", error);
         generalAlertMsg.textContent = "Correo o contraseña incorrectos.";

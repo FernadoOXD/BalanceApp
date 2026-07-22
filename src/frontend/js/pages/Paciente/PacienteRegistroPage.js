@@ -11,12 +11,12 @@ export class RegistroPacientePage extends HTMLElement {
         
   <div class="register-image-panel">
     <img 
-      src="assets/images/registro_paciente_image.png" 
+      src="./assets/images/registro_paciente_image.png" 
       alt="Platillo saludable" 
       class="register-image-panel__bg"
     />
     <div class="register-image-panel__logo">
-      <img src="assets/images/logo_horizontal.png" alt="BalanceApp" />
+      <img src="./assets/images/logo_horizontal.png" alt="BalanceApp" />
     </div>
     <div class="register-image-panel__caption">
       <p>Tu camino hacia un bienestar integral, guiado por la ciencia y diseñado para ti.</p>
@@ -91,7 +91,7 @@ export class RegistroPacientePage extends HTMLElement {
       </form>
 
         <a
-          href="#/auth"
+          href="./#/auth"
           class="specialist-back-link"
           id="specialist-back-link"
           aria-label="Volver a la pantalla de bienvenida"
@@ -245,7 +245,8 @@ export class RegistroPacientePage extends HTMLElement {
           }
         })
         .catch((error) => {
-          generalAlertMsg.textContent = error.message || "Error de conexión con el servidor.";
+          generalAlertMsg.textContent =
+            error.message || "Error de conexión con el servidor.";
           generalAlert.style.display = "flex";
           console.error("Register error:", error);
         })

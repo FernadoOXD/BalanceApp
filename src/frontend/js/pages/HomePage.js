@@ -9,24 +9,24 @@ export class HomePage extends HTMLElement {
     <!-- ── Header de la pagina de inicio ── -->
       <header class="header">
         <div class="container">
-          <a href="#" class="logo" aria-label="Balance App Inicio">
-            <img src="assets/images/logo_horizontal.png" alt="Balance App Logo" class="logo-img">
+          <a href="./#" class="logo" aria-label="Balance App Inicio">
+            <img src="./assets/images/logo_horizontal.png" alt="Balance App Logo" class="logo-img">
           </a>
           
           <nav class="nav-menu" aria-label="Navegación principal">
-            <a href="#servicios" class="nav-link">Servicios</a>
-            <a href="#sobre-mi" class="nav-link">Sobre mí</a>
-            <a href="#contacto" class="nav-link">Contacto</a>
+            <a href="./#servicios" class="nav-link">Servicios</a>
+            <a href="./#sobre-mi" class="nav-link">Sobre mí</a>
+            <a href="./#contacto" class="nav-link">Contacto</a>
             
             <div class="header-actions-mobile">
-              <button class="btn btn-text"><a href="#/auth">Iniciar sesión</a></button>
-              <button class="btn btn-primary"><a href="#/auth">Agendar cita</a></button>
+              <button class="btn btn-text"><a href="./#/auth">Iniciar sesión</a></button>
+              <button class="btn btn-primary"><a href="./#/auth">Agendar cita</a></button>
             </div>
           </nav>
           
           <div class="header-actions">
-            <button class="btn btn-text"><a href="#/auth">Iniciar sesión</a></button>
-            <button class="btn btn-primary"><a href="#/auth">Agendar cita</a></button>
+            <button class="btn btn-text"><a href="./#/auth">Iniciar sesión</a></button>
+            <button class="btn btn-primary"><a href="./#/auth">Agendar cita</a></button>
           </div>
           
           <button class="mobile-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
@@ -42,7 +42,7 @@ export class HomePage extends HTMLElement {
             <p class="hero-description">
               Descubre una forma saludable y sostenible de nutrir tu cuerpo. La Dra. Margarita te guiará paso a paso hacia tus objetivos de bienestar con planes de alimentación personalizados y seguimiento profesional.
             </p>
-            <a href="#/auth" class="hero-btn">
+            <a href="./#/auth" class="hero-btn">
               Agendar mi primera cita
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -51,7 +51,7 @@ export class HomePage extends HTMLElement {
             </a>
           </div>
           <div class="hero-image-wrapper">
-            <img src="assets/images/imagen_home_consultorio.png" alt="Dra. Margarita - Nutrióloga Profesional" class="hero-img">
+            <img src="./assets/images/imagen_home_consultorio.png" alt="Dra. Margarita - Nutrióloga Profesional" class="hero-img">
           </div>
         </div>
       </section>
@@ -68,7 +68,7 @@ export class HomePage extends HTMLElement {
           <div class="features-grid">
             <article class="feature-card">
               <div class="feature-icon-wrapper">
-                <img src="assets/icons/tratamiento_menu.png" alt="Menú personalizado" class="feature-icon">
+                <img src="./assets/icons/tratamiento_menu.png" alt="Menú personalizado" class="feature-icon">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9Z"/>
                   <path d="M12 2v2v18"/
                 </svg>
@@ -81,7 +81,7 @@ export class HomePage extends HTMLElement {
 
             <article class="feature-card">
               <div class="feature-icon-wrapper">
-                <img src="assets/icons/rendimiento_menu.png" alt="Seguimiento de Progreso" class="feature-icon">
+                <img src="./assets/icons/rendimiento_menu.png" alt="Seguimiento de Progreso" class="feature-icon">
                   <line x1="18" y1="20" x2="18" y2="10"></line>
                   <line x1="12" y1="20" x2="12" y2="4"></line>
                   <line x1="6" y1="20" x2="6" y2="14"></line>
@@ -95,7 +95,7 @@ export class HomePage extends HTMLElement {
 
             <article class="feature-card">
               <div class="feature-icon-wrapper">
-                <img src="assets/icons/agenda_menu.png" alt="Agenda tu cita !Ahora!" class="feature-icon">
+                <img src="./assets/icons/agenda_menu.png" alt="Agenda tu cita !Ahora!" class="feature-icon">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                   <line x1="16" y1="2" x2="16" y2="6"></line>
                   <line x1="8" y1="2" x2="8" y2="6"></line>
