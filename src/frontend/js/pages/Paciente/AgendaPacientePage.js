@@ -230,7 +230,7 @@ export class AgendaPacientePage extends HTMLElement {
           </div>
           <div class="empty-state" style="opacity:.6">
             <div class="empty-icon">
-              <img src="./assets/icons/calendario-mas.png" alt="Cargando">
+              <img src="/assets/icons/calendario-mas.png" alt="Cargando">
             </div>
             <p>Por favor espera…</p>
           </div>
@@ -276,7 +276,7 @@ export class AgendaPacientePage extends HTMLElement {
             !hasCitas && !this.error
               ? `<div class="empty-state">
                    <div class="empty-icon">
-                     <img src="./assets/icons/calendario-mas.png" alt="Calendario">
+                     <img src="/assets/icons/calendario-mas.png" alt="Calendario">
                    </div>
                    <h2>Aún no tienes citas agendadas</h2>
                    <p>Comienza tu camino hacia una mejor nutrición programando
@@ -295,7 +295,7 @@ export class AgendaPacientePage extends HTMLElement {
             <div>
               <!-- PRÓXIMAS CITAS -->
               <h3 class="section-title">
-                <img src="./assets/icons/calendario-mas.png" alt="Calendario">
+                <img src="/assets/icons/calendario-mas.png" alt="Calendario">
                 Próximas Citas
               </h3>
 
@@ -317,11 +317,11 @@ export class AgendaPacientePage extends HTMLElement {
                     </div>
                     <div class="cita-date">${cita.fecha}</div>
                     <div class="cita-time">
-                      <img src="./assets/icons/relog-tiempo.png" alt="Reloj" style="width:14px;height:14px;">
+                      <img src="/assets/icons/relog-tiempo.png" alt="Reloj" style="width:14px;height:14px;">
                       ${cita.hora}
                     </div>
                     <div class="cita-doctor">
-                      <img src="./${cita.doctorImg}" alt="${cita.doctor}">
+                      <img src="/${cita.doctorImg}" alt="${cita.doctor}">
                       <div>
                         <h4>${cita.doctor}</h4>
                         <p>Nutricionista</p>
@@ -339,7 +339,7 @@ export class AgendaPacientePage extends HTMLElement {
 
               <!-- HISTORIAL -->
               <h3 class="section-title">
-                <img src="./assets/icons/relog-tiempo.png" alt="Historial">
+                <img src="/assets/icons/relog-tiempo.png" alt="Historial">
                 Historial de Citas
               </h3>
 
@@ -397,7 +397,7 @@ export class AgendaPacientePage extends HTMLElement {
           <div class="modal-content modal-small">
             <div class="modal-header-danger" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
               <div style="display:flex; align-items:center; gap:12px;">
-                <img src="./assets/icons/peligro.png" alt="Alerta" class="custom-icon icon-danger" style="width:24px;">
+                <img src="/assets/icons/peligro.png" alt="Alerta" class="custom-icon icon-danger" style="width:24px;">
                 <h3 style="font-size: 20px; font-weight: 700; color: #DC2626; margin:0;">Cancelar Cita</h3>
               </div>
               <button class="btn-close-modal close-modal-cancel" style="background:transparent; border:none; font-size:16px; cursor:pointer;">✖</button>

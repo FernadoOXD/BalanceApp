@@ -147,20 +147,20 @@ export class TratamientoEspecialistaPage extends HTMLElement {
             <span>${paciente.tratamiento || "Sin definir"}</span>
           </div>
           <p style="color: var(--text-secondary);">
-            <img src="./assets/icons/manzanaVerde.png" alt="Alimentación" class="card-icon">
+            <img src="/assets/icons/manzanaVerde.png" alt="Alimentación" class="card-icon">
             <strong style="color: var(--text-primary);">Plan:</strong> ${paciente.alimentacion || "No asignada"}
           </p>
           <p style="color: var(--text-secondary);">
-            <img src="./assets/icons/pesasVerde.png" alt="Ejercicio" class="card-icon">
+            <img src="/assets/icons/pesasVerde.png" alt="Ejercicio" class="card-icon">
             <strong style="color: var(--text-primary);">Rutina:</strong> ${paciente.ejercicio ? "Asignada (Ver detalle)" : "No asignado"}
           </p>
         </div>
         <div class="card-footer" style="border-top: 1px solid var(--border-color);">
           <button class="btn-perfil" data-id="${paciente.id}" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">
-            <img src="./assets/icons/perfilVerde.png" alt="Perfil" class="btn-icon"> Ver Perfil / Editar
+            <img src="/assets/icons/perfilVerde.png" alt="Perfil" class="btn-icon"> Ver Perfil / Editar
           </button>
           <button class="btn-delete" data-id="${paciente.id}" style="background: var(--btn-bg); border: 1px solid var(--border-color);">
-            <img src="./assets/icons/eliminarRojo.png" alt="Eliminar" class="btn-icon">
+            <img src="/assets/icons/eliminarRojo.png" alt="Eliminar" class="btn-icon">
           </button>
         </div>
       </div>
@@ -366,7 +366,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
                             !this.modoModalSoloLectura
                               ? `
                             <button type="button" class="btn-delete-row" data-index="${index}" style="background: none; border: none; cursor: pointer; padding: 0 4px; display: flex; align-items: center;">
-                              <img src="./assets/icons/eliminarRojo.png" alt="Eliminar Fila" class="excel-row-delete-icon" style="width: 16px; height: 16px;">
+                              <img src="/assets/icons/eliminarRojo.png" alt="Eliminar Fila" class="excel-row-delete-icon" style="width: 16px; height: 16px;">
                             </button>
                           `
                               : ""
@@ -517,7 +517,7 @@ export class TratamientoEspecialistaPage extends HTMLElement {
 
       <section class="search-bar-section">
         <div class="search-input-wrapper" style="position: relative;">
-          <img src="./assets/icons/Busqueda.png" alt="Buscar" class="search-icon">
+          <img src="/assets/icons/Busqueda.png" alt="Buscar" class="search-icon">
           <input type="text" id="search-asignar-input" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" placeholder="Escribe el nombre del paciente para asignación directa...">
         </div>
       </section>
@@ -548,20 +548,20 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           <section class="search-bar-section">
             <div class="search-container-relative" style="position: relative; flex-grow: 1;">
               <div class="search-input-wrapper">
-                <img src="./assets/icons/Busqueda.png" alt="Buscar" class="search-icon">
+                <img src="/assets/icons/Busqueda.png" alt="Buscar" class="search-icon">
                 <input type="text" id="search-input" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--form-border);" placeholder="Buscar paciente por nombre..." autocomplete="off">
               </div>
               <div id="search-dropdown" class="search-suggest-dropdown" style="display: none; background: var(--bg-card); border: 1px solid var(--border-dropdown);"></div>
             </div>
             
             <button id="btn-asignar-nuevo" class="btn-primary" style="background: var(--color-brand); color: var(--text-primary); border: none;">
-              <img src="./assets/icons/añadir.png" alt="Nuevo" class="btn-icon-white"> Nuevo Tratamiento
+              <img src="/assets/icons/añadir.png" alt="Nuevo" class="btn-icon-white"> Nuevo Tratamiento
             </button>
           </section>
 
           <section class="tratamientos-section">
             <h2 style="color: var(--text-primary);">
-              <img src="./assets/icons/reciente.png" alt="Historial" class="section-icon"> 
+              <img src="/assets/icons/reciente.png" alt="Historial" class="section-icon"> 
               Tratamientos Recientes y Activos
             </h2>
             <div id="pacientes-container" class="pacientes-grid"></div>

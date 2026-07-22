@@ -9,13 +9,13 @@ export class SidebarPaciente extends HTMLElement {
       <aside class="sidebar">
         <div class="sidebar__header">
           <div class="sidebar__logo">
-            <img src="./assets/images/logo_horizontal.png" alt="BalanceApp" class="sidebar__logo-img">
+            <img src="/assets/images/logo_horizontal.png" alt="BalanceApp" class="sidebar__logo-img">
           </div>
         </div>
 
         <div class="sidebar__profile">
           <div class="sidebar__profile-img">
-            <img src="./assets/images/default_user.png" alt="Paciente">
+            <img src="/assets/images/default_user.png" alt="Paciente">
           </div>
           <div class="sidebar__profile-info">
             <h3 id="sidebar-nombre-paciente" class="sidebar__profile-name">Nombre del Paciente</h3>
@@ -34,20 +34,20 @@ export class SidebarPaciente extends HTMLElement {
         <nav class="sidebar__nav">
           <ul class="sidebar__nav-list">
             <li class="sidebar__nav-item">
-              <a href="./#/paciente/agenda" class="sidebar__nav-link">
-                <img src="./assets/icons/calendario.png" alt="Icono Agenda" class="sidebar__nav-icon">
+              <a href="/#/paciente/agenda" class="sidebar__nav-link">
+                <img src="/assets/icons/calendario.png" alt="Icono Agenda" class="sidebar__nav-icon">
                 Mi agenda
               </a>
             </li>
             <li class="sidebar__nav-item">
-              <a href="./#/paciente/tratamiento" class="sidebar__nav-link">
-                <img src="./assets/icons/tratamiento.png" alt="Icono Tratamiento" class="sidebar__nav-icon">
+              <a href="/#/paciente/tratamiento" class="sidebar__nav-link">
+                <img src="/assets/icons/tratamiento.png" alt="Icono Tratamiento" class="sidebar__nav-icon">
                 Tratamiento
               </a>
             </li>
             <li class="sidebar__nav-item">
-              <a href="./#/paciente/settings" class="sidebar__nav-link">
-                <img src="./assets/icons/ajustes.png" alt="Icono Ajustes" class="sidebar__nav-icon">
+              <a href="/#/paciente/settings" class="sidebar__nav-link">
+                <img src="/assets/icons/ajustes.png" alt="Icono Ajustes" class="sidebar__nav-icon">
                 Ajustes
               </a>
             </li>
@@ -56,7 +56,7 @@ export class SidebarPaciente extends HTMLElement {
 
         <div class="sidebar__footer">
           <!-- ──────────── BOTÓN DE CERRAR SESIÓN ──────────── -->
-          <a href="./#" id="btn-open-logout" class="sidebar__help-link" style="color: var(--color-danger, #DC2626);">
+          <a href="/#" id="btn-open-logout" class="sidebar__help-link" style="color: var(--color-danger, #DC2626);">
             <svg class="sidebar__help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-danger, #DC2626);">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>

@@ -11,13 +11,13 @@ export class AuthPage extends HTMLElement {
         <!-- ── Panel izquierdo: imagen decorativa ── -->
         <div class="auth-image-panel">
           <img
-            src="./assets/images/select_type_user_image.png"
+            src="/assets/images/select_type_user_image.png"
             alt="Tazón de granola con frutas frescas"
             class="auth-image-panel__img"
           />
           <div class="auth-image-panel__logo">
             <img
-              src="./assets/images/logo_horizontal.png"
+              src="/assets/images/logo_horizontal.png"
               alt="BalanceApp — Nutrición y Bienestar"
             />
           </div>
@@ -30,7 +30,7 @@ export class AuthPage extends HTMLElement {
             <!-- Marca pequeña -->
             <div class="auth-form-panel__brand">
               <img
-                src="./assets/images/logo_horizontal.png"
+                src="/assets/images/logo_horizontal.png"
                 alt="BalanceApp logo"
               />
             </div>
@@ -47,7 +47,7 @@ export class AuthPage extends HTMLElement {
               class="auth-btn auth-btn--primary"
               aria-label="Crear una cuenta nueva"
             >
-              <a href="./#/auth/paciente-register">Crear Cuenta</a>
+              <a href="/#/auth/paciente-register">Crear Cuenta</a>
             </button>
 
             <button
@@ -55,7 +55,7 @@ export class AuthPage extends HTMLElement {
               class="auth-btn auth-btn--outline"
               aria-label="Iniciar sesión con cuenta existente"
             >
-              <a href="./#/auth/paciente-login">Iniciar Sesión</a>
+              <a href="/#/auth/paciente-login">Iniciar Sesión</a>
             </button>
 
             <!-- Separador -->
@@ -69,7 +69,7 @@ export class AuthPage extends HTMLElement {
             <p class="auth-specialist">
               ¿Eres especialista?&nbsp;
               <a
-                href="./#/auth/especialista-login"
+                href="/#/auth/especialista-login"
                 class="auth-specialist__link"
                 id="link-specialist"
               >
@@ -78,7 +78,7 @@ export class AuthPage extends HTMLElement {
             </p>
             
             <a
-              href="./#"
+              href="/#"
               class="specialist-back-link"
               id="specialist-back-link"
               aria-label="Volver a la pantalla de bienvenida"

@@ -15,7 +15,7 @@ public class Database {
         // Conexión local a la base de datos balanceapp
         String url = "jdbc:mysql://localhost:3306/balanceapp?useSSL=false&allowPublicKeyRetrieval=true";
         String user = "admin";
-        String password = "Mario123"; 
+        String password = "my-fer_510";
 
         return DriverManager.getConnection(url, user, password);
     }

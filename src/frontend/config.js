@@ -1,6 +1,6 @@
-const isProduction = true; 
+const isProduction = false;
 
-// URL de desarrollo (Javalin corriendo en tu computadora)  
+// URL de desarrollo (Javalin corriendo en tu computadora)
 const LOCAL_URL = "http://localhost:5000";
 
 // URL de producción (La futura dirección real de tu backend)

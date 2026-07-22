@@ -36,17 +36,17 @@ export class AgendaEspecialistaPage extends HTMLElement {
                 <div class="calendar-header">
                   <div class="calendar-title">
                     <!-- ICONO LOCAL: Calendario -->
-                    <img src="./assets/icons/calendario.png" alt="Calendario" class="custom-icon large-icon">
+                    <img src="/assets/icons/calendario.png" alt="Calendario" class="custom-icon large-icon">
                     <h2 id="month-year-display">Cargando...</h2>
                   </div>
                   <div class="calendar-nav">
                     <button id="btn-prev-month" class="nav-btn">
                       <!-- ICONO LOCAL: Flecha Izquierda -->
-                      <img src="./assets/icons/flecha-izquierda.png" alt="Atrás" class="custom-icon">
+                      <img src="/assets/icons/flecha-izquierda.png" alt="Atrás" class="custom-icon">
                     </button>
                     <button id="btn-next-month" class="nav-btn">
                       <!-- ICONO LOCAL: Flecha Derecha -->
-                      <img src="./assets/icons/flecha-derecha.png" alt="Adelante" class="custom-icon">
+                      <img src="/assets/icons/flecha-derecha.png" alt="Adelante" class="custom-icon">
                     </button>
                   </div>
                 </div>
@@ -221,12 +221,15 @@ export class AgendaEspecialistaPage extends HTMLElement {
     try {
       const year = this.currentDate.getFullYear();
       const month = this.currentDate.getMonth();
-      
+
       const response = await fetch(`${API_BASE_URL}/api/cita`);
       const data = await response.json();
-      
+
       if (data.success) {
-        const todasLasCitas = [...(data.proximas || []), ...(data.historial || [])];
+        const todasLasCitas = [
+          ...(data.proximas || []),
+          ...(data.historial || []),
+        ];
         this.appointments = todasLasCitas.filter((cita) => {
           if (!cita.fecha) return false;
           const [citaYear, citaMonth] = cita.fecha.split("-").map(Number);
@@ -235,7 +238,7 @@ export class AgendaEspecialistaPage extends HTMLElement {
       } else {
         this.appointments = [];
       }
-      
+
       this.renderCalendar();
       this.renderAppointments();
     } catch (error) {
@@ -362,7 +365,7 @@ export class AgendaEspecialistaPage extends HTMLElement {
             <div class="dropdown-selected">
               <span>Pendiente</span>
               <!-- ICONO LOCAL: Flecha abajo -->
-              <img src="./assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
+              <img src="/assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
             </div>
             <div class="dropdown-options">
               <div class="dropdown-item active" data-value="Pendiente">Pendiente</div>
@@ -385,13 +388,13 @@ export class AgendaEspecialistaPage extends HTMLElement {
           </div>
           <div class="appt-time">
             <!-- ICONO LOCAL: Reloj -->
-            <img src="./assets/icons/relog-tiempo.png" alt="Hora" class="custom-icon"> 
+            <img src="/assets/icons/relog-tiempo.png" alt="Hora" class="custom-icon"> 
             ${app.hora}
           </div>
           <div class="appt-footer">
             <div class="appt-type">
               <!-- ICONO LOCAL: Tipo/Médico -->
-              <img src="./assets/icons/tratamiento_menu.png" alt="Tipo" class="custom-icon"> 
+              <img src="/assets/icons/tratamiento_menu.png" alt="Tipo" class="custom-icon"> 
               ${app.tipo}
             </div>
             ${cancelBtnHTML}
@@ -420,21 +423,21 @@ export class AgendaEspecialistaPage extends HTMLElement {
       btnConfirm.textContent = "Procesando...";
       btnConfirm.disabled = true;
 
-      const endpoint = isCanceling 
+      const endpoint = isCanceling
         ? `${API_BASE_URL}/api/cita/${targetId}/cancelar`
         : `${API_BASE_URL}/api/cita/${targetId}/concluir`;
-      
+
       const response = await fetch(endpoint, {
-        method: 'PATCH'
+        method: "PATCH",
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         // Actualizamos arreglo local
         const appt = this.appointments.find((a) => a.id == targetId);
         if (appt) appt.estado = newStatus;
-        
+
         // Restaurar y repintar
         btnConfirm.textContent = originalText;
         btnConfirm.disabled = false;
@@ -447,7 +450,7 @@ export class AgendaEspecialistaPage extends HTMLElement {
     } catch (error) {
       console.error("Error al procesar:", error);
       alert("Error al intentar cambiar el estado de la cita: " + error.message);
-      
+
       // Restaurar botón
       const btnConfirm = this.querySelector(btnId);
       btnConfirm.textContent = originalText;

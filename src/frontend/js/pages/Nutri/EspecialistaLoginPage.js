@@ -11,7 +11,7 @@ export class EspecialistaLoginPage extends HTMLElement {
         <!-- ── Panel izquierdo: imagen decorativa ── -->
         <div class="specialist-image-panel">
           <img
-            src="./assets/images/login_nutri_image.png"
+            src="/assets/images/login_nutri_image.png"
             alt="Consultorio de nutrición moderno"
             class="specialist-image-panel__img"
           />
@@ -19,7 +19,7 @@ export class EspecialistaLoginPage extends HTMLElement {
           <!-- Logo flotante -->
           <div class="specialist-image-panel__logo">
             <img
-              src="./assets/images/logo_horizontal.png"
+              src="/assets/images/logo_horizontal.png"
               alt="BalanceApp — Nutrición y Bienestar"
             />
           </div>
@@ -149,7 +149,7 @@ export class EspecialistaLoginPage extends HTMLElement {
 
             <!-- Volver a la pantalla anterior -->
             <a
-              href="./#/auth"
+              href="/#/auth"
               class="specialist-back-link"
               id="specialist-back-link"
               aria-label="Volver a la pantalla de bienvenida"

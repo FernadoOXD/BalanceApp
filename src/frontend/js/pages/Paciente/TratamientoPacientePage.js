@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../../config.js';
+import { API_BASE_URL } from "../../../config.js";
 
 export class TratamientoPacientePage extends HTMLElement {
   constructor() {
@@ -35,7 +35,7 @@ export class TratamientoPacientePage extends HTMLElement {
             <section class="summary-cards-container" id="summary-container">
               
               <div class="summary-card">
-                <img class="icon-box" src="./assets/icons/objetivo.png" alt="Objetivo">
+                <img class="icon-box" src="/assets/icons/objetivo.png" alt="Objetivo">
                 <div class="summary-info">
                   <span class="summary-title">OBJETIVO PRINCIPAL</span>
                   <h3 class="summary-value" id="val-objetivo">Cargando...</h3>
@@ -43,7 +43,7 @@ export class TratamientoPacientePage extends HTMLElement {
               </div>
 
               <div class="summary-card">
-                <img class="icon-box" src="./assets/icons/dieta.png" alt="Dieta">
+                <img class="icon-box" src="/assets/icons/dieta.png" alt="Dieta">
                 <div class="summary-info">
                   <span class="summary-title">PLAN NUTRICIONAL BASE</span>
                   <h3 class="summary-value" id="val-nutricion">Cargando...</h3>
@@ -51,7 +51,7 @@ export class TratamientoPacientePage extends HTMLElement {
               </div>
 
               <div class="summary-card">
-                <img class="icon-box" src="./assets/icons/aptitud-fisica.png" alt="Ejercicio">
+                <img class="icon-box" src="/assets/icons/aptitud-fisica.png" alt="Ejercicio">
                 <div class="summary-info">
                   <span class="summary-title">ENFOQUE FÍSICO</span>
                   <h3 class="summary-value" id="val-fisico">Cargando...</h3>
@@ -126,30 +126,32 @@ export class TratamientoPacientePage extends HTMLElement {
       }
 
       // Conexión real a tu backend
-      const response = await fetch(`${API_BASE_URL}/api/paciente/tratamiento/${idPaciente}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/paciente/tratamiento/${idPaciente}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
       if (!response.ok) {
         throw new Error(`Error en el servidor: Código ${response.status}`);
       }
 
       this.data = await response.json();
-      
+
       // Asegurarse de que el contenido principal sea visible y pintar datos
       this.querySelector("#tratamiento-content").classList.remove("hidden");
       this.renderDynamicContent();
-
     } catch (error) {
       console.error("Error al cargar el plan de tratamiento:", error);
-      
+
       // Ocultar el contenido vacío y mostrar el mensaje amigable
       const mainContent = this.querySelector("#tratamiento-content");
       const errorDiv = this.querySelector("#error-tratamiento");
-      
+
       if (mainContent) mainContent.classList.add("hidden");
       if (errorDiv) errorDiv.classList.remove("hidden");
     }
@@ -163,9 +165,13 @@ export class TratamientoPacientePage extends HTMLElement {
     const valNutricion = this.querySelector("#val-nutricion");
     const valFisico = this.querySelector("#val-fisico");
 
-    if (valObjetivo) valObjetivo.textContent = this.data.objetivo || 'No especificado';
-    if (valNutricion) valNutricion.textContent = this.data.alimentacion || 'No especificado';
-    if (valFisico) valFisico.textContent = this.data.ejercicioDescripcion || 'No especificado';
+    if (valObjetivo)
+      valObjetivo.textContent = this.data.objetivo || "No especificado";
+    if (valNutricion)
+      valNutricion.textContent = this.data.alimentacion || "No especificado";
+    if (valFisico)
+      valFisico.textContent =
+        this.data.ejercicioDescripcion || "No especificado";
 
     // 2. MENÚ SEMANAL (Parsear el String JSON y respetar mayúsculas de la nutrióloga)
     const menuTbody = this.querySelector("#menu-tbody");
@@ -173,22 +179,27 @@ export class TratamientoPacientePage extends HTMLElement {
       if (this.data.menuExcel) {
         try {
           // Convertimos el texto de MySQL a un Array real
-          const menuParseado = typeof this.data.menuExcel === 'string' 
-            ? JSON.parse(this.data.menuExcel) 
-            : this.data.menuExcel;
+          const menuParseado =
+            typeof this.data.menuExcel === "string"
+              ? JSON.parse(this.data.menuExcel)
+              : this.data.menuExcel;
 
-          menuTbody.innerHTML = menuParseado.map((fila) => `
+          menuTbody.innerHTML = menuParseado
+            .map(
+              (fila) => `
             <tr>
-              <td class="meal-type"><strong>${fila.comida || ''}</strong></td>
-              <td>${fila.Lunes || '-'}</td>
-              <td>${fila.Martes || '-'}</td>
-              <td>${fila.Miercoles || '-'}</td>
-              <td>${fila.Jueves || '-'}</td>
-              <td>${fila.Viernes || '-'}</td>
-              <td>${fila.Sabado || '-'}</td>
-              <td>${fila.Domingo || '-'}</td>
+              <td class="meal-type"><strong>${fila.comida || ""}</strong></td>
+              <td>${fila.Lunes || "-"}</td>
+              <td>${fila.Martes || "-"}</td>
+              <td>${fila.Miercoles || "-"}</td>
+              <td>${fila.Jueves || "-"}</td>
+              <td>${fila.Viernes || "-"}</td>
+              <td>${fila.Sabado || "-"}</td>
+              <td>${fila.Domingo || "-"}</td>
             </tr>
-          `).join("");
+          `,
+            )
+            .join("");
         } catch (e) {
           console.error("Error al leer el menú:", e);
           menuTbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Error al cargar el menú.</td></tr>`;
@@ -202,7 +213,10 @@ export class TratamientoPacientePage extends HTMLElement {
     const rutinaTag = this.querySelector("#rutina-tag");
     const exerciseContainer = this.querySelector("#exercise-container");
 
-    if (rutinaTag) rutinaTag.textContent = this.data.ejercicioDescripcion ? "Rutina Personalizada" : "Sin rutina";
+    if (rutinaTag)
+      rutinaTag.textContent = this.data.ejercicioDescripcion
+        ? "Rutina Personalizada"
+        : "Sin rutina";
 
     if (exerciseContainer) {
       if (this.data.ejercicio) {
@@ -213,7 +227,7 @@ export class TratamientoPacientePage extends HTMLElement {
           </div>
         `;
         // Ajustamos el grid para que ocupe todo el ancho
-        exerciseContainer.style.gridTemplateColumns = "1fr"; 
+        exerciseContainer.style.gridTemplateColumns = "1fr";
       } else {
         exerciseContainer.innerHTML = `
           <div style="padding: 20px; color: var(--text-muted, gray);">
@@ -238,17 +252,17 @@ export class TratamientoPacientePage extends HTMLElement {
     try {
       // 2. Configurar el formato del PDF
       const opciones = {
-        margin: [15, 10, 15, 10], 
+        margin: [15, 10, 15, 10],
         filename: "Plan_Tratamiento_BalanceApp.pdf",
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: {
-          scale: 2, 
-          useCORS: true, 
+          scale: 2,
+          useCORS: true,
           logging: false,
         },
         jsPDF: {
           unit: "mm",
-          format: "a3", 
+          format: "a3",
           orientation: "portrait",
         },
       };
@@ -256,7 +270,7 @@ export class TratamientoPacientePage extends HTMLElement {
       // 3. Ocultar el botón temporalmente para que NO salga impreso en el PDF
       btnDownload.style.visibility = "hidden";
 
-      // 4. Ejecutar la librería 
+      // 4. Ejecutar la librería
       await html2pdf().set(opciones).from(elemento).save();
     } catch (error) {
       console.error("Error al generar el PDF:", error);

@@ -30,7 +30,7 @@ export class SettingEspecialista extends HTMLElement {
             <section class="settings-card">
               <div class="card-header-icon">
                 <div class="icon-box icon-green-light">
-                  <img src="./assets/icons/dia-y-noche.png" alt="Apariencia" class="custom-icon">
+                  <img src="/assets/icons/dia-y-noche.png" alt="Apariencia" class="custom-icon">
                 </div>
                 <div class="header-text">
                   <h2>Apariencia</h2>
@@ -55,7 +55,7 @@ export class SettingEspecialista extends HTMLElement {
             <section class="settings-card">
               <div class="card-header-icon">
                 <div class="icon-box icon-green-light">
-                  <img src="./assets/icons/relog-tiempo.png" alt="Horarios" class="custom-icon">
+                  <img src="/assets/icons/relog-tiempo.png" alt="Horarios" class="custom-icon">
                 </div>
                 <div class="header-text">
                   <h2>Horarios de Cita</h2>
@@ -88,7 +88,7 @@ export class SettingEspecialista extends HTMLElement {
                   <div class="custom-dropdown" id="duration-dropdown">
                     <div class="dropdown-selected">
                       <span id="duration-selected-text">1 hora</span>
-                      <img src="./assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
+                      <img src="/assets/icons/flecha-abajo.png" alt="Abrir" class="custom-icon dropdown-arrow">
                     </div>
                     <div class="dropdown-options">
                       <div class="dropdown-item" data-value="30">30 minutos</div>
@@ -109,7 +109,7 @@ export class SettingEspecialista extends HTMLElement {
             <section class="settings-card">
               <div class="card-header-icon">
                 <div class="icon-box icon-transparent">
-                  <img src="./assets/icons/notificacion-negro.png" alt="Notificaciones" class="custom-icon">
+                  <img src="/assets/icons/notificacion-negro.png" alt="Notificaciones" class="custom-icon">
                 </div>
                 <div class="header-text">
                   <h2>Notificaciones</h2>
@@ -294,13 +294,13 @@ export class SettingEspecialista extends HTMLElement {
           <div class="col-day"><strong>${d.day}</strong></div>
           <div class="col-time">
             <div class="input-icon-wrapper">
-              <img src="./assets/icons/boton-editar.png" class="custom-icon tiny-icon">
+              <img src="/assets/icons/boton-editar.png" class="custom-icon tiny-icon">
               <input type="time" class="time-input start-time" value="${d.start}" ${d.active ? "" : "disabled"}>
             </div>
           </div>
           <div class="col-time">
             <div class="input-icon-wrapper">
-              <img src="./assets/icons/boton-editar.png" class="custom-icon tiny-icon">
+              <img src="/assets/icons/boton-editar.png" class="custom-icon tiny-icon">
               <input type="time" class="time-input end-time" value="${d.end}" ${d.active ? "" : "disabled"}>
             </div>
           </div>

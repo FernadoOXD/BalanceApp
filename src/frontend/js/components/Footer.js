@@ -9,8 +9,8 @@ export class AppFooter extends HTMLElement {
         <div class="container">
           <div class="footer-grid">
             <div class="footer-col">
-              <a href="./#" class="logo footer-logo" aria-label="Balance App Inicio">
-                <img src="./assets/images/logo_horizontal.png" alt="Balance App Logo" class="logo-img">
+              <a href="/#" class="logo footer-logo" aria-label="Balance App Inicio">
+                <img src="/assets/images/logo_horizontal.png" alt="Balance App Logo" class="logo-img">
               </a>
               <p class="footer-desc">
                 Transformando vidas a través de la nutrición consciente y profesional.
@@ -29,9 +29,9 @@ export class AppFooter extends HTMLElement {
             <div class="footer-col">
               <h4 class="footer-title">Redes Sociales</h4>
               <ul class="footer-list">
-                <li><a href="./#" class="footer-link">Instagram</a></li>
-                <li><a href="./#" class="footer-link">Facebook</a></li>
-                <li><a href="./#" class="footer-link">LinkedIn</a></li>
+                <li><a href="/#" class="footer-link">Instagram</a></li>
+                <li><a href="/#" class="footer-link">Facebook</a></li>
+                <li><a href="/#" class="footer-link">LinkedIn</a></li>
               </ul>
             </div>
           </div>

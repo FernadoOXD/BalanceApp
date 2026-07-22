@@ -1,7 +1,7 @@
 //Components
-import { HomePage } from "./pages/HomePage.js";
-import { AuthPage } from "./pages/AuthPage.js";
-import { AppFooter } from "./components/Footer.js";
+import { HomePage } from "/pages/HomePage.js";
+import { AuthPage } from "/pages/AuthPage.js";
+import { AppFooter } from "/components/Footer.js";
 
 // Inicialización global del modo oscuro
 function initDarkMode() {
@@ -15,26 +15,26 @@ function initDarkMode() {
 initDarkMode();
 
 //Pages de Especialista
-import { EspecialistaLoginPage } from "./pages/Nutri/EspecialistaLoginPage.js";
-import { DashboardEspecialistaPage } from "./pages/Nutri/DashboardEspecialistaPage.js";
-import { SidebarEspecialista } from "./pages/Nutri/SidebarEspecialista.js";
-import { AgendaEspecialistaPage } from "./pages/Nutri/AgendaEspecialistaPage.js";
-import { ListPacientesEspecialistaPage } from "./pages/Nutri/ListPacientesEspecialistaPage.js";
-import { TratamientoEspecialistaPage } from "./pages/Nutri/TratamientoEspecialistaPage.js";
-import { SettingEspecialista } from "./pages/Nutri/SettingEspecialista.js";
+import { EspecialistaLoginPage } from "/pages/Nutri/EspecialistaLoginPage.js";
+import { DashboardEspecialistaPage } from "/pages/Nutri/DashboardEspecialistaPage.js";
+import { SidebarEspecialista } from "/pages/Nutri/SidebarEspecialista.js";
+import { AgendaEspecialistaPage } from "/pages/Nutri/AgendaEspecialistaPage.js";
+import { ListPacientesEspecialistaPage } from "/pages/Nutri/ListPacientesEspecialistaPage.js";
+import { TratamientoEspecialistaPage } from "/pages/Nutri/TratamientoEspecialistaPage.js";
+import { SettingEspecialista } from "/pages/Nutri/SettingEspecialista.js";
 
 //Pages de Paciente
-import { PacienteLoginPage } from "./pages/Paciente/PacienteLoginPage.js";
-import { RegistroPacientePage } from "./pages/Paciente/PacienteRegistroPage.js";
-import { SidebarPaciente } from "./pages/Paciente/SidebarPaciente.js";
-import { AgendamientoEncuestaPage } from "./pages/Paciente/AgendamientoEncuestaPage.js";
-import { AgendaPacientePage } from "./pages/Paciente/AgendaPacientePage.js";
-import { TratamientoPacientePage } from "./pages/Paciente/TratamientoPacientePage.js";
-import { SettingPaciente } from "./pages/Paciente/SettingPaciente.js";
+import { PacienteLoginPage } from "/pages/Paciente/PacienteLoginPage.js";
+import { RegistroPacientePage } from "/pages/Paciente/PacienteRegistroPage.js";
+import { SidebarPaciente } from "/pages/Paciente/SidebarPaciente.js";
+import { AgendamientoEncuestaPage } from "/pages/Paciente/AgendamientoEncuestaPage.js";
+import { AgendaPacientePage } from "/pages/Paciente/AgendaPacientePage.js";
+import { TratamientoPacientePage } from "/pages/Paciente/TratamientoPacientePage.js";
+import { SettingPaciente } from "/pages/Paciente/SettingPaciente.js";
 
 //Rutas
-import { Router } from "./router/Router.js";
-import { routes } from "./router/routes.js";
+import { Router } from "/router/Router.js";
+import { routes } from "/router/routes.js";
 
 /*
 /////////////////////////////////////////////////////////////

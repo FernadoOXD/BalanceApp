@@ -433,7 +433,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             <h1 class="topbar-title">Pacientes</h1>
             <div class="search-context-container">
               <div class="search-bar-inner">
-                <img src="./assets/icons/Busqueda.png" alt="Buscar" class="search-icon-img">
+                <img src="/assets/icons/Busqueda.png" alt="Buscar" class="search-icon-img">
                 <input type="text" id="global-search-input" placeholder="Buscar pacientes..." autocomplete="off">
               </div>
               <div id="dropdown-clientes-nuevos" class="dropdown-floating hidden-dropdown">
@@ -448,7 +448,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               </div>
             </div>
             <div class="notification-icon-wrapper">
-              <img src="./assets/icons/notificaciones.png" alt="Notificaciones">
+              <img src="/assets/icons/notificaciones.png" alt="Notificaciones">
             </div>
           </header>
 
@@ -481,7 +481,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                         <tr class="row-paciente-item" data-id="${p.id}">
                           <td class="cell-profile-wrapper">
                             <div class="avatar-circle">
-                              <img src="./${p.avatar}" alt="${p.nombre}" class="avatar-img" onerror="this.style.display='none'">
+                              <img src="/${p.avatar}" alt="${p.nombre}" class="avatar-img" onerror="this.style.display='none'">
                               <span>${p.iniciales}</span>
                             </div>
                             <div class="patient-name-id">
@@ -573,7 +573,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <h1 class="topbar-title">Perfil del Paciente</h1>
             </div>
             <div class="notification-icon-wrapper">
-              <img src="./assets/icons/notificaciones.png" alt="Notificaciones">
+              <img src="/assets/icons/notificaciones.png" alt="Notificaciones">
             </div>
           </header>
 
@@ -582,7 +582,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <div class="perfil-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
                 <div class="header-left-info">
                   <div class="avatar-large" style="background: var(--bg-avatar-large);">
-                    <img src="./${p.avatar}" alt="${p.nombre}" class="avatar-img" onerror="this.style.display='none'">
+                    <img src="/${p.avatar}" alt="${p.nombre}" class="avatar-img" onerror="this.style.display='none'">
                     <span>${p.iniciales}</span>
                   </div>
                   <div>
@@ -594,15 +594,15 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                 
                 <div class="header-actions-container" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end; justify-content: center;">
                   <button class="btn-header-action" id="btn-anadir-nuevo-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
-                    <img src="./assets/icons/añadir.png" alt="Añadir" style="width:16px; height:16px; object-fit: contain;">
+                    <img src="/assets/icons/añadir.png" alt="Añadir" style="width:16px; height:16px; object-fit: contain;">
                     <span>Añadir Nueva Evaluación</span>
                   </button>
                   <button class="btn-header-action" id="btn-ver-expediente" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
-                    <img src="./assets/icons/reciente.png" alt="Expediente" style="width:16px; height:16px; object-fit: contain;">
+                    <img src="/assets/icons/reciente.png" alt="Expediente" style="width:16px; height:16px; object-fit: contain;">
                     <span>Ver Expediente Completo</span>
                   </button>
                   <button class="btn-header-action" id="btn-ver-diagnostico" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 14px; border: 1.5px solid var(--border-color); border-radius: 6px; background-color: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 13px; cursor: pointer; width: 230px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
-                    <img src="./assets/icons/notas.png" alt="Diagnóstico" style="width:16px; height:16px; object-fit: contain;">
+                    <img src="/assets/icons/notas.png" alt="Diagnóstico" style="width:16px; height:16px; object-fit: contain;">
                     <span>Ver Diagnósticos</span>
                   </button>
                 </div>
@@ -775,7 +775,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
                   No hay expediente clínico registrado para este paciente en la base de datos.
                 </p>
                 <button class="btn-nuevo-paciente" id="btn-anadir-expediente" style="background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">
-                  <img src="./assets/icons/añadirBlanco.png" alt="Añadir" style="width:14px; height:14px; margin-right:6px;">
+                  <img src="/assets/icons/añadirBlanco.png" alt="Añadir" style="width:14px; height:14px; margin-right:6px;">
                   Añadir Expediente
                 </button>
               </div>
@@ -796,7 +796,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
             </div>
             <div class="header-actions-container">
               <button class="btn-header-action" id="btn-editar-expediente">
-                <img src="./assets/icons/notas.png" alt="Editar" style="width:14px;height:14px;"> Editar
+                <img src="/assets/icons/notas.png" alt="Editar" style="width:14px;height:14px;"> Editar
               </button>
             </div>
           </header>
@@ -911,7 +911,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
 
               <div style="margin-top: 25px; display:flex; justify-content: flex-end;">
                 <button type="submit" class="btn-nuevo-paciente" style="padding: 12px 30px; background: var(--btn-bg); color: var(--btn-text); border: 1px solid var(--border-color);">
-                  <img src="./assets/icons/añadirBlanco.png" alt="Guardar" style="width:14px;height:14px;margin-right:8px;">
+                  <img src="/assets/icons/añadirBlanco.png" alt="Guardar" style="width:14px;height:14px;margin-right:8px;">
                   Guardar Expediente
                 </button>
               </div>
@@ -1151,7 +1151,7 @@ export class ListPacientesEspecialistaPage extends HTMLElement {
               <div class="dropdown-item-row" data-id="${p.id}" style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; cursor:pointer; border-bottom:1px solid var(--border-color);">
                 <div style="display:flex; align-items:center; gap:10px;">
                   <div class="avatar-circle small-avatar">
-                    <img src="./${p.avatar}" alt="${p.nombre}" class="avatar-img" onerror="this.style.display='none'">
+                    <img src="/${p.avatar}" alt="${p.nombre}" class="avatar-img" onerror="this.style.display='none'">
                     <span>${p.iniciales}</span>
                   </div>
                   <div class="patient-name-id">

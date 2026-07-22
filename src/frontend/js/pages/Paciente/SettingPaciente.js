@@ -19,7 +19,7 @@ export class SettingPaciente extends HTMLElement {
           <!-- Icono de notificaciones superior -->
           <div class="top-nav-bar">
              <button class="btn-icon-only">
-               <img src="./assets/icons/notificacion-negro.png" alt="Notificaciones" class="custom-icon">
+               <img src="/assets/icons/notificacion-negro.png" alt="Notificaciones" class="custom-icon">
              </button>
           </div>
 
@@ -34,7 +34,7 @@ export class SettingPaciente extends HTMLElement {
             <!-- 1. APARIENCIA -->
             <section class="settings-card">
               <div class="card-header-icon">
-                <img src="./assets/icons/dia-y-noche.png" alt="Apariencia" class="custom-icon large-icon">
+                <img src="/assets/icons/dia-y-noche.png" alt="Apariencia" class="custom-icon large-icon">
                 <h2>Apariencia</h2>
               </div>
               <div class="divider"></div>
@@ -55,7 +55,7 @@ export class SettingPaciente extends HTMLElement {
             <!-- 2. GESTIÓN DE CUENTA -->
             <section class="settings-card">
               <div class="card-header-icon">
-                <img src="./assets/icons/gestion-de-usuarios.png" alt="Gestión" class="custom-icon large-icon">
+                <img src="/assets/icons/gestion-de-usuarios.png" alt="Gestión" class="custom-icon large-icon">
                 <h2>Gestión de Cuenta</h2>
               </div>
               <div class="divider"></div>
@@ -79,7 +79,7 @@ export class SettingPaciente extends HTMLElement {
         <div id="modal-delete-account" class="modal-overlay hidden">
           <div class="modal-content modal-small">
             <div class="modal-header-danger">
-              <img src="./assets/icons/peligro.png" alt="Alerta" class="custom-icon icon-danger">
+              <img src="/assets/icons/peligro.png" alt="Alerta" class="custom-icon icon-danger">
               <h3>¿Eliminar cuenta?</h3>
             </div>
             <div class="modal-body text-left">
@@ -157,37 +157,39 @@ export class SettingPaciente extends HTMLElement {
       btnConfirmDelete.textContent = "Eliminando...";
       btnConfirmDelete.disabled = true;
 
-      const idPaciente = localStorage.getItem('idPaciente');
+      const idPaciente = localStorage.getItem("idPaciente");
 
       // Validación estricta a prueba de fallos
       if (!idPaciente || idPaciente === "undefined" || idPaciente === "null") {
-          alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
-          throw new Error("ID inválido detectado en la memoria del navegador.");
+        alert("Tu sesión está corrupta. Cierra sesión y vuelve a iniciarla.");
+        throw new Error("ID inválido detectado en la memoria del navegador.");
       }
 
       // Petición DELETE usando la ruta correcta
-      const response = await fetch(`${API_BASE_URL}/api/paciente/${idPaciente}`, {
-          method: 'DELETE',
+      const response = await fetch(
+        `${API_BASE_URL}/api/paciente/${idPaciente}`,
+        {
+          method: "DELETE",
           headers: {
-              'Content-Type': 'application/json'
-          }
-      });
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
       if (!response.ok) {
-          throw new Error("No se pudo completar la eliminación del paciente.");
+        throw new Error("No se pudo completar la eliminación del paciente.");
       }
 
       // Limpieza de sesión y redirección exitosa
       localStorage.clear();
       window.location.hash = "#/";
       window.location.reload();
-
     } catch (error) {
-        console.error(error);
-        alert(error.message);
-        btnConfirmDelete.textContent = "Confirmar Eliminación";
-        btnConfirmDelete.disabled = false;
-        modalDelete.classList.add("hidden");
+      console.error(error);
+      alert(error.message);
+      btnConfirmDelete.textContent = "Confirmar Eliminación";
+      btnConfirmDelete.disabled = false;
+      modalDelete.classList.add("hidden");
     }
   }
 }

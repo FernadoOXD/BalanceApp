@@ -21,7 +21,7 @@ export class AgendamientoEncuestaPage extends HTMLElement {
   <!-- ── Header Global ── -->
   <header class="n-header">
     <div class="n-header__brand">
-      <img src="./assets/images/logo_horizontal.png" width="200px" height="100px" alt="Logo">
+      <img src="/assets/images/logo_horizontal.png" width="200px" height="100px" alt="Logo">
     </div>
     <div class="n-header__actions">
       <button class="n-icon-btn" aria-label="Perfil de usuario">
@@ -85,7 +85,7 @@ export class AgendamientoEncuestaPage extends HTMLElement {
         </div>
 
         <div class="n-card__footer">
-          <button type="button" class="n-btn n-btn--outline"><a href="./#/paciente/agenda" style="text-decoration:none; color:inherit;">Volver</a></button>
+          <button type="button" class="n-btn n-btn--outline"><a href="/#/paciente/agenda" style="text-decoration:none; color:inherit;">Volver</a></button>
           <button type="button" id="btn-next-phase" class="n-btn n-btn--primary">
             Siguiente 
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
