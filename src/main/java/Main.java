@@ -1,4 +1,3 @@
-
 import io.javalin.Javalin;
 import routes.CitaRoutes;
 import routes.ConfiguracionRoutes;
@@ -16,19 +15,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Inicialización del servidor con CORS configurado para producción y pruebas locales
+        // Inicialización del servidor con CORS totalmente abierto a cualquier dominio
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableCors(cors -> {
                 cors.addRule(it -> {
-                    // Permite peticiones desde el frontend oficial desplegado
-                    it.allowHost("balance-app-frontend.vercel.app");
-                    // Permite peticiones locales desde la extensión Live Server de VS Code (puerto 5500)
-                    it.allowHost("http://localhost:5500");
-                    it.allowHost("http://127.0.0.1:5500");
-                    // Permite peticiones locales adicionales (puerto 5501)
-                    it.allowHost("http://localhost:5501");
-                    it.allowHost("http://127.0.0.1:5501");
-                    
+                    // Refleja el origen del cliente (permite ddns.net, abrdns.com, vercel, localhost, etc.)
+                    it.reflectClientOrigin();
                     it.allowCredentials = true;
                 });
             });
@@ -47,6 +39,6 @@ public class Main {
         ConfiguracionRoutes.registrar(app);
         EstadisticasRoutes.registrar(app);
 
-        System.out.println("Servidor iniciado en el puerto 5000 con CORS habilitado para Vercel y Live Server (Local).");
+        System.out.println("Servidor iniciado en el puerto 5000 con CORS totalmente habilitado.");
     }
 }
