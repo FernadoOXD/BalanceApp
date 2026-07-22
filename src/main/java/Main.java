@@ -15,13 +15,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Inicialización del servidor con CORS totalmente abierto a cualquier dominio
+        // Inicialización del servidor con CORS habilitado para cualquier origen
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableCors(cors -> {
                 cors.addRule(it -> {
-                    // Refleja el origen del cliente (permite ddns.net, abrdns.com, vercel, localhost, etc.)
-                    it.reflectClientOrigin();
-                    it.allowCredentials = true;
+                    // anyHost() permite peticiones desde ddns.net, vercel, localhost o cualquier dominio
+                    it.anyHost();
                 });
             });
         }).start(5000);
