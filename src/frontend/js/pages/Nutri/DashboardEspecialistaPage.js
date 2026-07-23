@@ -51,7 +51,7 @@ export class DashboardEspecialistaPage extends HTMLElement {
 
               <!-- Gráfica 2: Frecuencia Relativa (Dona) -->
               <div class="card panel-card" style="background: var(--bg-card); padding: 24px; border-radius: 24px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-                  <h3 style="margin-bottom: 16px; color: var(--text-primary);">Distribución de Diagnósticos</h3>
+                  <h3 style="margin-bottom: 16px; color: var(--text-primary);">Distribución de Diagnósticos   </h3>
                   <div id="graficaDiagnosticos"></div>
               </div>
           </div>

@@ -72,8 +72,9 @@ export class TratamientoEspecialistaPage extends HTMLElement {
           menuExcel: menuParseado,
           nombre:
             p.nombre ||
-            `${p.nombres || ""} ${p.apellidoPaterno || ""}`.trim() ||
+            `${p.nombres || ""} ${p.apellidoPaterno || ""} ${p.apellidoMaterno || ""}`.trim() ||
             "Paciente Sin Nombre",
+
           id: p.id || p.idPaciente || "S/N",
           iniciales:
             (p.nombres ? p.nombres.charAt(0) : "P") +
