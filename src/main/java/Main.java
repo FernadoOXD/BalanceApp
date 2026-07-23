@@ -20,16 +20,19 @@ public class Main {
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableCors(cors -> {
                 cors.addRule(it -> {
-                    // Permite peticiones desde el frontend oficial desplegado
-                    it.allowHost("balance-app-frontend.vercel.app");
-                    // Permite peticiones locales desde la extensión Live Server de VS Code (puerto 5500)
+                    // Frontend en Producción (AWS Nginx)
+                    it.allowHost("http://balanceapp.ddns.net");
+                    it.allowHost("https://balanceapp.ddns.net");
+
+                    // Si accedes al frontend especificando puerto en AWS (ej: :8080), debes agregarlo:
+                    // it.allowHost("http://balanceapp.ddns.net:8080");
+
+                    // Entorno de Desarrollo Local (Live Server)
                     it.allowHost("http://localhost:5500");
                     it.allowHost("http://127.0.0.1:5500");
-                    // Permite peticiones locales adicionales (puerto 5501)
                     it.allowHost("http://localhost:5501");
                     it.allowHost("http://127.0.0.1:5501");
-                    it.allowHost("http://balanceapp.ddns.net");
-                    
+
                     it.allowCredentials = true;
                 });
             });

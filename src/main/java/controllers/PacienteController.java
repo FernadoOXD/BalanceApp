@@ -48,30 +48,25 @@ public class PacienteController {
     }
     
     private static int guardarEnBaseDeDatos(Paciente p) throws Exception {
-        String sql = "INSERT INTO PACIENTE (nombres, apellidoPaterno, email, contrasena) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO PACIENTE (nombres, apellidoPaterno, apellidoMaterno, email, contrasena) VALUES (?, ?, ?, ?, ?)";
         
-        // Protegemos la inserción por si el frontend manda todo en 'nombres'
-        String nombresOriginales = p.getNombres() != null ? p.getNombres().trim() : "";
-        String nombreFinal = nombresOriginales;
-        String apellidoFinal = p.getApellidoPaterno();
-
-        if ((apellidoFinal == null || apellidoFinal.isEmpty()) && nombresOriginales.contains(" ")) {
-            int primerEspacio = nombresOriginales.indexOf(" ");
-            nombreFinal = nombresOriginales.substring(0, primerEspacio);
-            apellidoFinal = nombresOriginales.substring(primerEspacio + 1);
-        }
+        // Recibimos los datos limpios directamente desde el frontend
+        String nombreFinal = p.getNombres() != null ? p.getNombres().trim() : "";
+        String apellidoPaternoFinal = p.getApellidoPaterno() != null ? p.getApellidoPaterno().trim() : "";
+        String apellidoMaternoFinal = p.getApellidoMaterno() != null ? p.getApellidoMaterno().trim() : null;
         
-        if (apellidoFinal == null || apellidoFinal.isEmpty()) {
-            apellidoFinal = "Sin apellido";
+        if (apellidoPaternoFinal.isEmpty()) {
+            apellidoPaternoFinal = "Sin apellido";
         }
 
         try (Connection conn = Database.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setString(1, nombreFinal);
-            pstmt.setString(2, apellidoFinal);
-            pstmt.setString(3, p.getEmail());
-            pstmt.setString(4, p.getContrasena());
+            pstmt.setString(2, apellidoPaternoFinal);
+            pstmt.setString(3, apellidoMaternoFinal);
+            pstmt.setString(4, p.getEmail());
+            pstmt.setString(5, p.getContrasena());
 
             int filasAfectadas = pstmt.executeUpdate();
 

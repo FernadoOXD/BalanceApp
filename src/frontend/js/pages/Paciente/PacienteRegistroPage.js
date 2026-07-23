@@ -207,12 +207,39 @@ export class RegistroPacientePage extends HTMLElement {
       submitBtn.innerHTML = "Registrando... ";
       submitBtn.disabled = true;
 
-      // Dividir el nombre completo para el backend
-      const nameParts = fullname.split(" ");
-      const nombres = nameParts[0];
-      const apellidoPaterno = nameParts.length > 1 ? nameParts[1] : "-";
-      const apellidoMaterno =
-        nameParts.length > 2 ? nameParts.slice(2).join(" ") : "";
+      // --- INICIO: LÓGICA DE SEPARACIÓN DE NOMBRE COMPLETO ---
+      // Se limpian espacios extras y se separan las palabras
+      const palabras = fullname.split(/\s+/);
+      const total = palabras.length;
+
+      let nombres = "";
+      let apellidoPaterno = "";
+      let apellidoMaterno = null;
+
+      if (total >= 4) {
+        // Ej: "Carlos Mario Muñoz Díaz" -> 4 o más palabras
+        // Las últimas dos se asignan a los apellidos, todas las anteriores forman el nombre
+        apellidoMaterno = palabras[total - 1];
+        apellidoPaterno = palabras[total - 2];
+        nombres = palabras.slice(0, total - 2).join(" ");
+      } else if (total === 3) {
+        // Ej: "Carlos Muñoz Díaz" -> 3 palabras
+        // 1 palabra al nombre, 2 palabras a los apellidos
+        nombres = palabras[0];
+        apellidoPaterno = palabras[1];
+        apellidoMaterno = palabras[2];
+      } else if (total === 2) {
+        // Ej: "Carlos Muñoz" -> 2 palabras
+        nombres = palabras[0];
+        apellidoPaterno = palabras[1];
+        apellidoMaterno = null;
+      } else {
+        // 1 palabra (o si el usuario escribió solo un nombre)
+        nombres = palabras[0] || "";
+        apellidoPaterno = "Sin apellido";
+        apellidoMaterno = null;
+      }
+      // --- FIN: LÓGICA DE SEPARACIÓN ---
 
       fetch(`${API_BASE_URL}/api/paciente`, {
         method: "POST",
