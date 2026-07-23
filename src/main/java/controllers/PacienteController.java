@@ -27,14 +27,16 @@ public class PacienteController {
                 
                 // Aseguramos que el objeto devuelto al registrarse incluya los datos personales
                 String nombresStr = nuevoPaciente.getNombres() != null ? nuevoPaciente.getNombres() : "";
-                String apellidoStr = nuevoPaciente.getApellidoPaterno() != null ? nuevoPaciente.getApellidoPaterno() : "";
+                String apellidoPatStr = nuevoPaciente.getApellidoPaterno() != null ? nuevoPaciente.getApellidoPaterno() : "";
+                String apellidoMatStr = nuevoPaciente.getApellidoMaterno() != null ? nuevoPaciente.getApellidoMaterno() : "";
                 String emailStr = nuevoPaciente.getEmail() != null ? nuevoPaciente.getEmail() : "";
 
                 String jsonResponse = String.format(
-                    "{\"success\": true, \"message\": \"Paciente registrado exitosamente.\", \"idPaciente\": %d, \"nombres\": \"%s\", \"apellidoPaterno\": \"%s\", \"email\": \"%s\"}",
+                    "{\"success\": true, \"message\": \"Paciente registrado exitosamente.\", \"idPaciente\": %d, \"nombres\": \"%s\", \"apellidoPaterno\": \"%s\", \"apellidoMaterno\": \"%s\", \"email\": \"%s\"}",
                     idGenerado,
                     nombresStr,
-                    apellidoStr,
+                    apellidoPatStr,
+                    apellidoMatStr,
                     emailStr
                 );
 
@@ -50,12 +52,36 @@ public class PacienteController {
     private static int guardarEnBaseDeDatos(Paciente p) throws Exception {
         String sql = "INSERT INTO PACIENTE (nombres, apellidoPaterno, apellidoMaterno, email, contrasena) VALUES (?, ?, ?, ?, ?)";
         
-        // Recibimos los datos limpios directamente desde el frontend
-        String nombreFinal = p.getNombres() != null ? p.getNombres().trim() : "";
-        String apellidoPaternoFinal = p.getApellidoPaterno() != null ? p.getApellidoPaterno().trim() : "";
-        String apellidoMaternoFinal = p.getApellidoMaterno() != null ? p.getApellidoMaterno().trim() : null;
+        // Protegemos la inserción por si el frontend manda todo en 'nombres'
+        String nombresOriginales = p.getNombres() != null ? p.getNombres().trim() : "";
+        String nombreFinal = nombresOriginales;
+        String apellidoPaternoFinal = p.getApellidoPaterno();
+        String apellidoMaternoFinal = p.getApellidoMaterno();
+
+        if ((apellidoPaternoFinal == null || apellidoPaternoFinal.isEmpty()) && nombresOriginales.contains(" ")) {
+            String[] palabras = nombresOriginales.split("\\s+");
+            int total = palabras.length;
+
+            if (total >= 4) {
+                apellidoMaternoFinal = palabras[total - 1];
+                apellidoPaternoFinal = palabras[total - 2];
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < total - 2; i++) {
+                    if (i > 0) sb.append(" ");
+                    sb.append(palabras[i]);
+                }
+                nombreFinal = sb.toString();
+            } else if (total == 3) {
+                nombreFinal = palabras[0];
+                apellidoPaternoFinal = palabras[1];
+                apellidoMaternoFinal = palabras[2];
+            } else if (total == 2) {
+                nombreFinal = palabras[0];
+                apellidoPaternoFinal = palabras[1];
+            }
+        }
         
-        if (apellidoPaternoFinal.isEmpty()) {
+        if (apellidoPaternoFinal == null || apellidoPaternoFinal.isEmpty()) {
             apellidoPaternoFinal = "Sin apellido";
         }
 
@@ -99,7 +125,7 @@ public class PacienteController {
             String email = credenciales.getEmail();
             String contrasena = credenciales.getContrasena();
 
-            String sql = "SELECT idPaciente, nombres, apellidoPaterno, email FROM PACIENTE WHERE email = ? AND contrasena = ?";
+            String sql = "SELECT idPaciente, nombres, apellidoPaterno, apellidoMaterno, email FROM PACIENTE WHERE email = ? AND contrasena = ?";
 
             try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -111,13 +137,15 @@ public class PacienteController {
                         int idEncontrado = rs.getInt("idPaciente");
                         String nombres = rs.getString("nombres");
                         String apellidoPaterno = rs.getString("apellidoPaterno");
+                        String apellidoMaterno = rs.getString("apellidoMaterno");
                         String emailDB = rs.getString("email");
 
                         String jsonResponse = String.format(
-                            "{\"success\": true, \"idPaciente\": %d, \"nombres\": \"%s\", \"apellidoPaterno\": \"%s\", \"email\": \"%s\"}",
+                            "{\"success\": true, \"idPaciente\": %d, \"nombres\": \"%s\", \"apellidoPaterno\": \"%s\", \"apellidoMaterno\": \"%s\", \"email\": \"%s\"}",
                             idEncontrado,
                             nombres != null ? nombres : "",
                             apellidoPaterno != null ? apellidoPaterno : "",
+                            apellidoMaterno != null ? apellidoMaterno : "",
                             emailDB != null ? emailDB : ""
                         );
 
